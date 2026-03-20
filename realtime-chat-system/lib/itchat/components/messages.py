@@ -390,7 +390,7 @@ def send_file(self, fileDir, toUserName=None, mediaId=None, file_=None):
         'BaseRequest': self.loginInfo['BaseRequest'],
         'Msg': {
             'Type': 6,
-            'Content': ("<appmsg appid='wxeb7ec651dd0aefa9' sdkver=''><title>%s</title>" % os.path.basename(fileDir) +
+            'Content': ("<appmsg appid='xxxx' sdkver=''><title>%s</title>" % os.path.basename(fileDir) +
                 "<des></des><action></action><type>6</type><content></content><url></url><lowurl></lowurl>" +
                 "<appattach><totallen>%s</totallen><attachid>%s</attachid>" % (str(fileSize), mediaId) +
                 "<fileext>%s</fileext></appattach><extinfo></extinfo></appmsg>" % os.path.splitext(fileDir)[1].replace('.','')),
