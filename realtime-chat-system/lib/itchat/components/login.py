@@ -109,7 +109,7 @@ def push_login(core):
 def get_QRuuid(self):
     url = '%s/jslogin' % config.BASE_URL
     params = {
-        'appid': 'wx782c26e4c19acffb',
+        'appid': 'xxx',
         'fun': 'new',
         'redirect_uri': 'https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxnewloginpage?mod=desktop',
         'lang': 'zh_CN'}
