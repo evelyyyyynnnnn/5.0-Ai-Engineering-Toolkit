@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lineage"
+version = "0.1.0"
+description = "Span-level provenance for extracted values: every number keeps the characters it came from, through every transformation."
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name = "Wenke Du"}]
+keywords = ["provenance", "lineage", "extraction", "audit", "citations"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[project.scripts]
+lineage = "lineage.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["lineage*"]

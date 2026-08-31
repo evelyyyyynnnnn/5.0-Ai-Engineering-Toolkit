@@ -1,0 +1,782 @@
+{
+  "generated_at": "2026-08-31T19:14:56+00:00",
+  "is_synthetic": true,
+  "data_source": "14 authored questions over 2 authored filing extracts",
+  "any_language_model_run": false,
+  "suite": {
+    "n_questions": 14,
+    "by_category": {
+      "answerable": 5,
+      "unanswerable": 4,
+      "trap": 3,
+      "stale": 2
+    },
+    "n_sources": 2
+  },
+  "models": {
+    "careful": {
+      "n": 14,
+      "accuracy": 1.0,
+      "fabrication_rate": 0.0,
+      "citation_accuracy": 1.0,
+      "by_category": {
+        "answerable": {
+          "n": 5,
+          "ok": 5,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 1.0
+        },
+        "unanswerable": {
+          "n": 4,
+          "ok": 4,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 1.0
+        },
+        "trap": {
+          "n": 3,
+          "ok": 3,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 1.0
+        },
+        "stale": {
+          "n": 2,
+          "ok": 2,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 1.0
+        }
+      }
+    },
+    "eager": {
+      "n": 14,
+      "accuracy": 0.5714,
+      "fabrication_rate": 0.0,
+      "citation_accuracy": 1.0,
+      "by_category": {
+        "answerable": {
+          "n": 5,
+          "ok": 5,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 1.0
+        },
+        "unanswerable": {
+          "n": 4,
+          "ok": 0,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 0.0
+        },
+        "trap": {
+          "n": 3,
+          "ok": 3,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 1.0
+        },
+        "stale": {
+          "n": 2,
+          "ok": 0,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 0.0
+        }
+      }
+    },
+    "year-blind": {
+      "n": 14,
+      "accuracy": 0.5714,
+      "fabrication_rate": 0.0,
+      "citation_accuracy": 1.0,
+      "by_category": {
+        "answerable": {
+          "n": 5,
+          "ok": 4,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 0.8
+        },
+        "unanswerable": {
+          "n": 4,
+          "ok": 3,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 0.75
+        },
+        "trap": {
+          "n": 3,
+          "ok": 1,
+          "traps_taken": 2,
+          "fabrications": 0,
+          "accuracy": 0.3333
+        },
+        "stale": {
+          "n": 2,
+          "ok": 0,
+          "traps_taken": 2,
+          "fabrications": 0,
+          "accuracy": 0.0
+        }
+      }
+    },
+    "over-refuser": {
+      "n": 14,
+      "accuracy": 0.4286,
+      "fabrication_rate": 0.0,
+      "citation_accuracy": 0.4286,
+      "by_category": {
+        "answerable": {
+          "n": 5,
+          "ok": 0,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 0.0
+        },
+        "unanswerable": {
+          "n": 4,
+          "ok": 4,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 1.0
+        },
+        "trap": {
+          "n": 3,
+          "ok": 0,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 0.0
+        },
+        "stale": {
+          "n": 2,
+          "ok": 2,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 1.0
+        }
+      }
+    },
+    "uncited": {
+      "n": 14,
+      "accuracy": 1.0,
+      "fabrication_rate": 0.0,
+      "citation_accuracy": 0.4286,
+      "by_category": {
+        "answerable": {
+          "n": 5,
+          "ok": 5,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 1.0
+        },
+        "unanswerable": {
+          "n": 4,
+          "ok": 4,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 1.0
+        },
+        "trap": {
+          "n": 3,
+          "ok": 3,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 1.0
+        },
+        "stale": {
+          "n": 2,
+          "ok": 2,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 1.0
+        }
+      }
+    }
+  },
+  "separation": {
+    "best": "careful",
+    "worst": "over-refuser",
+    "spread": 0.5714,
+    "accuracies": {
+      "careful": 1.0,
+      "eager": 0.5714,
+      "year-blind": 0.5714,
+      "over-refuser": 0.4286,
+      "uncited": 1.0
+    }
+  },
+  "transcripts": {
+    "careful": [
+      {
+        "qid": "Q01",
+        "question": "What was total revenue in fiscal 2024?",
+        "answer": "1,284,500 [A]",
+        "category": "answerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q02",
+        "question": "What was cost of revenue in fiscal 2024?",
+        "answer": "742,100 [A]",
+        "category": "answerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q03",
+        "question": "How many full-time employees were there at the end of fiscal 2024?",
+        "answer": "12,450 [A]",
+        "category": "answerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q04",
+        "question": "What percentage of component purchases came from the largest supplier in fiscal 2024?",
+        "answer": "42 [B]",
+        "category": "answerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q05",
+        "question": "What was R&D expense in fiscal 2023?",
+        "answer": "128,900 [A]",
+        "category": "answerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q06",
+        "question": "What was operating income in fiscal 2024?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "unanswerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q07",
+        "question": "What is the Company's effective tax rate?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "unanswerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q08",
+        "question": "How many employees did the Company have in fiscal 2023?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "unanswerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q09",
+        "question": "What was the dividend per share?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "unanswerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q10",
+        "question": "What was total revenue in fiscal 2023?",
+        "answer": "1,102,300 [A]",
+        "category": "trap",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q11",
+        "question": "What share of component purchases came from the largest supplier in fiscal 2023?",
+        "answer": "31 [B]",
+        "category": "trap",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q12",
+        "question": "What was R&D expense in fiscal 2024?",
+        "answer": "141,200 [A]",
+        "category": "trap",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q13",
+        "question": "What was total revenue in fiscal 2025?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "stale",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q14",
+        "question": "What is the current supplier concentration, as of today?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "stale",
+        "ok": true,
+        "failure": ""
+      }
+    ],
+    "eager": [
+      {
+        "qid": "Q01",
+        "question": "What was total revenue in fiscal 2024?",
+        "answer": "1,284,500 [A]",
+        "category": "answerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q02",
+        "question": "What was cost of revenue in fiscal 2024?",
+        "answer": "742,100 [A]",
+        "category": "answerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q03",
+        "question": "How many full-time employees were there at the end of fiscal 2024?",
+        "answer": "12,450 [A]",
+        "category": "answerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q04",
+        "question": "What percentage of component purchases came from the largest supplier in fiscal 2024?",
+        "answer": "42 [B]",
+        "category": "answerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q05",
+        "question": "What was R&D expense in fiscal 2023?",
+        "answer": "128,900 [A]",
+        "category": "answerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q06",
+        "question": "What was operating income in fiscal 2024?",
+        "answer": "2024 [A]",
+        "category": "unanswerable",
+        "ok": false,
+        "failure": "answered an unanswerable question"
+      },
+      {
+        "qid": "Q07",
+        "question": "What is the Company's effective tax rate?",
+        "answer": "2024 [A]",
+        "category": "unanswerable",
+        "ok": false,
+        "failure": "answered an unanswerable question"
+      },
+      {
+        "qid": "Q08",
+        "question": "How many employees did the Company have in fiscal 2023?",
+        "answer": "2024 [A]",
+        "category": "unanswerable",
+        "ok": false,
+        "failure": "answered an unanswerable question"
+      },
+      {
+        "qid": "Q09",
+        "question": "What was the dividend per share?",
+        "answer": "2024 [A]",
+        "category": "unanswerable",
+        "ok": false,
+        "failure": "answered an unanswerable question"
+      },
+      {
+        "qid": "Q10",
+        "question": "What was total revenue in fiscal 2023?",
+        "answer": "1,102,300 [A]",
+        "category": "trap",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q11",
+        "question": "What share of component purchases came from the largest supplier in fiscal 2023?",
+        "answer": "31 [B]",
+        "category": "trap",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q12",
+        "question": "What was R&D expense in fiscal 2024?",
+        "answer": "141,200 [A]",
+        "category": "trap",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q13",
+        "question": "What was total revenue in fiscal 2025?",
+        "answer": "2024 [A]",
+        "category": "stale",
+        "ok": false,
+        "failure": "answered an unanswerable question"
+      },
+      {
+        "qid": "Q14",
+        "question": "What is the current supplier concentration, as of today?",
+        "answer": "2024 [A]",
+        "category": "stale",
+        "ok": false,
+        "failure": "answered an unanswerable question"
+      }
+    ],
+    "year-blind": [
+      {
+        "qid": "Q01",
+        "question": "What was total revenue in fiscal 2024?",
+        "answer": "1,284,500 [A]",
+        "category": "answerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q02",
+        "question": "What was cost of revenue in fiscal 2024?",
+        "answer": "742,100 [A]",
+        "category": "answerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q03",
+        "question": "How many full-time employees were there at the end of fiscal 2024?",
+        "answer": "12,450 [A]",
+        "category": "answerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q04",
+        "question": "What percentage of component purchases came from the largest supplier in fiscal 2024?",
+        "answer": "42 [B]",
+        "category": "answerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q05",
+        "question": "What was R&D expense in fiscal 2023?",
+        "answer": "141,200 [A]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "Q06",
+        "question": "What was operating income in fiscal 2024?",
+        "answer": "Not stated in the documents.",
+        "category": "unanswerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q07",
+        "question": "What is the Company's effective tax rate?",
+        "answer": "Not stated in the documents.",
+        "category": "unanswerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q08",
+        "question": "How many employees did the Company have in fiscal 2023?",
+        "answer": "12,450 [A]",
+        "category": "unanswerable",
+        "ok": false,
+        "failure": "answered an unanswerable question"
+      },
+      {
+        "qid": "Q09",
+        "question": "What was the dividend per share?",
+        "answer": "Not stated in the documents.",
+        "category": "unanswerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q10",
+        "question": "What was total revenue in fiscal 2023?",
+        "answer": "1,284,500 [A]",
+        "category": "trap",
+        "ok": false,
+        "failure": "took the trap value"
+      },
+      {
+        "qid": "Q11",
+        "question": "What share of component purchases came from the largest supplier in fiscal 2023?",
+        "answer": "42 [B]",
+        "category": "trap",
+        "ok": false,
+        "failure": "took the trap value"
+      },
+      {
+        "qid": "Q12",
+        "question": "What was R&D expense in fiscal 2024?",
+        "answer": "141,200 [A]",
+        "category": "trap",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q13",
+        "question": "What was total revenue in fiscal 2025?",
+        "answer": "1,284,500 [A]",
+        "category": "stale",
+        "ok": false,
+        "failure": "answered an unanswerable question"
+      },
+      {
+        "qid": "Q14",
+        "question": "What is the current supplier concentration, as of today?",
+        "answer": "42 [B]",
+        "category": "stale",
+        "ok": false,
+        "failure": "answered an unanswerable question"
+      }
+    ],
+    "over-refuser": [
+      {
+        "qid": "Q01",
+        "question": "What was total revenue in fiscal 2024?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "Q02",
+        "question": "What was cost of revenue in fiscal 2024?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "Q03",
+        "question": "How many full-time employees were there at the end of fiscal 2024?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "Q04",
+        "question": "What percentage of component purchases came from the largest supplier in fiscal 2024?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "Q05",
+        "question": "What was R&D expense in fiscal 2023?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "Q06",
+        "question": "What was operating income in fiscal 2024?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "unanswerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q07",
+        "question": "What is the Company's effective tax rate?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "unanswerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q08",
+        "question": "How many employees did the Company have in fiscal 2023?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "unanswerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q09",
+        "question": "What was the dividend per share?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "unanswerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q10",
+        "question": "What was total revenue in fiscal 2023?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "trap",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "Q11",
+        "question": "What share of component purchases came from the largest supplier in fiscal 2023?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "trap",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "Q12",
+        "question": "What was R&D expense in fiscal 2024?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "trap",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "Q13",
+        "question": "What was total revenue in fiscal 2025?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "stale",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q14",
+        "question": "What is the current supplier concentration, as of today?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "stale",
+        "ok": true,
+        "failure": ""
+      }
+    ],
+    "uncited": [
+      {
+        "qid": "Q01",
+        "question": "What was total revenue in fiscal 2024?",
+        "answer": "1,284,500",
+        "category": "answerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q02",
+        "question": "What was cost of revenue in fiscal 2024?",
+        "answer": "742,100",
+        "category": "answerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q03",
+        "question": "How many full-time employees were there at the end of fiscal 2024?",
+        "answer": "12,450",
+        "category": "answerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q04",
+        "question": "What percentage of component purchases came from the largest supplier in fiscal 2024?",
+        "answer": "42",
+        "category": "answerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q05",
+        "question": "What was R&D expense in fiscal 2023?",
+        "answer": "128,900",
+        "category": "answerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q06",
+        "question": "What was operating income in fiscal 2024?",
+        "answer": "Not stated in the documents.",
+        "category": "unanswerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q07",
+        "question": "What is the Company's effective tax rate?",
+        "answer": "Not stated in the documents.",
+        "category": "unanswerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q08",
+        "question": "How many employees did the Company have in fiscal 2023?",
+        "answer": "Not stated in the documents.",
+        "category": "unanswerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q09",
+        "question": "What was the dividend per share?",
+        "answer": "Not stated in the documents.",
+        "category": "unanswerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q10",
+        "question": "What was total revenue in fiscal 2023?",
+        "answer": "1,102,300",
+        "category": "trap",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q11",
+        "question": "What share of component purchases came from the largest supplier in fiscal 2023?",
+        "answer": "31",
+        "category": "trap",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q12",
+        "question": "What was R&D expense in fiscal 2024?",
+        "answer": "141,200",
+        "category": "trap",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q13",
+        "question": "What was total revenue in fiscal 2025?",
+        "answer": "Not stated in the documents.",
+        "category": "stale",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "Q14",
+        "question": "What is the current supplier concentration, as of today?",
+        "answer": "Not stated in the documents.",
+        "category": "stale",
+        "ok": true,
+        "failure": ""
+      }
+    ]
+  }
+}
