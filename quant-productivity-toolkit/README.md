@@ -6,29 +6,35 @@
 
 ## Status
 
-This is working code with a runnable demo and 0 tests. It is **not** a
+This is working code with a runnable demo and 28 tests. It is **not** a
 finished result.
 
-Installable from this repository, NOT published to PyPI — no downloads, no users. Every demonstration below runs on synthetic series where the contamination was put there deliberately, which is the only way to show a detector finds it.
+Release artifacts (sdist + wheel) are built and pass twine check, but the package is NOT published to PyPI — no downloads, no users. Every demonstration below runs on synthetic series where the contamination was put there deliberately, which is the only way to show a detector finds it.
 
-Last run: `2026-08-31T19:18:52+00:00`
+Last run: `2026-08-31T21:08:19+00:00`
 
 ## Quick start
 
 ```bash
 pip install -r requirements.txt
-python -m pytest tests/ -q     # 0 tests
+python -m pytest tests/ -q     # 28 tests
 python -m src.demo             # runs everything, rewrites results/ and website/
 ```
 
 ## Layout
 
 ```
+LICENSE
+MANIFEST.in
+PACKAGE_README.md
 README.md
 data/
   |-- README.md
   |-- manifests/
   |-- sample/
+dist/
+  |-- qkit_research-0.1.0-py3-none-any.whl
+  |-- qkit_research-0.1.0.tar.gz
 docs/
   |-- DATA.md
   |-- EVIDENCE.md
@@ -58,12 +64,6 @@ src/
   |-- demo.py
   |-- site.py
   |-- sitekit.py
-tests/
-  |-- .gitkeep
-  |-- test_qkit.py
-website/
-  |-- README.md
-  |-- index.html
 ```
 
 - `src/` &mdash; the implementation.

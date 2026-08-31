@@ -5,7 +5,7 @@ from . import sitekit as sk
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 META = {
-    "name": "lineage",
+    "name": "spanlineage",
     "slug": "data-provenance-library",
     "repo": "5.0-Ai-Engineering-Toolkit",
     "pillar": "Financial Stability",
@@ -14,16 +14,17 @@ META = {
                "document.",
     "tags": [("pip-installable", ""), ("no dependencies", ""), ("CLI", ""),
              ("not yet published", "warn")],
-    "banner": "Installable from this repository and NOT published to PyPI, so it has "
-              "no downloads and no users. The pipeline below runs on two authored "
-              "filing extracts; the library is real, the filings are not.",
+    "banner": "Release artifacts (sdist + wheel) are built and pass twine check, but "
+              "the package is NOT published to PyPI, so it has no downloads and no "
+              "users. The pipeline below runs on two authored filing extracts; the "
+              "library is real, the filings are not.",
 }
 
 
 SAMPLE = """pip install -e .
 
 python - <<'PY'
-import lineage as L
+import spanlineage as L
 src  = L.Source("D1", "Revenue was 1,250 and costs were 400.")
 rev  = L.extract(src, r"Revenue was ([\\d,]+)")
 cost = L.extract(src, r"costs were ([\\d,]+)")
@@ -31,8 +32,8 @@ margin = (rev - cost) / rev
 print(margin.value, [e["text"] for e in margin.evidence({"D1": src})])
 PY
 
-lineage extract filing.txt 'revenue was ([0-9,]+)'
-lineage verify filing.txt record.json"""
+spanlineage extract filing.txt 'revenue was ([0-9,]+)'
+spanlineage verify filing.txt record.json"""
 
 
 def build_site(results: dict) -> pathlib.Path:
@@ -84,7 +85,7 @@ def build_site(results: dict) -> pathlib.Path:
     {metrics}
     <p class="mono" style="color:var(--muted);font-size:12.5px">
       generated {sk.esc(results['generated_at'])} &middot;
-      lineage {sk.esc(results['package']['version'])} &middot;
+      spanlineage {sk.esc(results['package']['version'])} &middot;
       {sk.esc(results['data_source'])}
     </p>
     {metric_tbl}

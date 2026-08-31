@@ -1,2 +1,2 @@
-# The lineage package has no runtime dependencies.
+# The spanlineage package has no runtime dependencies.
 pytest>=7.0

@@ -1,0 +1,10 @@
+include LICENSE
+include PACKAGE_README.md
+include requirements.txt
+recursive-exclude tests *
+recursive-exclude src *
+recursive-exclude website *
+recursive-exclude results *
+recursive-exclude data *
+recursive-exclude docs *
+global-exclude __pycache__ *.py[cod] .DS_Store

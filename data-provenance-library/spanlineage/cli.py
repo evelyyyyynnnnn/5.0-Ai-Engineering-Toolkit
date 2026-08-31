@@ -1,4 +1,4 @@
-"""lineage command line: extract with provenance, or verify a record."""
+"""spanlineage command line: extract with provenance, or verify a record."""
 
 from __future__ import annotations
 
@@ -40,7 +40,7 @@ def cmd_verify(args) -> int:
 
 
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(prog="lineage", description=__doc__)
+    ap = argparse.ArgumentParser(prog="spanlineage", description=__doc__)
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     e = sub.add_parser("extract", help="extract a number and record its span")

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>lineage</title>
+<title>spanlineage</title>
 <meta name="description" content="Span-level provenance that survives arithmetic: a derived number keeps the characters it came from, across every transformation and every document.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -114,13 +114,13 @@ svg.chart{display:block;width:100%;height:auto}
 <div class="wrap">
 <header class="mast">
   <div class="eyebrow">5.0-Ai-Engineering-Toolkit &middot; Financial Stability</div>
-  <h1>lineage</h1>
+  <h1>spanlineage</h1>
   <p class="lede">Span-level provenance that survives arithmetic: a derived number keeps the characters it came from, across every transformation and every document.</p>
   <div class="tags"><span class="tag ">pip-installable</span><span class="tag ">no dependencies</span><span class="tag ">CLI</span><span class="tag warn">not yet published</span></div>
 </header>
 <div class="banner">
   <span class="bi">Data</span>
-  <p>Installable from this repository and NOT published to PyPI, so it has no downloads and no users. The pipeline below runs on two authored filing extracts; the library is real, the filings are not.</p>
+  <p>Release artifacts (sdist + wheel) are built and pass twine check, but the package is NOT published to PyPI, so it has no downloads and no users. The pipeline below runs on two authored filing extracts; the library is real, the filings are not.</p>
 </div>
 
 <section>
@@ -142,8 +142,8 @@ svg.chart{display:block;width:100%;height:auto}
   <div class="stack-lg">
     <div class="metrics"><div class="metric"><span class="mk">Derivation depth</span><span class="mv">3</span><span class="mn">transformations deep</span></div><div class="metric"><span class="mk">Spans retained</span><span class="mv">4</span><span class="mn">on the final margin</span></div><div class="metric"><span class="mk">Documents joined</span><span class="mv">2</span><span class="mn">in one metric</span></div><div class="metric"><span class="mk">Spans verified</span><span class="mv">4/4</span><span class="mn">against sources</span></div></div>
     <p class="mono" style="color:var(--muted);font-size:12.5px">
-      generated 2026-08-31T19:24:00+00:00 &middot;
-      lineage 0.1.0 &middot;
+      generated 2026-08-31T21:08:19+00:00 &middot;
+      spanlineage 0.1.0 &middot;
       two authored filing extracts (src/demo.py)
     </p>
     <div class="tw"><table><thead><tr><th>Metric</th><th>Value</th><th>Spans</th><th>Depth</th><th>Documents</th><th>Evidence</th></tr></thead><tbody><tr><td>revenue</td><td class="n">1,284,500.0000</td><td class="n">1</td><td class="n">0</td><td>FILING</td><td>1,284,500</td></tr><tr><td>gross_profit</td><td class="n">542,400.0000</td><td class="n">2</td><td class="n">1</td><td>FILING</td><td>1,284,500, 742,100</td></tr><tr><td>adjusted_opex</td><td class="n">291,600.0000</td><td class="n">2</td><td class="n">1</td><td>FILING, NOTES</td><td>318,400, 26,800</td></tr><tr><td>operating_income</td><td class="n">250,800.0000</td><td class="n">4</td><td class="n">2</td><td>FILING, NOTES</td><td>1,284,500, 742,100, 318,400, 26,800</td></tr><tr><td>operating_margin</td><td class="n">0.1953</td><td class="n">4</td><td class="n">3</td><td>FILING, NOTES</td><td>1,284,500, 742,100, 318,400, 26,800</td></tr><tr><td>revenue_growth</td><td class="n">0.1653</td><td class="n">2</td><td class="n">2</td><td>FILING</td><td>1,284,500, 1,102,300</td></tr><tr><td>revenue_per_employee</td><td class="n">103.1727</td><td class="n">2</td><td class="n">1</td><td>FILING</td><td>1,284,500, 12,450</td></tr><tr><td>rnd_intensity</td><td class="n">0.1099</td><td class="n">2</td><td class="n">1</td><td>FILING</td><td>141,200, 1,284,500</td></tr></tbody></table></div>
@@ -197,7 +197,7 @@ svg.chart{display:block;width:100%;height:auto}
     <pre>pip install -e .
 
 python - &lt;&lt;&#x27;PY&#x27;
-import lineage as L
+import spanlineage as L
 src  = L.Source(&quot;D1&quot;, &quot;Revenue was 1,250 and costs were 400.&quot;)
 rev  = L.extract(src, r&quot;Revenue was ([\d,]+)&quot;)
 cost = L.extract(src, r&quot;costs were ([\d,]+)&quot;)
@@ -205,8 +205,8 @@ margin = (rev - cost) / rev
 print(margin.value, [e[&quot;text&quot;] for e in margin.evidence({&quot;D1&quot;: src})])
 PY
 
-lineage extract filing.txt &#x27;revenue was ([0-9,]+)&#x27;
-lineage verify filing.txt record.json</pre>
+spanlineage extract filing.txt &#x27;revenue was ([0-9,]+)&#x27;
+spanlineage verify filing.txt record.json</pre>
   </div>
 </section>
 
