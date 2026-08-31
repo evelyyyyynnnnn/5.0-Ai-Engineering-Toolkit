@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T21:20:27+00:00",
+  "generated_at": "2026-08-31T22:08:13+00:00",
   "is_synthetic": true,
   "data_source": "synthetic factor market with fat tails (src/demo.py)",
   "n_tickers": 8,
@@ -83,7 +83,7 @@
           "start": 689
         }
       },
-      "latency_ms": 10.351,
+      "latency_ms": 11.031,
       "checks": [
         {
           "level": "warn",
@@ -175,7 +175,7 @@
           "start": 689
         }
       },
-      "latency_ms": 3.515,
+      "latency_ms": 2.765,
       "checks": [
         {
           "level": "warn",
@@ -267,7 +267,7 @@
           "start": 689
         }
       },
-      "latency_ms": 3.313,
+      "latency_ms": 2.538,
       "checks": [
         {
           "level": "warn",
@@ -325,8 +325,8 @@
   },
   "throughput": {
     "requests": 300,
-    "seconds": 0.7841,
-    "requests_per_second": 382.6,
-    "mean_latency_ms": 2.614
+    "seconds": 0.8846,
+    "requests_per_second": 339.2,
+    "mean_latency_ms": 2.949
   }
 }
