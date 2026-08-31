@@ -3,10 +3,10 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "lineage"
+name = "spanlineage"
 version = "0.1.0"
 description = "Span-level provenance for extracted values: every number keeps the characters it came from, through every transformation."
-readme = "README.md"
+readme = "PACKAGE_README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}
 authors = [{name = "Wenke Du"}]
@@ -23,7 +23,7 @@ dependencies = []
 dev = ["pytest>=7.0"]
 
 [project.scripts]
-lineage = "lineage.cli:main"
+spanlineage = "spanlineage.cli:main"
 
 [tool.setuptools.packages.find]
-include = ["lineage*"]
+include = ["spanlineage*"]

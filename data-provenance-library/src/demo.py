@@ -2,8 +2,8 @@
 from __future__ import annotations
 import json, pathlib, subprocess, sys
 from datetime import datetime, timezone
-import lineage as L
-from lineage.graph import build_graph, explain, to_dot
+import spanlineage as L
+from spanlineage.graph import build_graph, explain, to_dot
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
@@ -58,7 +58,7 @@ def build_pipeline():
 
 
 def cli_check() -> dict:
-    out = subprocess.run([sys.executable, "-m", "lineage.cli", "--help"],
+    out = subprocess.run([sys.executable, "-m", "spanlineage.cli", "--help"],
                          capture_output=True, text=True, timeout=60)
     return {"exit": out.returncode, "help_ok": "extract" in out.stdout,
             "subcommands": ["extract", "verify"]}
@@ -90,7 +90,7 @@ def run() -> dict:
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "is_synthetic": True,
         "data_source": "two authored filing extracts (src/demo.py)",
-        "package": {"name": "lineage", "version": L.__version__,
+        "package": {"name": "spanlineage", "version": L.__version__,
                     "exports": len(L.__all__), "published": False},
         "metrics": rows,
         "graph": g.stats(),
@@ -110,7 +110,7 @@ def run() -> dict:
 
 def main() -> int:
     r = run()
-    print(f"lineage {r['package']['version']}, {r['package']['exports']} exports")
+    print(f"spanlineage {r['package']['version']}, {r['package']['exports']} exports")
     print(f"\n{'metric':<24}{'value':>16}{'spans':>7}{'depth':>7}  documents")
     for name, m in r["metrics"].items():
         print(f"{name:<24}{m['value']:>16.4f}{m['n_spans']:>7}{m['depth']:>7}  "

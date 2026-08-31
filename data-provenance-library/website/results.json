@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-08-31T19:24:00+00:00",
+  "generated_at": "2026-08-31T21:08:19+00:00",
   "is_synthetic": true,
   "data_source": "two authored filing extracts (src/demo.py)",
   "package": {
-    "name": "lineage",
+    "name": "spanlineage",
     "version": "0.1.0",
     "exports": 12,
     "published": false

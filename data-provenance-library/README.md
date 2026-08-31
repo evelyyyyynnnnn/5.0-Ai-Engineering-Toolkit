@@ -1,4 +1,4 @@
-# lineage
+# spanlineage
 
 > Span-level provenance that survives arithmetic: a derived number keeps the characters it came from, across every transformation and every document.
 
@@ -6,51 +6,57 @@
 
 ## Status
 
-This is working code with a runnable demo and 0 tests. It is **not** a
+This is working code with a runnable demo and 20 tests. It is **not** a
 finished result.
 
-Installable from this repository and NOT published to PyPI, so it has no downloads and no users. The pipeline below runs on two authored filing extracts; the library is real, the filings are not.
+Release artifacts (sdist + wheel) are built and pass twine check, but the package is NOT published to PyPI, so it has no downloads and no users. The pipeline below runs on two authored filing extracts; the library is real, the filings are not.
 
-Last run: `2026-08-31T19:24:00+00:00`
+Last run: `2026-08-31T21:08:19+00:00`
 
 ## Quick start
 
 ```bash
 pip install -r requirements.txt
-python -m pytest tests/ -q     # 0 tests
+python -m pytest tests/ -q     # 20 tests
 python -m src.demo             # runs everything, rewrites results/ and website/
 ```
 
 ## Layout
 
 ```
+LICENSE
+MANIFEST.in
+PACKAGE_README.md
 README.md
 data/
   |-- README.md
   |-- manifests/
   |-- sample/
+dist/
+  |-- spanlineage-0.1.0-py3-none-any.whl
+  |-- spanlineage-0.1.0.tar.gz
 docs/
   |-- DATA.md
   |-- EVIDENCE.md
   |-- METHOD.md
-lineage/
+pyproject.toml
+requirements.txt
+results/
+  |-- README.md
+  |-- latest.json
+spanlineage/
   |-- __init__.py
   |-- cli.py
   |-- core.py
   |-- graph.py
   |-- verify.py
-lineage.egg-info/
+spanlineage.egg-info/
   |-- PKG-INFO
   |-- SOURCES.txt
   |-- dependency_links.txt
   |-- entry_points.txt
   |-- requires.txt
   |-- top_level.txt
-pyproject.toml
-requirements.txt
-results/
-  |-- README.md
-  |-- latest.json
 src/
   |-- .gitkeep
   |-- __init__.py
@@ -58,12 +64,6 @@ src/
   |-- site.py
   |-- sitekit.py
 tests/
-  |-- .gitkeep
-  |-- test_lineage.py
-website/
-  |-- README.md
-  |-- index.html
-  |-- results.json
 ```
 
 - `src/` &mdash; the implementation.
