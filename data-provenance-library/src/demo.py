@@ -108,7 +108,134 @@ def run() -> dict:
     return results
 
 
+def run_real() -> dict:
+    """Derive metrics from figures companies actually reported, with spans.
+
+    The tamper check is the one worth watching here. It edits the SEC's own
+    JSON, re-verifies, and must fail -- which is the whole claim of the library
+    stated against a document anyone can re-download and hash for themselves.
+    """
+    import sys as _sys
+    _sys.path.insert(0, str(ROOT))
+    from data.fetch import COMPANIES
+    from data.load import ROOT as DATA_ROOT
+    from data.load import load_company
+
+    companies, failures = [], []
+    for tic in COMPANIES:
+        try:
+            sources, metrics, prov = load_company(tic, root=DATA_ROOT)
+        except Exception as exc:
+            failures.append({"ticker": tic, "error": f"{type(exc).__name__}: {exc}"})
+            continue
+
+        rows = {}
+        for name, v in metrics.items():
+            rows[name] = {
+                "value": round(float(v.value), 6),
+                "n_spans": len(v.spans),
+                "documents": sorted({s.doc_id for s in v.spans}),
+                "evidence": [e["text"] for e in v.evidence(sources) if e["text"]],
+                "op": v.op,
+                "depth": build_graph(v).depth(),
+            }
+
+        headline = metrics.get("gross_margin") or metrics["revenue"]
+        verification = L.verify_against(headline, sources)
+
+        # Tamper: change a digit inside a span this metric actually depends
+        # on, in the SEC's own JSON, and re-verify. Editing an unrelated
+        # document would prove nothing.
+        span = headline.spans[0]
+        doc_id = span.doc_id
+        original = sources[doc_id]
+        a, b = span.start, span.end
+        digits = original.text[a:b]
+        broken_digits = ("9" + digits[1:]) if digits[:1] != "9" else "8" + digits[1:]
+        broken = L.Source(doc_id,
+                          original.text[:a] + broken_digits + original.text[b:])
+        tampered = L.verify_against(headline, {**sources, doc_id: broken})
+
+        companies.append({
+            "ticker": tic,
+            "metrics": rows,
+            "provenance": prov,
+            "graph": build_graph(headline).stats(),
+            "explanation": explain(headline, sources),
+            "verification": verification,
+            "tamper": {"detected": not tampered["ok"],
+                       "problems": tampered["problems"][:3]},
+            "cross_document": sorted({s.doc_id for s in headline.spans}),
+        })
+
+    if not companies:
+        from data.datakit import FetchError
+        raise FetchError("no company could be loaded: "
+                         + "; ".join(f["error"] for f in failures))
+
+    results = {
+        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "is_synthetic": False,
+        "data_source": "SEC EDGAR XBRL company-concept API -- values as filed, "
+                       "each carrying the accession number of the filing it was "
+                       "reported in; see data/MANIFEST.json for hashes",
+        "package": {"name": "spanlineage", "version": L.__version__,
+                    "exports": len(L.__all__), "published": False},
+        "duplicate_policy":
+            "the same figure is reported many times -- in the original 10-K, "
+            "again as a comparative the next year, again in each quarter's "
+            "year-to-date column. The earliest FILED entry for a period is "
+            "used, because a lineage that followed restatements would explain "
+            "a number using characters from a document published after it.",
+        "companies": companies,
+        "failures": failures,
+    }
+    (ROOT / "results").mkdir(exist_ok=True)
+    (ROOT / "results" / "latest-real.json").write_text(
+        json.dumps(results, indent=2) + "\n", encoding="utf8")
+    return results
+
+
+def main_real() -> int:
+    from data.datakit import FetchError
+    try:
+        r = run_real()
+    except FetchError as exc:
+        print(f"cannot run on real data: {exc}", file=sys.stderr)
+        return 2
+    print(f"source: {r['data_source']}")
+    for c in r["companies"]:
+        print(f"\n=== {c['ticker']} ===")
+        for pv in c["provenance"]:
+            if pv["status"] != "ok":
+                print(f"  {pv['field']:<10} unavailable: {pv['status'][:70]}")
+                continue
+            print(f"  {pv['field']:<10} {pv['value']:>18,.0f} {pv['unit']}  "
+                  f"FY{pv['fy']} {pv['form']} accession {pv['accession']}")
+            print(f"  {'':<10} span {pv['span']} reads {pv['span_text']!r} "
+                  f"in [{pv['document_sha256']}]")
+        print("  derived:")
+        for name, m in c["metrics"].items():
+            if m["op"]:
+                print(f"    {name:<16}{m['value']:>16.6f}  "
+                      f"{m['n_spans']} span(s) across {len(m['documents'])} "
+                      f"document(s), depth {m['depth']}")
+        v = c["verification"]
+        print(f"  verifies against the filed documents: {v['ok']}")
+        print(f"  tamper detected after editing the SEC's JSON: "
+              f"{c['tamper']['detected']}")
+    if r["failures"]:
+        print("\ncould not load:")
+        for f_ in r["failures"]:
+            print(f"  {f_['ticker']}: {f_['error'][:100]}")
+    print("\nduplicate policy: " + r["duplicate_policy"])
+    print("wrote results/latest-real.json")
+    return 0
+
+
 def main() -> int:
+    if "--real" in sys.argv[1:]:
+        return main_real()
     r = run()
     print(f"spanlineage {r['package']['version']}, {r['package']['exports']} exports")
     print(f"\n{'metric':<24}{'value':>16}{'spans':>7}{'depth':>7}  documents")
