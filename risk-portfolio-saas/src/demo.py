@@ -114,7 +114,104 @@ def run() -> dict:
     return results
 
 
+def run_real() -> dict:
+    """Risk report over the real ETF tape.
+
+    Everything the engine reports here is a measurement: the VaR numbers, the
+    Euler decomposition and the drawdown all come from real returns. The
+    portfolios are still authored -- an equal-weight and a concentrated basket
+    over the same eight tickers -- because a portfolio is an input, not
+    something a data feed provides.
+    """
+    import sys as _sys
+    _sys.path.insert(0, str(ROOT))
+    from data.load import load_market
+
+    market, meta = load_market(root=ROOT / "data")
+    tickers = market.tickers
+    n = len(tickers)
+    portfolios = [
+        {"portfolio_id": "EQUAL-WEIGHT", "as_of": meta["last_date"],
+         "tickers": tickers, "weights": [1 / n] * n},
+        {"portfolio_id": "SIXTY-FORTY", "as_of": meta["last_date"],
+         "tickers": tickers,
+         "weights": _sixty_forty(tickers)},
+    ]
+    reports = {}
+    for req in portfolios:
+        out = handle(req, market)
+        reports[req["portfolio_id"]] = out["report"] if out["ok"] else out
+
+    results = {
+        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "is_synthetic": False,
+        "data_source": "real daily closes from Stooq (see data/MANIFEST.json for "
+                       "URLs, hashes and retrieval times)",
+        "n_tickers": meta["n_tickers"],
+        "observations": meta["n_days"],
+        "window": {"first": meta["first_date"], "last": meta["last_date"]},
+        "betas_estimated_against": meta["benchmark"],
+        "betas": meta["betas"],
+        "provenance": meta["series"],
+        "portfolios_are_authored": True,
+        "reports": reports,
+    }
+    (ROOT / "results").mkdir(exist_ok=True)
+    (ROOT / "results" / "latest-real.json").write_text(
+        json.dumps(results, indent=2) + "\n", encoding="utf8")
+    return results
+
+
+def _sixty_forty(tickers) -> list:
+    """60% to equity sleeves, 40% to bonds, spread evenly inside each sleeve."""
+    bondish = {"agg.us", "tlt.us"}
+    bonds = [t for t in tickers if t in bondish]
+    eq = [t for t in tickers if t not in bondish]
+    if not bonds or not eq:
+        return [1 / len(tickers)] * len(tickers)
+    w = {t: 0.60 / len(eq) for t in eq}
+    w.update({t: 0.40 / len(bonds) for t in bonds})
+    return [w[t] for t in tickers]
+
+
+def main_real() -> int:
+    from data.datakit import FetchError
+    try:
+        r = run_real()
+    except FetchError as exc:
+        print(f"cannot run on real data: {exc}", file=sys.stderr)
+        return 2
+    print(f"source: {r['data_source']}")
+    print(f"{r['n_tickers']} tickers, {r['observations']} trading days "
+          f"({r['window']['first']} .. {r['window']['last']})")
+    print(f"betas vs {r['betas_estimated_against']}: " +
+          ", ".join(f"{k} {v:+.2f}" for k, v in r["betas"].items()))
+    for pid, rep in r["reports"].items():
+        if "risk" not in rep:
+            print(f"\n{pid}: {rep}")
+            continue
+        rk, cn = rep["risk"], rep["concentration"]
+        print(f"\n{pid}  ({rep['n_positions']} positions, "
+              f"alpha {rep['alpha']})")
+        print(f"  VaR  historical {rk['var_historical']:.4f} | "
+              f"gaussian {rk['var_gaussian']:.4f} | "
+              f"cornish-fisher {rk['var_cornish_fisher']:.4f}")
+        print(f"  expected shortfall {rk['expected_shortfall']:.4f} | "
+              f"max drawdown {rk['max_drawdown']:.4f} | "
+              f"annualised vol {rk['annualised_volatility']:.4f}")
+        print(f"  effective positions {cn['effective_positions']:.2f} "
+              f"of {rep['n_positions']} | top-3 share {cn['top3_share']:.1%}")
+        for chk in rep.get("checks", []):
+            print(f"  [{chk['level']}] {chk['detail']}")
+    print("\nportfolios are authored; every risk number above is measured "
+          "from real returns")
+    print("wrote results/latest-real.json")
+    return 0
+
+
 def main() -> int:
+    if "--real" in sys.argv[1:]:
+        return main_real()
     r = run()
     print(f"market: {r['n_tickers']} names, {r['observations']} observations\n")
     print(f"{'portfolio':<16}{'vol':>9}{'VaR hist':>10}{'VaR gauss':>11}"
