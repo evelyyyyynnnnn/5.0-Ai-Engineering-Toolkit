@@ -14,8 +14,9 @@ META = {
                "tried before this one.",
     "tags": [("pip-installable", ""), ("CLI", ""), ("4 checks", ""),
              ("not yet published", "warn")],
-    "banner": "Installable from this repository, NOT published to PyPI — no downloads, "
-              "no users. Every demonstration below runs on synthetic series where the "
+    "banner": "Release artifacts (sdist + wheel) are built and pass twine check, but "
+              "the package is NOT published to PyPI — no downloads, no users. Every "
+              "demonstration below runs on synthetic series where the "
               "contamination was put there deliberately, which is the only way to show "
               "a detector finds it.",
 }

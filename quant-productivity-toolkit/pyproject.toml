@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "qkit-research"
 version = "0.1.0"
 description = "The checks a quantitative researcher forgets: lookahead detection, survivorship auditing, purged cross-validation and deflated Sharpe."
-readme = "README.md"
+readme = "PACKAGE_README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}
 authors = [{name = "Wenke Du"}]

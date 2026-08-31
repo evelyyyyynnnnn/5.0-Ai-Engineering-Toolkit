@@ -5,8 +5,8 @@ import pytest
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 
-import lineage as L
-from lineage.graph import build_graph, explain, to_dot
+import spanlineage as L
+from spanlineage.graph import build_graph, explain, to_dot
 
 TEXT = "Revenue was 1,250 and costs were 400 in FY2024."
 

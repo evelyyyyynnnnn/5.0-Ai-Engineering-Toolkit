@@ -1,4 +1,4 @@
-"""lineage — values that remember where they came from.
+"""spanlineage — values that remember where they came from.
 
 The problem: a pipeline extracts a number from a document, transforms it four
 times, and lands it in a report. When someone disputes the number, nobody can

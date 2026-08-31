@@ -1,4 +1,4 @@
-# lineage — website
+# spanlineage — website
 
 Static site for `data-provenance-library`. No build step: Vercel serves this folder as-is.
 
