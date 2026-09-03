@@ -1,0 +1,167 @@
+{
+  "generated_at": "2026-08-31T22:08:12+00:00",
+  "is_synthetic": true,
+  "data_source": "synthetic return series with known contamination",
+  "package": {
+    "name": "qkit-research",
+    "version": "0.1.0",
+    "exports": 12,
+    "published": false
+  },
+  "lookahead": {
+    "cases": [
+      {
+        "feature": "copies next period's return",
+        "max_forward_corr": 1.0,
+        "lag_of_max": 1,
+        "max_backward_corr": 0.01571,
+        "contaminated": true,
+        "detail": "|corr(f[t], y[t+1])| = 1.000 exceeds 0.5; the feature knows about 1 period(s) ahead"
+      },
+      {
+        "feature": "copies this period's return",
+        "max_forward_corr": 1.0,
+        "lag_of_max": 0,
+        "max_backward_corr": 0.00369,
+        "contaminated": true,
+        "detail": "|corr(f[t], y[t+0])| = 1.000 exceeds 0.5; the feature knows about the same period"
+      },
+      {
+        "feature": "centred rolling mean (window straddles t)",
+        "max_forward_corr": 0.45359,
+        "lag_of_max": 2,
+        "max_backward_corr": 0.45331,
+        "contaminated": false,
+        "detail": "max forward correlation 0.454 is within the plausible range (backward 0.453 is not evidence of lookahead)"
+      },
+      {
+        "feature": "momentum: last period's return",
+        "max_forward_corr": 0.01549,
+        "lag_of_max": 3,
+        "max_backward_corr": 1.0,
+        "contaminated": false,
+        "detail": "max forward correlation 0.015 is within the plausible range (backward 1.000 is not evidence of lookahead)"
+      },
+      {
+        "feature": "trailing mean, properly lagged",
+        "max_forward_corr": 0.01133,
+        "lag_of_max": 1,
+        "max_backward_corr": 0.45363,
+        "contaminated": false,
+        "detail": "max forward correlation 0.011 is within the plausible range (backward 0.454 is not evidence of lookahead)"
+      },
+      {
+        "feature": "pure noise",
+        "max_forward_corr": 0.05415,
+        "lag_of_max": 2,
+        "max_backward_corr": 0.02642,
+        "contaminated": false,
+        "detail": "max forward correlation 0.054 is within the plausible range (backward 0.026 is not evidence of lookahead)"
+      },
+      {
+        "feature": "weak genuine edge (~5%)",
+        "max_forward_corr": 0.04819,
+        "lag_of_max": 2,
+        "max_backward_corr": 0.03184,
+        "contaminated": false,
+        "detail": "max forward correlation 0.048 is within the plausible range (backward 0.032 is not evidence of lookahead)"
+      }
+    ],
+    "n_flagged": 2,
+    "momentum_cleared": true
+  },
+  "survivorship": {
+    "n_universe": 300,
+    "n_survivors": 216,
+    "n_delisted": 84,
+    "survivor_share": 0.72,
+    "biased": true,
+    "mean_return_all": 0.000243,
+    "mean_return_survivors": 0.000638,
+    "bias_bps": 3.95
+  },
+  "validation": {
+    "purged_embargo_0": {
+      "n_splits": 5,
+      "label_span": 20,
+      "embargo": 0,
+      "dropped_per_fold": [
+        0,
+        20,
+        20,
+        20,
+        20
+      ],
+      "folds_with_overlap": 0
+    },
+    "purged_embargo_20": {
+      "n_splits": 5,
+      "label_span": 20,
+      "embargo": 20,
+      "dropped_per_fold": [
+        20,
+        40,
+        40,
+        40,
+        20
+      ],
+      "folds_with_overlap": 0
+    },
+    "naive_kfold": {
+      "n_splits": 5,
+      "label_span": 1,
+      "embargo": 0,
+      "dropped_per_fold": [
+        0,
+        1,
+        1,
+        1,
+        1
+      ],
+      "folds_with_overlap": 0
+    },
+    "naive_overlapping_train_points": 72,
+    "label_span": 20
+  },
+  "selection": {
+    "n_trials_run": 200,
+    "best_observed_sharpe": 1.8244,
+    "true_sharpe": 0.0,
+    "psr_vs_zero": 0.99913,
+    "min_track_record_length": 207.6,
+    "by_assumed_trials": [
+      {
+        "n_trials": 1,
+        "observed_sharpe": 1.8244,
+        "expected_max_sharpe_from_noise": 0.0,
+        "deflated_sharpe_prob": 0.99913,
+        "survives": true
+      },
+      {
+        "n_trials": 10,
+        "observed_sharpe": 1.8244,
+        "expected_max_sharpe_from_noise": 0.9127,
+        "deflated_sharpe_prob": 0.94119,
+        "survives": false
+      },
+      {
+        "n_trials": 50,
+        "observed_sharpe": 1.8244,
+        "expected_max_sharpe_from_noise": 1.3195,
+        "deflated_sharpe_prob": 0.80694,
+        "survives": false
+      },
+      {
+        "n_trials": 200,
+        "observed_sharpe": 1.8244,
+        "expected_max_sharpe_from_noise": 1.603,
+        "deflated_sharpe_prob": 0.648,
+        "survives": false
+      }
+    ]
+  },
+  "cli": {
+    "exit": 0,
+    "help_ok": true
+  }
+}

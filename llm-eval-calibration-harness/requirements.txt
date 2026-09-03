@@ -1,0 +1,2 @@
+# Standard library only. Graders are lexical by design.
+pytest>=7.0

@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Risk Portfolio Service</title>
+<meta name="description" content="Portfolio in, risk report out — three VaR methods reported side by side, risk attributed by Euler decomposition, and findings surfaced without being asked for.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#FCFCFD; --surface:#FFFFFF; --surface-2:#F4F5F8;
+  --ink:#16191F; --ink-2:#40474F; --muted:#6C7480;
+  --line:#E2E5EA; --line-2:#EFF1F4;
+  --accent:#1D5B70; --accent-2:#E6F0F3;
+  --ok:#2C6B4F; --ok-bg:#E5F1EA;
+  --warn:#8A6212; --warn-bg:#F7EFDC;
+  --demo:#6E4B8F; --demo-bg:#F0EAF6;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme=light]){
+    --bg:#0F1216; --surface:#161A20; --surface-2:#1C212A;
+    --ink:#E9ECF0; --ink-2:#BEC5CE; --muted:#8A939F;
+    --line:#282F38; --line-2:#20262E;
+    --accent:#72B3CB; --accent-2:#18272E;
+    --ok:#7BC09F; --ok-bg:#15251E;
+    --warn:#D8AD5E; --warn-bg:#292216;
+    --demo:#B79AD6; --demo-bg:#241C2E;
+  }
+}
+:root[data-theme=dark]{
+  --bg:#0F1216; --surface:#161A20; --surface-2:#1C212A;
+  --ink:#E9ECF0; --ink-2:#BEC5CE; --muted:#8A939F;
+  --line:#282F38; --line-2:#20262E;
+  --accent:#72B3CB; --accent-2:#18272E;
+  --ok:#7BC09F; --ok-bg:#15251E;
+  --warn:#D8AD5E; --warn-bg:#292216;
+  --demo:#B79AD6; --demo-bg:#241C2E;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+    "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:15.5px;line-height:1.62;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 24px 88px}
+h1,h2,h3{font-family:Spectral,Georgia,"Songti SC",serif;margin:0;text-wrap:balance}
+h1{font-size:clamp(28px,4.2vw,42px);font-weight:700;letter-spacing:-.015em;line-height:1.14}
+h2{font-size:clamp(20px,2.5vw,25px);font-weight:600;letter-spacing:-.01em}
+h3{font-size:17px;font-weight:600}
+p{margin:0}
+a{color:var(--accent)}
+code,.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.88em}
+.stack{display:flex;flex-direction:column;gap:14px}
+.stack-lg{display:flex;flex-direction:column;gap:22px}
+section{margin-top:52px}
+
+header.mast{border-bottom:1px solid var(--line);padding:44px 0 26px;margin-bottom:8px;
+  display:flex;flex-direction:column;gap:15px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--muted)}
+.lede{color:var(--ink-2);font-size:16.5px;max-width:66ch}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tag{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.06em;
+  text-transform:uppercase;padding:3px 9px;border-radius:4px;background:var(--surface-2);
+  color:var(--muted);font-weight:500;white-space:nowrap}
+.tag.ok{background:var(--ok-bg);color:var(--ok)}
+.tag.demo{background:var(--demo-bg);color:var(--demo)}
+.tag.warn{background:var(--warn-bg);color:var(--warn)}
+
+.banner{display:flex;gap:13px;align-items:flex-start;background:var(--demo-bg);
+  border-radius:9px;padding:15px 18px;margin-top:26px}
+.banner .bi{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--demo);flex:none;padding-top:3px;font-weight:600}
+.banner p{font-size:14.2px;color:var(--ink-2)}
+
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.metric{background:var(--surface);padding:15px 16px;display:flex;flex-direction:column;gap:5px}
+.metric .mk{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);line-height:1.35}
+.metric .mv{font-family:Spectral,Georgia,serif;font-size:26px;font-weight:600;
+  font-variant-numeric:tabular-nums;line-height:1.1;color:var(--accent)}
+.metric .mn{font-size:12.4px;color:var(--muted);line-height:1.4}
+
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:9px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.8px;min-width:520px}
+th{text-align:left;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);font-weight:500;padding:11px 14px;
+  border-bottom:1px solid var(--line);background:var(--surface-2)}
+td{padding:10px 14px;border-bottom:1px solid var(--line-2);vertical-align:top;line-height:1.5}
+td.n{font-variant-numeric:tabular-nums;text-align:right}
+tr:last-child td{border-bottom:0}
+
+pre{margin:0;background:var(--surface-2);border:1px solid var(--line);border-radius:9px;
+  padding:15px 17px;overflow-x:auto;font-family:"IBM Plex Mono",monospace;
+  font-size:12.8px;line-height:1.62;color:var(--ink-2)}
+ul.tight{margin:0;padding-left:19px;display:flex;flex-direction:column;gap:7px}
+ul.tight li::marker{color:var(--muted)}
+.note{background:var(--surface-2);border:1px solid var(--line);border-radius:9px;
+  padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.foot{margin-top:60px;padding-top:22px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13px;display:flex;flex-direction:column;gap:9px}
+figure{margin:0}
+svg.chart{display:block;width:100%;height:auto}
+@media (max-width:600px){.wrap{padding:0 17px 68px}.banner{flex-direction:column;gap:7px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="mast">
+  <div class="eyebrow">5.0-Ai-Engineering-Toolkit &middot; Financial Stability</div>
+  <h1>Risk Portfolio Service</h1>
+  <p class="lede">Portfolio in, risk report out — three VaR methods reported side by side, risk attributed by Euler decomposition, and findings surfaced without being asked for.</p>
+  <div class="tags"><span class="tag ">JSON in / JSON out</span><span class="tag ">3 VaR methods</span><span class="tag ">Euler attribution</span><span class="tag demo">synthetic market</span></div>
+</header>
+<div class="banner">
+  <span class="bi">Data</span>
+  <p>The market is synthetic — a factor model with fat tails and a crash regime, generated by src/demo.py. The service is real and the numbers are computed, but no market data and no client portfolio is involved.</p>
+</div>
+
+<section>
+  <h2>Three VaR numbers, because the disagreement is the information</h2>
+  <div class="stack">
+    <p>A VaR figure without its method attached is not interpretable. Historical,
+    Gaussian and Cornish-Fisher VaR disagree on the same portfolio, and how much they
+    disagree tells you how far the return distribution is from the one the parametric
+    number assumes.</p>
+    <p>So the report gives all three and flags the gap. A service that quoted one number
+    would be easier to read and would hide the only thing worth knowing about it.</p>
+  </div>
+</section>
+
+<section>
+  <h2>This run</h2>
+  <div class="stack-lg">
+    <div class="metrics"><div class="metric"><span class="mk">Portfolios scored</span><span class="mv">3</span><span class="mn">8 names each</span></div><div class="metric"><span class="mk">Bad requests rejected</span><span class="mv">6/6</span><span class="mn">none let through</span></div><div class="metric"><span class="mk">Throughput</span><span class="mv">339/s</span><span class="mn">2.9 ms per report</span></div><div class="metric"><span class="mk">Observations</span><span class="mv">750</span><span class="mn">per name</span></div></div>
+    <p class="mono" style="color:var(--muted);font-size:12.5px">
+      generated 2026-08-31T22:08:13+00:00 &middot; synthetic factor market with fat tails (src/demo.py)
+    </p>
+    <div class="tw"><table><thead><tr><th>Portfolio</th><th>Ann. vol</th><th>VaR historical</th><th>VaR Gaussian</th><th>VaR Cornish-Fisher</th><th>Expected shortfall</th><th>Max drawdown</th></tr></thead><tbody><tr><td>EQUAL-WEIGHT</td><td class="n">0.262</td><td class="n">0.0296</td><td class="n">0.0283</td><td class="n">0.0299</td><td class="n">0.0438</td><td class="n">0.660</td></tr><tr><td>CONCENTRATED</td><td class="n">0.378</td><td class="n">0.0401</td><td class="n">0.0404</td><td class="n">0.0415</td><td class="n">0.0599</td><td class="n">0.742</td></tr><tr><td>HIDDEN-RISK</td><td class="n">0.272</td><td class="n">0.0297</td><td class="n">0.0293</td><td class="n">0.0308</td><td class="n">0.0451</td><td class="n">0.665</td></tr></tbody></table></div>
+    <figure><svg class="chart" viewBox="0 0 680 324" role="img" aria-label="Bar chart of results"><text x="180" y="26.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">EQUAL-WEIGH · historical</text><rect x="190" y="9" width="300.8" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="499.8" y="26.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.0296</text><text x="180" y="61.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">EQUAL-WEIGH · gaussian</text><rect x="190" y="44" width="288.0" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="487.0" y="61.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.0283</text><text x="180" y="96.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">EQUAL-WEIGH · cornish_fisher</text><rect x="190" y="79" width="304.7" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="503.7" y="96.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.0299</text><text x="180" y="131.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">CONCENTRATE · historical</text><rect x="190" y="114" width="408.3" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="607.3" y="131.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.0401</text><text x="180" y="166.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">CONCENTRATE · gaussian</text><rect x="190" y="149" width="411.1" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="610.1" y="166.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.0404</text><text x="180" y="201.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">CONCENTRATE · cornish_fisher</text><rect x="190" y="184" width="422.0" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="621.0" y="201.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.0415</text><text x="180" y="236.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">HIDDEN-RISK · historical</text><rect x="190" y="219" width="302.3" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="501.3" y="236.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.0297</text><text x="180" y="271.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">HIDDEN-RISK · gaussian</text><rect x="190" y="254" width="298.0" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="497.0" y="271.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.0293</text><text x="180" y="306.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">HIDDEN-RISK · cornish_fisher</text><rect x="190" y="289" width="313.8" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="512.8" y="306.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.0308</text></svg></figure>
+    <div class="note">
+      <h3>Cornish-Fisher was reported below Gaussian until a sign was fixed</h3>
+      <p>On a fat left tail the Cornish-Fisher correction must push VaR <em>up</em>. The
+      first version applied the expansion to the positive quantile and negated
+      afterwards, which flips the sign of the skew term and produced a corrected VaR
+      <em>below</em> the uncorrected one — the exact opposite of the correction's
+      purpose. The formula looked right; printing the two numbers side by side made it
+      obvious in a second.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Where the risk actually is</h2>
+  <div class="stack-lg">
+    <div class="tw"><table><thead><tr><th>Ticker</th><th>Capital weight</th><th>Risk share</th><th>Risk / capital</th></tr></thead><tbody><tr><td>BETA</td><td class="n">18.0%</td><td class="n">27.5%</td><td class="n">1.53×</td></tr><tr><td>ALPHA</td><td class="n">11.7%</td><td class="n">18.0%</td><td class="n">1.54×</td></tr><tr><td>GAMMA</td><td class="n">11.7%</td><td class="n">12.9%</td><td class="n">1.11×</td></tr><tr><td>ZETA</td><td class="n">11.7%</td><td class="n">11.0%</td><td class="n">0.94×</td></tr><tr><td>ETA</td><td class="n">11.7%</td><td class="n">11.0%</td><td class="n">0.94×</td></tr><tr><td>DELTA</td><td class="n">11.7%</td><td class="n">9.3%</td><td class="n">0.79×</td></tr><tr><td>EPSILON</td><td class="n">11.7%</td><td class="n">5.3%</td><td class="n">0.45×</td></tr><tr><td>THETA</td><td class="n">11.7%</td><td class="n">5.0%</td><td class="n">0.43×</td></tr></tbody></table></div>
+    <div class="note">
+      <h3>The last column is the point of the service</h3>
+      <p>The HIDDEN-RISK portfolio looks well diversified by capital — eight positions,
+      7.8 effective
+      positions, nothing above 18%. By risk it is not: the top position carries
+      1.53×
+      its capital share.</p>
+      <p>Contributions come from an Euler decomposition and sum exactly to portfolio
+      volatility, which is what makes them an allocation of risk rather than a set of
+      scores. A capital-based position limit is structurally unable to see this, which
+      is why the ratio is a check rather than a chart.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Findings the service raises unprompted</h2>
+  <div class="stack-lg">
+    <div class="tw"><table><thead><tr><th>Portfolio</th><th>Level</th><th>Code</th><th>Detail</th></tr></thead><tbody><tr><td>EQUAL-WEIGHT</td><td>warn</td><td>risk_capital_mismatch</td><td>ALPHA carries 1.59x its capital share in risk (20% of risk on 12% of capital)</td></tr><tr><td>EQUAL-WEIGHT</td><td>info</td><td>non_normal_tail</td><td>Cornish-Fisher VaR exceeds Gaussian by 6%; the tail is fatter than normal</td></tr><tr><td>CONCENTRATED</td><td>warn</td><td>concentrated</td><td>2.8 effective positions across 8 holdings (35% of equal weighting)</td></tr><tr><td>CONCENTRATED</td><td>warn</td><td>risk_concentration</td><td>ALPHA is 63% of risk on 55% of capital</td></tr><tr><td>HIDDEN-RISK</td><td>warn</td><td>risk_capital_mismatch</td><td>BETA carries 1.53x its capital share in risk (27% of risk on 18% of capital)</td></tr><tr><td>HIDDEN-RISK</td><td>info</td><td>non_normal_tail</td><td>Cornish-Fisher VaR exceeds Gaussian by 5%; the tail is fatter than normal</td></tr></tbody></table></div>
+    <p>A risk system that only answers the question asked is a calculator. These fire on
+    every report without being requested.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Rejecting bad input</h2>
+  <div class="stack-lg">
+    <div class="tw"><table><thead><tr><th>Rejected request</th><th>Caught</th><th>Message returned</th></tr></thead><tbody><tr><td>weights that do not sum to one</td><td>yes</td><td>weights sum to 1.142857, not 1.0</td></tr><tr><td>mismatched lengths</td><td>yes</td><td>tickers and weights have different lengths</td></tr><tr><td>a ticker with no market data</td><td>yes</td><td>no market data for [&#x27;UNKNOWN&#x27;]</td></tr><tr><td>duplicate tickers</td><td>yes</td><td>duplicate tickers</td></tr><tr><td>NaN weights</td><td>yes</td><td>weights contain NaN or inf</td></tr><tr><td>a missing field</td><td>yes</td><td>&#x27;tickers&#x27;</td></tr></tbody></table></div>
+    <p>Every rejection names what is wrong and what was received. The alignment check
+    matters most: a ticker with no market data is refused rather than dropped, because
+    silent misalignment is what makes a risk system dangerous rather than merely wrong
+    — the numbers still come out, they just describe a different portfolio.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Reproduce it</h2>
+  <div class="stack">
+    <pre>cd risk-portfolio-saas
+pip install -r requirements.txt
+python -m pytest tests/ -q
+python -m src.demo</pre>
+    <p>The service surface is one function — <code>handle(request, market)</code>, JSON
+    in and JSON out — so a FastAPI or Flask layer is a thin adapter rather than a
+    rewrite. None is included, because the framework is not the part worth showing.</p>
+  </div>
+</section>
+
+<section>
+  <h2>What this does not establish</h2>
+  <div class="stack">
+    <ul class="tight">
+      <li>Synthetic market data. No real prices, no real portfolio, no client.</li>
+      <li>750 observations per name. A 95% historical VaR
+      estimated from this much data has a wide confidence interval that the report
+      does not show.</li>
+      <li>Single-period risk only. No liquidity horizon, no margin, no funding, and
+      no netting across accounts.</li>
+      <li>Stress scenarios are single-factor beta shocks. Real stress testing
+      requires correlated multi-factor scenarios and a view on how correlations
+      themselves move.</li>
+      <li>No persistence, authentication, tenancy or rate limiting — none of the
+      things that make a service a service. This is the analytics core only.</li>
+    </ul>
+  </div>
+</section>
+
+<div class="foot">
+  <p>5.0-Ai-Engineering-Toolkit &middot; risk-portfolio-saas &middot; part of a five-repository portfolio on optimization-driven,
+     system-level decision frameworks.</p>
+  <p>Every figure on this page was produced by running <code>python -m src.demo</code> in this
+     project and reading <code>results.json</code>. Nothing here is hand-entered. The run used clearly-labelled synthetic data; swap in the real source and the same pipeline reports real numbers.</p>
+</div>
+</div>
+</body>
+</html>
