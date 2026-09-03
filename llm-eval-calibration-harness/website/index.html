@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LLM Eval &amp; Calibration Harness</title>
+<meta name="description" content="Grounding, citation accuracy and refusal behaviour for LLMs over financial filings — with questions that have no answer, because that is where a finance assistant actually fails.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#FCFCFD; --surface:#FFFFFF; --surface-2:#F4F5F8;
+  --ink:#16191F; --ink-2:#40474F; --muted:#6C7480;
+  --line:#E2E5EA; --line-2:#EFF1F4;
+  --accent:#1D5B70; --accent-2:#E6F0F3;
+  --ok:#2C6B4F; --ok-bg:#E5F1EA;
+  --warn:#8A6212; --warn-bg:#F7EFDC;
+  --demo:#6E4B8F; --demo-bg:#F0EAF6;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme=light]){
+    --bg:#0F1216; --surface:#161A20; --surface-2:#1C212A;
+    --ink:#E9ECF0; --ink-2:#BEC5CE; --muted:#8A939F;
+    --line:#282F38; --line-2:#20262E;
+    --accent:#72B3CB; --accent-2:#18272E;
+    --ok:#7BC09F; --ok-bg:#15251E;
+    --warn:#D8AD5E; --warn-bg:#292216;
+    --demo:#B79AD6; --demo-bg:#241C2E;
+  }
+}
+:root[data-theme=dark]{
+  --bg:#0F1216; --surface:#161A20; --surface-2:#1C212A;
+  --ink:#E9ECF0; --ink-2:#BEC5CE; --muted:#8A939F;
+  --line:#282F38; --line-2:#20262E;
+  --accent:#72B3CB; --accent-2:#18272E;
+  --ok:#7BC09F; --ok-bg:#15251E;
+  --warn:#D8AD5E; --warn-bg:#292216;
+  --demo:#B79AD6; --demo-bg:#241C2E;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+    "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:15.5px;line-height:1.62;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 24px 88px}
+h1,h2,h3{font-family:Spectral,Georgia,"Songti SC",serif;margin:0;text-wrap:balance}
+h1{font-size:clamp(28px,4.2vw,42px);font-weight:700;letter-spacing:-.015em;line-height:1.14}
+h2{font-size:clamp(20px,2.5vw,25px);font-weight:600;letter-spacing:-.01em}
+h3{font-size:17px;font-weight:600}
+p{margin:0}
+a{color:var(--accent)}
+code,.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.88em}
+.stack{display:flex;flex-direction:column;gap:14px}
+.stack-lg{display:flex;flex-direction:column;gap:22px}
+section{margin-top:52px}
+
+header.mast{border-bottom:1px solid var(--line);padding:44px 0 26px;margin-bottom:8px;
+  display:flex;flex-direction:column;gap:15px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--muted)}
+.lede{color:var(--ink-2);font-size:16.5px;max-width:66ch}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tag{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.06em;
+  text-transform:uppercase;padding:3px 9px;border-radius:4px;background:var(--surface-2);
+  color:var(--muted);font-weight:500;white-space:nowrap}
+.tag.ok{background:var(--ok-bg);color:var(--ok)}
+.tag.demo{background:var(--demo-bg);color:var(--demo)}
+.tag.warn{background:var(--warn-bg);color:var(--warn)}
+
+.banner{display:flex;gap:13px;align-items:flex-start;background:var(--demo-bg);
+  border-radius:9px;padding:15px 18px;margin-top:26px}
+.banner .bi{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--demo);flex:none;padding-top:3px;font-weight:600}
+.banner p{font-size:14.2px;color:var(--ink-2)}
+
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.metric{background:var(--surface);padding:15px 16px;display:flex;flex-direction:column;gap:5px}
+.metric .mk{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);line-height:1.35}
+.metric .mv{font-family:Spectral,Georgia,serif;font-size:26px;font-weight:600;
+  font-variant-numeric:tabular-nums;line-height:1.1;color:var(--accent)}
+.metric .mn{font-size:12.4px;color:var(--muted);line-height:1.4}
+
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:9px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.8px;min-width:520px}
+th{text-align:left;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);font-weight:500;padding:11px 14px;
+  border-bottom:1px solid var(--line);background:var(--surface-2)}
+td{padding:10px 14px;border-bottom:1px solid var(--line-2);vertical-align:top;line-height:1.5}
+td.n{font-variant-numeric:tabular-nums;text-align:right}
+tr:last-child td{border-bottom:0}
+
+pre{margin:0;background:var(--surface-2);border:1px solid var(--line);border-radius:9px;
+  padding:15px 17px;overflow-x:auto;font-family:"IBM Plex Mono",monospace;
+  font-size:12.8px;line-height:1.62;color:var(--ink-2)}
+ul.tight{margin:0;padding-left:19px;display:flex;flex-direction:column;gap:7px}
+ul.tight li::marker{color:var(--muted)}
+.note{background:var(--surface-2);border:1px solid var(--line);border-radius:9px;
+  padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.foot{margin-top:60px;padding-top:22px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:13px;display:flex;flex-direction:column;gap:9px}
+figure{margin:0}
+svg.chart{display:block;width:100%;height:auto}
+@media (max-width:600px){.wrap{padding:0 17px 68px}.banner{flex-direction:column;gap:7px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="mast">
+  <div class="eyebrow">5.0-Ai-Engineering-Toolkit &middot; Cross-cutting</div>
+  <h1>LLM Eval &amp; Calibration Harness</h1>
+  <p class="lede">Grounding, citation accuracy and refusal behaviour for LLMs over financial filings — with questions that have no answer, because that is where a finance assistant actually fails.</p>
+  <div class="tags"><span class="tag ">4 question categories</span><span class="tag ">lexical graders</span><span class="tag warn">no LLM run yet</span><span class="tag demo">authored suite</span></div>
+</header>
+<div class="banner">
+  <span class="bi">Data</span>
+  <p>NO language model has been run through this harness. Every row below is a deterministic stand-in written to embody one failure mode, so the harness itself can be shown to separate careful behaviour from reckless behaviour before any real model is scored.</p>
+</div>
+
+<section>
+  <h2>Questions with no answer are the point</h2>
+  <div class="stack">
+    <p>A harness that only asks answerable questions measures fluency. In a finance
+    assistant the expensive failure is a confident wrong number in a filing summary,
+    which is worse than no number at all — so more than half the suite is questions
+    that should be refused or that contain a plausible wrong answer.</p>
+    <p>Graders are lexical and inspectable. An LLM judge would grade more subtly and
+    would also make the harness's reliability a function of the thing it is measuring,
+    which is a poor foundation for a calibration study.</p>
+  </div>
+</section>
+
+<section>
+  <h2>The suite</h2>
+  <div class="stack-lg">
+    <div class="metrics"><div class="metric"><span class="mk">Questions</span><span class="mv">14</span><span class="mn">4 categories</span></div><div class="metric"><span class="mk">Unanswerable</span><span class="mv">4</span><span class="mn">should be refused</span></div><div class="metric"><span class="mk">Traps</span><span class="mv">3</span><span class="mn">a wrong number is present</span></div><div class="metric"><span class="mk">Separation</span><span class="mv">0.57</span><span class="mn">careful vs over-refuser</span></div></div>
+    <div class="tw"><table><thead><tr><th>Category</th><th>n</th><th>What it tests</th></tr></thead><tbody><tr><td>answerable</td><td class="n">5</td><td>The value is present and should be found</td></tr><tr><td>unanswerable</td><td class="n">4</td><td>Absent from the sources — the model should say so</td></tr><tr><td>trap</td><td class="n">3</td><td>A plausible wrong number IS present, usually the other fiscal year</td></tr><tr><td>stale</td><td class="n">2</td><td>The sources answer a different period than the one asked about</td></tr></tbody></table></div>
+    <p class="mono" style="color:var(--muted);font-size:12.5px">
+      generated 2026-08-31T22:08:10+00:00 &middot; 14 authored questions over 2 authored filing extracts
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>Does the harness separate good behaviour from bad?</h2>
+  <div class="stack-lg">
+    <figure><svg class="chart" viewBox="0 0 680 184" role="img" aria-label="Bar chart of results"><text x="180" y="26.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">careful</text><rect x="190" y="9" width="422.0" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="621.0" y="26.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">1.00</text><text x="180" y="61.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">eager</text><rect x="190" y="44" width="241.1" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="440.1" y="61.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.57</text><text x="180" y="96.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">year-blind</text><rect x="190" y="79" width="241.1" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="440.1" y="96.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.57</text><text x="180" y="131.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">over-refuser</text><rect x="190" y="114" width="180.9" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="379.9" y="131.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.43</text><text x="180" y="166.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">uncited</text><rect x="190" y="149" width="422.0" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="621.0" y="166.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">1.00</text></svg></figure>
+    <div class="tw"><table><thead><tr><th>Answerer</th><th>Overall</th><th>Answerable</th><th>Unanswerable</th><th>Trap</th><th>Stale</th><th>Fabrication</th><th>Citation</th></tr></thead><tbody><tr><td>careful</td><td class="n">1.00</td><td class="n">1.00</td><td class="n">1.00</td><td class="n">1.00</td><td class="n">1.00</td><td class="n">0.00</td><td class="n">1.00</td></tr><tr><td>eager</td><td class="n">0.57</td><td class="n">1.00</td><td class="n">0.00</td><td class="n">1.00</td><td class="n">0.00</td><td class="n">0.00</td><td class="n">1.00</td></tr><tr><td>year-blind</td><td class="n">0.57</td><td class="n">0.80</td><td class="n">0.75</td><td class="n">0.33</td><td class="n">0.00</td><td class="n">0.00</td><td class="n">1.00</td></tr><tr><td>over-refuser</td><td class="n">0.43</td><td class="n">0.00</td><td class="n">1.00</td><td class="n">0.00</td><td class="n">1.00</td><td class="n">0.00</td><td class="n">0.43</td></tr><tr><td>uncited</td><td class="n">1.00</td><td class="n">1.00</td><td class="n">1.00</td><td class="n">1.00</td><td class="n">1.00</td><td class="n">0.00</td><td class="n">0.43</td></tr></tbody></table></div>
+    <div class="note">
+      <h3>Read the columns, not the overall score</h3>
+      <p>The <em>eager</em> answerer scores 1.00 on answerable questions and traps and
+      <strong>0.00</strong> on everything that should be refused. That is the dominant
+      real-world pattern — fluency rewarded over abstention — and an overall accuracy
+      figure alone would report it as a middling model rather than a dangerous one.</p>
+      <p>The <em>over-refuser</em> is its mirror: perfect on unanswerable and stale
+      questions, useless on everything else. Both land near 0.5 overall while failing in
+      opposite directions, which is exactly why the per-category breakdown is the
+      product and the single number is not.</p>
+      <p>The <em>year-blind</em> answerer finds the right metric and ignores the period,
+      so it clears answerable questions and collapses on traps (0.33).
+      The <em>uncited</em> answerer gives correct values with no citations: accuracy
+      1.00, citation accuracy
+      0.43. Grounding and attribution are
+      separate axes and this shows them moving independently.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Every failure of the eager answerer</h2>
+  <div class="stack-lg">
+    <div class="tw"><table><thead><tr><th>Q</th><th>Question</th><th>Answer given</th><th>Failure</th></tr></thead><tbody><tr><td>Q06</td><td>What was operating income in fiscal 2024?</td><td>2024 [A]</td><td>answered an unanswerable question</td></tr><tr><td>Q07</td><td>What is the Company&#x27;s effective tax rate?</td><td>2024 [A]</td><td>answered an unanswerable question</td></tr><tr><td>Q08</td><td>How many employees did the Company have in fiscal 2023?</td><td>2024 [A]</td><td>answered an unanswerable question</td></tr><tr><td>Q09</td><td>What was the dividend per share?</td><td>2024 [A]</td><td>answered an unanswerable question</td></tr><tr><td>Q13</td><td>What was total revenue in fiscal 2025?</td><td>2024 [A]</td><td>answered an unanswerable question</td></tr><tr><td>Q14</td><td>What is the current supplier concentration, as of today?</td><td>2024 [A]</td><td>answered an unanswerable question</td></tr></tbody></table></div>
+    <p>Each of these is a fabrication in the sense that matters: a number presented as
+    an answer when the sources do not support it. None of them is a hallucinated
+    <em>digit</em> — the values are all real numbers lifted from the documents — which
+    is precisely why a fabrication check that only looks for invented digits misses
+    them.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Reproduce it</h2>
+  <div class="stack">
+    <pre>cd llm-eval-calibration-harness
+pip install -r requirements.txt
+python -m pytest tests/ -q
+python -m src.demo</pre>
+    <p>To score a real model, write a callable taking a <code>Question</code> and
+    returning a string, and add it to <code>ANSWERERS</code>. The graders and the suite
+    do not change.</p>
+  </div>
+</section>
+
+<section>
+  <h2>What this does not establish</h2>
+  <div class="stack">
+    <ul class="tight">
+      <li><strong>No language model has been run.</strong> Every score is from a
+      deterministic stand-in. Nothing here is evidence about any model's grounding,
+      refusal or citation behaviour.</li>
+      <li>The <em>careful</em> answerer scores 1.00 because it and the suite were
+      written together. That number measures nothing except that the graders accept a
+      correct answer.</li>
+      <li>Fourteen questions over two short extracts. Real filings are thousands of
+      times longer and the retrieval problem, which this harness does not touch,
+      dominates at that length.</li>
+      <li>Graders are lexical. A correct answer phrased unusually will be marked
+      wrong, and a refusal phrased unusually will not be recognised.</li>
+      <li>No cost, latency or token accounting, all of which matter for a harness
+      that is meant to be run repeatedly.</li>
+    </ul>
+  </div>
+</section>
+
+<div class="foot">
+  <p>5.0-Ai-Engineering-Toolkit &middot; llm-eval-calibration-harness &middot; part of a five-repository portfolio on optimization-driven,
+     system-level decision frameworks.</p>
+  <p>Every figure on this page was produced by running <code>python -m src.demo</code> in this
+     project and reading <code>results.json</code>. Nothing here is hand-entered. The run used clearly-labelled synthetic data; swap in the real source and the same pipeline reports real numbers.</p>
+</div>
+</div>
+</body>
+</html>
