@@ -1,0 +1,266 @@
+{
+  "generated_at": "2026-08-31T22:08:09+00:00",
+  "is_synthetic": true,
+  "data_source": "two authored filing extracts (src/demo.py)",
+  "package": {
+    "name": "spanlineage",
+    "version": "0.1.0",
+    "exports": 12,
+    "published": false
+  },
+  "metrics": {
+    "revenue": {
+      "value": 1284500.0,
+      "n_spans": 1,
+      "documents": [
+        "FILING-2024"
+      ],
+      "evidence": [
+        "1,284,500"
+      ],
+      "op": "extract",
+      "depth": 0
+    },
+    "gross_profit": {
+      "value": 542400.0,
+      "n_spans": 2,
+      "documents": [
+        "FILING-2024"
+      ],
+      "evidence": [
+        "1,284,500",
+        "742,100"
+      ],
+      "op": "sub",
+      "depth": 1
+    },
+    "adjusted_opex": {
+      "value": 291600.0,
+      "n_spans": 2,
+      "documents": [
+        "FILING-2024",
+        "NOTES-2024"
+      ],
+      "evidence": [
+        "318,400",
+        "26,800"
+      ],
+      "op": "sub",
+      "depth": 1
+    },
+    "operating_income": {
+      "value": 250800.0,
+      "n_spans": 4,
+      "documents": [
+        "FILING-2024",
+        "NOTES-2024"
+      ],
+      "evidence": [
+        "1,284,500",
+        "742,100",
+        "318,400",
+        "26,800"
+      ],
+      "op": "sub",
+      "depth": 2
+    },
+    "operating_margin": {
+      "value": 0.195251,
+      "n_spans": 4,
+      "documents": [
+        "FILING-2024",
+        "NOTES-2024"
+      ],
+      "evidence": [
+        "1,284,500",
+        "742,100",
+        "318,400",
+        "26,800"
+      ],
+      "op": "div",
+      "depth": 3
+    },
+    "revenue_growth": {
+      "value": 0.165291,
+      "n_spans": 2,
+      "documents": [
+        "FILING-2024"
+      ],
+      "evidence": [
+        "1,284,500",
+        "1,102,300"
+      ],
+      "op": "div",
+      "depth": 2
+    },
+    "revenue_per_employee": {
+      "value": 103.172691,
+      "n_spans": 2,
+      "documents": [
+        "FILING-2024"
+      ],
+      "evidence": [
+        "1,284,500",
+        "12,450"
+      ],
+      "op": "div",
+      "depth": 1
+    },
+    "rnd_intensity": {
+      "value": 0.109926,
+      "n_spans": 2,
+      "documents": [
+        "FILING-2024"
+      ],
+      "evidence": [
+        "141,200",
+        "1,284,500"
+      ],
+      "op": "div",
+      "depth": 1
+    }
+  },
+  "graph": {
+    "n_nodes": 8,
+    "n_edges": 8,
+    "depth": 3,
+    "n_leaves": 4,
+    "ops": [
+      "div",
+      "extract",
+      "sub"
+    ]
+  },
+  "explanation": [
+    {
+      "depth": 0,
+      "op": "div",
+      "value": 0.19525107045543014,
+      "note": "",
+      "evidence": []
+    },
+    {
+      "depth": 1,
+      "op": "sub",
+      "value": 250800.0,
+      "note": "",
+      "evidence": []
+    },
+    {
+      "depth": 2,
+      "op": "sub",
+      "value": 542400.0,
+      "note": "",
+      "evidence": []
+    },
+    {
+      "depth": 3,
+      "op": "extract",
+      "value": 1284500.0,
+      "note": "matched 'Total revenue for the period was ([\\\\d,]+)'",
+      "evidence": [
+        "1,284,500"
+      ]
+    },
+    {
+      "depth": 3,
+      "op": "extract",
+      "value": 742100.0,
+      "note": "matched 'Cost of revenue was ([\\\\d,]+)'",
+      "evidence": [
+        "742,100"
+      ]
+    },
+    {
+      "depth": 2,
+      "op": "sub",
+      "value": 291600.0,
+      "note": "",
+      "evidence": []
+    },
+    {
+      "depth": 3,
+      "op": "extract",
+      "value": 318400.0,
+      "note": "matched 'Operating expenses totalled ([\\\\d,]+)'",
+      "evidence": [
+        "318,400"
+      ]
+    },
+    {
+      "depth": 3,
+      "op": "extract",
+      "value": 26800.0,
+      "note": "matched 'restructuring charge of ([\\\\d,]+)'",
+      "evidence": [
+        "26,800"
+      ]
+    },
+    {
+      "depth": 1,
+      "op": "extract",
+      "value": 1284500.0,
+      "note": "matched 'Total revenue for the period was ([\\\\d,]+)'",
+      "evidence": [
+        "1,284,500"
+      ]
+    }
+  ],
+  "verification": {
+    "ok": true,
+    "n_spans": 4,
+    "n_checked": 4,
+    "problems": []
+  },
+  "tamper": {
+    "detected": true,
+    "problems": [
+      {
+        "span": {
+          "doc_id": "FILING-2024",
+          "start": 68,
+          "end": 77,
+          "doc_sha": "31c13cbaab4e2823"
+        },
+        "issue": "document has changed",
+        "recorded_sha": "31c13cbaab4e2823",
+        "current_sha": "07902c2010d6123d"
+      },
+      {
+        "span": {
+          "doc_id": "FILING-2024",
+          "start": 160,
+          "end": 167,
+          "doc_sha": "31c13cbaab4e2823"
+        },
+        "issue": "document has changed",
+        "recorded_sha": "31c13cbaab4e2823",
+        "current_sha": "07902c2010d6123d"
+      },
+      {
+        "span": {
+          "doc_id": "FILING-2024",
+          "start": 207,
+          "end": 214,
+          "doc_sha": "31c13cbaab4e2823"
+        },
+        "issue": "document has changed",
+        "recorded_sha": "31c13cbaab4e2823",
+        "current_sha": "07902c2010d6123d"
+      }
+    ]
+  },
+  "cross_document": [
+    "FILING-2024",
+    "NOTES-2024"
+  ],
+  "dot_lines": 20,
+  "cli": {
+    "exit": 0,
+    "help_ok": true,
+    "subcommands": [
+      "extract",
+      "verify"
+    ]
+  }
+}

@@ -1,0 +1,332 @@
+{
+  "generated_at": "2026-08-31T22:08:13+00:00",
+  "is_synthetic": true,
+  "data_source": "synthetic factor market with fat tails (src/demo.py)",
+  "n_tickers": 8,
+  "observations": 750,
+  "reports": {
+    "EQUAL-WEIGHT": {
+      "portfolio_id": "EQUAL-WEIGHT",
+      "as_of": "2026-08-31",
+      "n_positions": 8,
+      "observations": 750,
+      "alpha": 0.95,
+      "risk": {
+        "annualised_volatility": 0.26227,
+        "var_historical": 0.029554,
+        "var_gaussian": 0.028292,
+        "var_cornish_fisher": 0.029933,
+        "expected_shortfall": 0.043849,
+        "max_drawdown": 0.659609
+      },
+      "concentration": {
+        "hhi": 0.125,
+        "effective_positions": 8.0,
+        "top3_share": 0.375
+      },
+      "contributions": [
+        {
+          "ticker": "ALPHA",
+          "weight": 0.125,
+          "risk_contribution": 0.0032886,
+          "risk_share": 0.19905
+        },
+        {
+          "ticker": "BETA",
+          "weight": 0.125,
+          "risk_contribution": 0.00323729,
+          "risk_share": 0.19594
+        },
+        {
+          "ticker": "GAMMA",
+          "weight": 0.125,
+          "risk_contribution": 0.00236569,
+          "risk_share": 0.14319
+        },
+        {
+          "ticker": "ZETA",
+          "weight": 0.125,
+          "risk_contribution": 0.00201236,
+          "risk_share": 0.1218
+        },
+        {
+          "ticker": "ETA",
+          "weight": 0.125,
+          "risk_contribution": 0.00200837,
+          "risk_share": 0.12156
+        },
+        {
+          "ticker": "DELTA",
+          "weight": 0.125,
+          "risk_contribution": 0.00170604,
+          "risk_share": 0.10326
+        },
+        {
+          "ticker": "EPSILON",
+          "weight": 0.125,
+          "risk_contribution": 0.00097752,
+          "risk_share": 0.05917
+        },
+        {
+          "ticker": "THETA",
+          "weight": 0.125,
+          "risk_contribution": 0.00092559,
+          "risk_share": 0.05602
+        }
+      ],
+      "stress": {
+        "factor_shock_-10pct": -0.116759,
+        "factor_shock_-20pct": -0.233519,
+        "worst_20d_realised": {
+          "window": 20,
+          "loss": 0.221681,
+          "start": 689
+        }
+      },
+      "latency_ms": 11.031,
+      "checks": [
+        {
+          "level": "warn",
+          "code": "risk_capital_mismatch",
+          "detail": "ALPHA carries 1.59x its capital share in risk (20% of risk on 12% of capital)"
+        },
+        {
+          "level": "info",
+          "code": "non_normal_tail",
+          "detail": "Cornish-Fisher VaR exceeds Gaussian by 6%; the tail is fatter than normal"
+        }
+      ]
+    },
+    "CONCENTRATED": {
+      "portfolio_id": "CONCENTRATED",
+      "as_of": "2026-08-31",
+      "n_positions": 8,
+      "observations": 750,
+      "alpha": 0.95,
+      "risk": {
+        "annualised_volatility": 0.378241,
+        "var_historical": 0.040114,
+        "var_gaussian": 0.040389,
+        "var_cornish_fisher": 0.041456,
+        "expected_shortfall": 0.059904,
+        "max_drawdown": 0.742305
+      },
+      "concentration": {
+        "hhi": 0.358,
+        "effective_positions": 2.79,
+        "top3_share": 0.85
+      },
+      "contributions": [
+        {
+          "ticker": "ALPHA",
+          "weight": 0.55,
+          "risk_contribution": 0.0149461,
+          "risk_share": 0.62728
+        },
+        {
+          "ticker": "BETA",
+          "weight": 0.2,
+          "risk_contribution": 0.00523877,
+          "risk_share": 0.21987
+        },
+        {
+          "ticker": "GAMMA",
+          "weight": 0.1,
+          "risk_contribution": 0.00185783,
+          "risk_share": 0.07797
+        },
+        {
+          "ticker": "DELTA",
+          "weight": 0.05,
+          "risk_contribution": 0.00065938,
+          "risk_share": 0.02767
+        },
+        {
+          "ticker": "ZETA",
+          "weight": 0.03,
+          "risk_contribution": 0.00046612,
+          "risk_share": 0.01956
+        },
+        {
+          "ticker": "ETA",
+          "weight": 0.02,
+          "risk_contribution": 0.0003111,
+          "risk_share": 0.01306
+        },
+        {
+          "ticker": "EPSILON",
+          "weight": 0.04,
+          "risk_contribution": 0.00028135,
+          "risk_share": 0.01181
+        },
+        {
+          "ticker": "THETA",
+          "weight": 0.01,
+          "risk_contribution": 6.63e-05,
+          "risk_share": 0.00278
+        }
+      ],
+      "stress": {
+        "factor_shock_-10pct": -0.175413,
+        "factor_shock_-20pct": -0.350826,
+        "worst_20d_realised": {
+          "window": 20,
+          "loss": 0.32259,
+          "start": 689
+        }
+      },
+      "latency_ms": 2.765,
+      "checks": [
+        {
+          "level": "warn",
+          "code": "concentrated",
+          "detail": "2.8 effective positions across 8 holdings (35% of equal weighting)"
+        },
+        {
+          "level": "warn",
+          "code": "risk_concentration",
+          "detail": "ALPHA is 63% of risk on 55% of capital"
+        }
+      ]
+    },
+    "HIDDEN-RISK": {
+      "portfolio_id": "HIDDEN-RISK",
+      "as_of": "2026-08-31",
+      "n_positions": 8,
+      "observations": 750,
+      "alpha": 0.95,
+      "risk": {
+        "annualised_volatility": 0.271741,
+        "var_historical": 0.029696,
+        "var_gaussian": 0.029272,
+        "var_cornish_fisher": 0.030827,
+        "expected_shortfall": 0.045099,
+        "max_drawdown": 0.665191
+      },
+      "concentration": {
+        "hhi": 0.12846,
+        "effective_positions": 7.78,
+        "top3_share": 0.4143
+      },
+      "contributions": [
+        {
+          "ticker": "BETA",
+          "weight": 0.18,
+          "risk_contribution": 0.00470112,
+          "risk_share": 0.27463
+        },
+        {
+          "ticker": "ALPHA",
+          "weight": 0.11714,
+          "risk_contribution": 0.0030864,
+          "risk_share": 0.1803
+        },
+        {
+          "ticker": "GAMMA",
+          "weight": 0.11714,
+          "risk_contribution": 0.00221577,
+          "risk_share": 0.12944
+        },
+        {
+          "ticker": "ZETA",
+          "weight": 0.11714,
+          "risk_contribution": 0.00188383,
+          "risk_share": 0.11005
+        },
+        {
+          "ticker": "ETA",
+          "weight": 0.11714,
+          "risk_contribution": 0.00187736,
+          "risk_share": 0.10967
+        },
+        {
+          "ticker": "DELTA",
+          "weight": 0.11714,
+          "risk_contribution": 0.00159364,
+          "risk_share": 0.0931
+        },
+        {
+          "ticker": "EPSILON",
+          "weight": 0.11714,
+          "risk_contribution": 0.00090325,
+          "risk_share": 0.05277
+        },
+        {
+          "ticker": "THETA",
+          "weight": 0.11714,
+          "risk_contribution": 0.00085672,
+          "risk_share": 0.05005
+        }
+      ],
+      "stress": {
+        "factor_shock_-10pct": -0.121971,
+        "factor_shock_-20pct": -0.243941,
+        "worst_20d_realised": {
+          "window": 20,
+          "loss": 0.231748,
+          "start": 689
+        }
+      },
+      "latency_ms": 2.538,
+      "checks": [
+        {
+          "level": "warn",
+          "code": "risk_capital_mismatch",
+          "detail": "BETA carries 1.53x its capital share in risk (27% of risk on 18% of capital)"
+        },
+        {
+          "level": "info",
+          "code": "non_normal_tail",
+          "detail": "Cornish-Fisher VaR exceeds Gaussian by 5%; the tail is fatter than normal"
+        }
+      ]
+    }
+  },
+  "validation": {
+    "cases": [
+      {
+        "case": "weights that do not sum to one",
+        "rejected": true,
+        "error": "ValidationError",
+        "detail": "weights sum to 1.142857, not 1.0"
+      },
+      {
+        "case": "mismatched lengths",
+        "rejected": true,
+        "error": "ValidationError",
+        "detail": "tickers and weights have different lengths"
+      },
+      {
+        "case": "a ticker with no market data",
+        "rejected": true,
+        "error": "ValidationError",
+        "detail": "no market data for ['UNKNOWN']"
+      },
+      {
+        "case": "duplicate tickers",
+        "rejected": true,
+        "error": "ValidationError",
+        "detail": "duplicate tickers"
+      },
+      {
+        "case": "NaN weights",
+        "rejected": true,
+        "error": "ValidationError",
+        "detail": "weights contain NaN or inf"
+      },
+      {
+        "case": "a missing field",
+        "rejected": true,
+        "error": "KeyError",
+        "detail": "'tickers'"
+      }
+    ],
+    "all_rejected": true
+  },
+  "throughput": {
+    "requests": 300,
+    "seconds": 0.8846,
+    "requests_per_second": 339.2,
+    "mean_latency_ms": 2.949
+  }
+}
