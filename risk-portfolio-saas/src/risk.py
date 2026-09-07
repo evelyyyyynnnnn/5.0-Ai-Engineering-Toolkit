@@ -121,6 +121,99 @@ def stress_scenario(weights: np.ndarray, betas: np.ndarray,
                  * factor_shock)
 
 
+def _ll(k: int, n: int, p: float) -> float:
+    """Log-likelihood of k hits in n Bernoulli trials at rate p, 0*log0 := 0."""
+    if n == 0:
+        return 0.0
+    out = 0.0
+    if k > 0:
+        out += k * math.log(p) if p > 0 else -math.inf
+    if n - k > 0:
+        out += (n - k) * math.log(1 - p) if p < 1 else -math.inf
+    return out
+
+
+def _chi2_sf(x: float, df: int) -> float:
+    """Upper-tail probability of a chi-square variate. Closed forms for 1, 2 df."""
+    if x <= 0:
+        return 1.0
+    if df == 1:
+        return math.erfc(math.sqrt(x / 2.0))
+    if df == 2:
+        return math.exp(-x / 2.0)
+    raise ValueError("only 1 and 2 degrees of freedom are supported")
+
+
+def var_backtest(r: np.ndarray, alpha: float = 0.95, window: int = 250) -> dict:
+    """Out-of-sample backtest of the rolling historical VaR.
+
+    At each day t the VaR is estimated from the trailing `window` returns and
+    an exception is recorded when the next day's loss exceeds it. Two standard
+    tests are then reported on the exception series:
+
+      * Kupiec's proportion-of-failures test (unconditional coverage): are there
+        about (1-alpha) exceptions, no more and no fewer?
+      * Christoffersen's independence test: do exceptions cluster, or arrive
+        independently? Their sum is the conditional-coverage test.
+
+    A high p-value means the model is not rejected; it is not proof the model is
+    correct. The observed and expected exception counts are reported alongside
+    so the coverage can be read directly rather than only through a p-value.
+    """
+    r = np.asarray(r, float)
+    T = len(r)
+    p = 1.0 - alpha
+    if T <= window + 1:
+        return {"tested": False,
+                "reason": f"need more than window+1={window + 1} returns to "
+                          f"backtest; have {T}",
+                "window": window, "confidence": alpha}
+
+    hits = []
+    for t in range(window, T):
+        var_t = historical_var(r[t - window:t], alpha)   # loss is reported +ve
+        hits.append(1 if r[t] < -var_t else 0)
+    hits = np.asarray(hits, int)
+    n = len(hits)
+    x = int(hits.sum())
+    pi = x / n
+
+    # Kupiec unconditional coverage.
+    lr_uc = -2.0 * (_ll(x, n, p) - _ll(x, n, pi))
+    lr_uc = max(0.0, lr_uc)
+
+    # Christoffersen independence: transition counts n_ij of hit_{t-1}->hit_t.
+    prev, cur = hits[:-1], hits[1:]
+    n00 = int(np.sum((prev == 0) & (cur == 0)))
+    n01 = int(np.sum((prev == 0) & (cur == 1)))
+    n10 = int(np.sum((prev == 1) & (cur == 0)))
+    n11 = int(np.sum((prev == 1) & (cur == 1)))
+    pi01 = n01 / (n00 + n01) if (n00 + n01) else 0.0
+    pi11 = n11 / (n10 + n11) if (n10 + n11) else 0.0
+    pi_hit = (n01 + n11) / (n00 + n01 + n10 + n11) if n > 1 else 0.0
+    ll_ind = _ll(n01, n00 + n01, pi01) + _ll(n11, n10 + n11, pi11)
+    ll_pooled = _ll(n01 + n11, n00 + n01 + n10 + n11, pi_hit)
+    lr_ind = max(0.0, -2.0 * (ll_pooled - ll_ind))
+    lr_cc = lr_uc + lr_ind
+
+    return {
+        "tested": True,
+        "confidence": alpha,
+        "window": window,
+        "test_observations": n,
+        "expected_exceptions": round(p * n, 2),
+        "observed_exceptions": x,
+        "exception_rate": round(pi, 5),
+        "expected_rate": round(p, 5),
+        "kupiec_lr": round(lr_uc, 4),
+        "kupiec_p": round(_chi2_sf(lr_uc, 1), 4),
+        "independence_lr": round(lr_ind, 4),
+        "independence_p": round(_chi2_sf(lr_ind, 1), 4),
+        "christoffersen_cc_lr": round(lr_cc, 4),
+        "christoffersen_cc_p": round(_chi2_sf(lr_cc, 2), 4),
+    }
+
+
 def worst_historical_window(r: np.ndarray, window: int = 20) -> dict:
     """The worst realised run of `window` periods. A stress test with no model."""
     r = np.asarray(r, float)

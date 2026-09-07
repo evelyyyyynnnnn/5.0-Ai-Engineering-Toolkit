@@ -115,17 +115,19 @@ def run() -> dict:
 
 
 def run_real() -> dict:
-    """Risk report over the real ETF tape.
+    """Risk report over the real Fama-French 10-industry daily returns.
 
     Everything the engine reports here is a measurement: the VaR numbers, the
-    Euler decomposition and the drawdown all come from real returns. The
-    portfolios are still authored -- an equal-weight and a concentrated basket
-    over the same eight tickers -- because a portfolio is an input, not
-    something a data feed provides.
+    Euler decomposition, the drawdown and the VaR backtest all come from real
+    returns. The portfolios are still authored -- an equal-weight basket and a
+    high-beta tilt over the same ten industries -- because a portfolio is an
+    input, not something a data feed provides.
     """
     import sys as _sys
     _sys.path.insert(0, str(ROOT))
+    import numpy as _np
     from data.load import load_market
+    from . import risk as _risk
 
     market, meta = load_market(root=ROOT / "data")
     tickers = market.tickers
@@ -133,20 +135,27 @@ def run_real() -> dict:
     portfolios = [
         {"portfolio_id": "EQUAL-WEIGHT", "as_of": meta["last_date"],
          "tickers": tickers, "weights": [1 / n] * n},
-        {"portfolio_id": "SIXTY-FORTY", "as_of": meta["last_date"],
-         "tickers": tickers,
-         "weights": _sixty_forty(tickers)},
+        {"portfolio_id": "HIGH-BETA-TILT", "as_of": meta["last_date"],
+         "tickers": tickers, "weights": _high_beta_tilt(market.betas)},
     ]
     reports = {}
     for req in portfolios:
         out = handle(req, market)
-        reports[req["portfolio_id"]] = out["report"] if out["ok"] else out
+        rep = out["report"] if out["ok"] else out
+        if out["ok"]:
+            pr = market.returns @ _np.asarray(req["weights"], float)
+            rep["backtest"] = {
+                "var_95": _risk.var_backtest(pr, alpha=0.95, window=250),
+                "var_99": _risk.var_backtest(pr, alpha=0.99, window=250),
+            }
+        reports[req["portfolio_id"]] = rep
 
     results = {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "is_synthetic": False,
-        "data_source": "real daily closes from Stooq (see data/MANIFEST.json for "
-                       "URLs, hashes and retrieval times)",
+        "data_source": "Fama-French 10-industry value-weighted daily returns "
+                       "(Kenneth R. French Data Library); see data/MANIFEST.json "
+                       "for the URL, sha256 and retrieval time",
         "n_tickers": meta["n_tickers"],
         "observations": meta["n_days"],
         "window": {"first": meta["first_date"], "last": meta["last_date"]},
@@ -162,16 +171,20 @@ def run_real() -> dict:
     return results
 
 
-def _sixty_forty(tickers) -> list:
-    """60% to equity sleeves, 40% to bonds, spread evenly inside each sleeve."""
-    bondish = {"agg.us", "tlt.us"}
-    bonds = [t for t in tickers if t in bondish]
-    eq = [t for t in tickers if t not in bondish]
-    if not bonds or not eq:
-        return [1 / len(tickers)] * len(tickers)
-    w = {t: 0.60 / len(eq) for t in eq}
-    w.update({t: 0.40 / len(bonds) for t in bonds})
-    return [w[t] for t in tickers]
+def _high_beta_tilt(betas) -> list:
+    """Overweight the single highest-beta industry, spread the rest evenly.
+
+    Authored against the estimated betas so the report has a portfolio whose
+    risk share exceeds its capital share -- the mismatch the checks exist to
+    surface -- rather than hand-picking weights to force it.
+    """
+    import numpy as _np
+    b = _np.asarray(betas, float)
+    n = len(b)
+    top = int(_np.argmax(b))
+    w = _np.full(n, 0.60 / (n - 1))
+    w[top] = 0.40
+    return [float(x) for x in w]
 
 
 def main_real() -> int:
@@ -201,6 +214,16 @@ def main_real() -> int:
               f"annualised vol {rk['annualised_volatility']:.4f}")
         print(f"  effective positions {cn['effective_positions']:.2f} "
               f"of {rep['n_positions']} | top-3 share {cn['top3_share']:.1%}")
+        bt = rep.get("backtest", {})
+        for lvl, key in (("95%", "var_95"), ("99%", "var_99")):
+            b = bt.get(key, {})
+            if not b.get("tested"):
+                continue
+            print(f"  VaR {lvl} backtest: {b['observed_exceptions']} exceptions "
+                  f"vs {b['expected_exceptions']} expected over "
+                  f"{b['test_observations']} days | "
+                  f"Kupiec p={b['kupiec_p']:.3f} | "
+                  f"Christoffersen (cc) p={b['christoffersen_cc_p']:.3f}")
         for chk in rep.get("checks", []):
             print(f"  [{chk['level']}] {chk['detail']}")
     print("\nportfolios are authored; every risk number above is measured "
