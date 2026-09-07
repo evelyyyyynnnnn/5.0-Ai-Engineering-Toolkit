@@ -7,7 +7,7 @@ API token belonging to the maintainer, so it is a manual step.
 ## Build
 
 ```bash
-cd data-provenance-library
+cd 1-data-provenance-library
 python -m pip install --upgrade build twine
 rm -rf dist build *.egg-info
 python -m build            # writes dist/spanlineage-0.1.0.tar.gz and the wheel

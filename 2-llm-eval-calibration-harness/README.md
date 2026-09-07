@@ -1,59 +1,38 @@
-# qkit-research
+# LLM Eval & Calibration Harness
 
-> The four checks that decide whether a backtest means anything: lookahead, survivorship, label leakage, and how many strategies you tried before this one.
+> Grounding, citation accuracy and refusal behaviour for LLMs over financial filings — with questions that have no answer, because that is where a finance assistant actually fails.
 
-**Repository:** `5.0-Ai-Engineering-Toolkit` &middot; **Pillar:** Financial Stability
+**Repository:** `5.0-Ai-Engineering-Toolkit` &middot; **Pillar:** Cross-cutting
 
 ## Status
 
-This is working code with a runnable demo and 28 tests. It is **not** a
+This is working code with a runnable demo and 0 tests. It is **not** a
 finished result.
 
-Release artifacts (sdist + wheel) are built and pass twine check, but the package is NOT published to PyPI — no downloads, no users. Every demonstration below runs on synthetic series where the contamination was put there deliberately, which is the only way to show a detector finds it.
+NO language model has been run through this harness. Every row below is a deterministic stand-in written to embody one failure mode, so the harness itself can be shown to separate careful behaviour from reckless behaviour before any real model is scored.
 
-Last run: `2026-08-31T21:08:19+00:00`
+Last run: `2026-08-31T19:14:56+00:00`
 
 ## Quick start
 
 ```bash
 pip install -r requirements.txt
-python -m pytest tests/ -q     # 28 tests
+python -m pytest tests/ -q     # 0 tests
 python -m src.demo             # runs everything, rewrites results/ and website/
 ```
 
 ## Layout
 
 ```
-LICENSE
-MANIFEST.in
-PACKAGE_README.md
 README.md
 data/
   |-- README.md
   |-- manifests/
   |-- sample/
-dist/
-  |-- qkit_research-0.1.0-py3-none-any.whl
-  |-- qkit_research-0.1.0.tar.gz
 docs/
   |-- DATA.md
   |-- EVIDENCE.md
   |-- METHOD.md
-pyproject.toml
-qkit/
-  |-- __init__.py
-  |-- cli.py
-  |-- lookahead.py
-  |-- statistics.py
-  |-- universe.py
-  |-- validation.py
-qkit_research.egg-info/
-  |-- PKG-INFO
-  |-- SOURCES.txt
-  |-- dependency_links.txt
-  |-- entry_points.txt
-  |-- requires.txt
-  |-- top_level.txt
 requirements.txt
 results/
   |-- README.md
@@ -62,8 +41,19 @@ src/
   |-- .gitkeep
   |-- __init__.py
   |-- demo.py
+  |-- graders.py
+  |-- models.py
   |-- site.py
   |-- sitekit.py
+  |-- suite.py
+tests/
+  |-- .gitkeep
+  |-- test_harness.py
+website/
+  |-- README.md
+  |-- index.html
+  |-- results.json
+  |-- vercel.json
 ```
 
 - `src/` &mdash; the implementation.
@@ -78,7 +68,7 @@ src/
 `website/` has no build step. To deploy it independently:
 
 ```bash
-cp -r website/ ../my-quant-productivity-toolkit-site && cd ../my-quant-productivity-toolkit-site
+cp -r website/ ../my-2-llm-eval-calibration-harness-site && cd ../my-2-llm-eval-calibration-harness-site
 git init && git add -A && git commit -m "site"
 vercel deploy --prod
 ```

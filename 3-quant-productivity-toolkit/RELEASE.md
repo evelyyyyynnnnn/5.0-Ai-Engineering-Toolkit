@@ -7,7 +7,7 @@ API token belonging to the maintainer, so it is a manual step.
 ## Build
 
 ```bash
-cd quant-productivity-toolkit
+cd 3-quant-productivity-toolkit
 python -m pip install --upgrade build twine
 rm -rf dist build *.egg-info
 python -m build            # writes dist/qkit_research-0.1.0.tar.gz and the wheel

@@ -22,14 +22,14 @@ are financial stability, healthcare safety and secure digital infrastructure.
 
 | Folder | Project | Pillar | Evidence value |
 |---|---|---|---|
-| [`quant-productivity-toolkit/`](quant-productivity-toolkit/) | Quant Researcher Productivity Toolkit | Financial Stability | CORE — the only honest route to the downloads claim |
-| [`llm-eval-calibration-harness/`](llm-eval-calibration-harness/) | LLM Evaluation & Calibration Harness for Finance | Cross-cutting | CORE — serves the hallucination and verification argument |
-| [`data-provenance-library/`](data-provenance-library/) | Data Provenance / Lineage Library | Financial Stability | CORE — the through-line of the whole endeavor |
-| [`risk-portfolio-saas/`](risk-portfolio-saas/) | Risk-Portfolio SaaS Prototype | Financial Stability | CORE — the strongest of the four Notion tool ideas |
+| [`3-quant-productivity-toolkit/`](3-quant-productivity-toolkit/) | Quant Researcher Productivity Toolkit | Financial Stability | CORE — the only honest route to the downloads claim |
+| [`2-llm-eval-calibration-harness/`](2-llm-eval-calibration-harness/) | LLM Evaluation & Calibration Harness for Finance | Cross-cutting | CORE — serves the hallucination and verification argument |
+| [`1-data-provenance-library/`](1-data-provenance-library/) | Data Provenance / Lineage Library | Financial Stability | CORE — the through-line of the whole endeavor |
+| [`4-risk-portfolio-saas/`](4-risk-portfolio-saas/) | Risk-Portfolio SaaS Prototype | Financial Stability | CORE — the strongest of the four Notion tool ideas |
 
 ## What each one is
 
-### 1. Quant Researcher Productivity Toolkit — [`quant-productivity-toolkit/`](quant-productivity-toolkit/)
+### 1. Quant Researcher Productivity Toolkit — [`3-quant-productivity-toolkit/`](3-quant-productivity-toolkit/)
 
 The Notion 综合性工具 idea shipped as a real, installable package with public download statistics.
 
@@ -37,7 +37,7 @@ The Notion 综合性工具 idea shipped as a real, installable package with publ
 
 *Target scale:* Public registry download statistics
 
-### 2. LLM Evaluation & Calibration Harness for Finance — [`llm-eval-calibration-harness/`](llm-eval-calibration-harness/)
+### 2. LLM Evaluation & Calibration Harness for Finance — [`2-llm-eval-calibration-harness/`](2-llm-eval-calibration-harness/)
 
 Grounding, citation accuracy and refusal behaviour evaluation for LLMs applied to finance.
 
@@ -45,7 +45,7 @@ Grounding, citation accuracy and refusal behaviour evaluation for LLMs applied t
 
 *Target scale:* Public filings and public financial corpora
 
-### 3. Data Provenance / Lineage Library — [`data-provenance-library/`](data-provenance-library/)
+### 3. Data Provenance / Lineage Library — [`1-data-provenance-library/`](1-data-provenance-library/)
 
 Span-level citations from extracted values back to their source documents.
 
@@ -53,7 +53,7 @@ Span-level citations from extracted values back to their source documents.
 
 *Target scale:* Shared across repos 3.0 and 5.0
 
-### 4. Risk-Portfolio SaaS Prototype — [`risk-portfolio-saas/`](risk-portfolio-saas/)
+### 4. Risk-Portfolio SaaS Prototype — [`4-risk-portfolio-saas/`](4-risk-portfolio-saas/)
 
 The Notion 风控组合SaaS idea built as a working risk-portfolio prototype.
 
@@ -65,10 +65,10 @@ The Notion 风控组合SaaS idea built as a working risk-portfolio prototype.
 
 ```
 5.0-Ai-Engineering-Toolkit/
-├── quant-productivity-toolkit/
-├── risk-portfolio-saas/
-├── data-provenance-library/
-└── llm-eval-calibration-harness/
+├── 3-quant-productivity-toolkit/
+├── 4-risk-portfolio-saas/
+├── 1-data-provenance-library/
+└── 2-llm-eval-calibration-harness/
 ```
 
 Every rebuilt project carries the same skeleton: `README.md`, `src/`, `data/`, `results/`, `tests/`, `website/`.
