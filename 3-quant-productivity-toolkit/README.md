@@ -1,15 +1,15 @@
-# spanlineage
+# qkit-research
 
-> Span-level provenance that survives arithmetic: a derived number keeps the characters it came from, across every transformation and every document.
+> The four checks that decide whether a backtest means anything: lookahead, survivorship, label leakage, and how many strategies you tried before this one.
 
 **Repository:** `5.0-Ai-Engineering-Toolkit` &middot; **Pillar:** Financial Stability
 
 ## Status
 
-This is working code with a runnable demo and 20 tests. It is **not** a
+This is working code with a runnable demo and 28 tests. It is **not** a
 finished result.
 
-Release artifacts (sdist + wheel) are built and pass twine check, but the package is NOT published to PyPI, so it has no downloads and no users. The pipeline below runs on two authored filing extracts; the library is real, the filings are not.
+Release artifacts (sdist + wheel) are built and pass twine check, but the package is NOT published to PyPI — no downloads, no users. Every demonstration below runs on synthetic series where the contamination was put there deliberately, which is the only way to show a detector finds it.
 
 Last run: `2026-08-31T21:08:19+00:00`
 
@@ -17,7 +17,7 @@ Last run: `2026-08-31T21:08:19+00:00`
 
 ```bash
 pip install -r requirements.txt
-python -m pytest tests/ -q     # 20 tests
+python -m pytest tests/ -q     # 28 tests
 python -m src.demo             # runs everything, rewrites results/ and website/
 ```
 
@@ -33,37 +33,37 @@ data/
   |-- manifests/
   |-- sample/
 dist/
-  |-- spanlineage-0.1.0-py3-none-any.whl
-  |-- spanlineage-0.1.0.tar.gz
+  |-- qkit_research-0.1.0-py3-none-any.whl
+  |-- qkit_research-0.1.0.tar.gz
 docs/
   |-- DATA.md
   |-- EVIDENCE.md
   |-- METHOD.md
 pyproject.toml
-requirements.txt
-results/
-  |-- README.md
-  |-- latest.json
-spanlineage/
+qkit/
   |-- __init__.py
   |-- cli.py
-  |-- core.py
-  |-- graph.py
-  |-- verify.py
-spanlineage.egg-info/
+  |-- lookahead.py
+  |-- statistics.py
+  |-- universe.py
+  |-- validation.py
+qkit_research.egg-info/
   |-- PKG-INFO
   |-- SOURCES.txt
   |-- dependency_links.txt
   |-- entry_points.txt
   |-- requires.txt
   |-- top_level.txt
+requirements.txt
+results/
+  |-- README.md
+  |-- latest.json
 src/
   |-- .gitkeep
   |-- __init__.py
   |-- demo.py
   |-- site.py
   |-- sitekit.py
-tests/
 ```
 
 - `src/` &mdash; the implementation.
@@ -78,7 +78,7 @@ tests/
 `website/` has no build step. To deploy it independently:
 
 ```bash
-cp -r website/ ../my-data-provenance-library-site && cd ../my-data-provenance-library-site
+cp -r website/ ../my-3-quant-productivity-toolkit-site && cd ../my-3-quant-productivity-toolkit-site
 git init && git add -A && git commit -m "site"
 vercel deploy --prod
 ```

@@ -1,6 +1,6 @@
-# qkit-research — website
+# Risk Portfolio Service — website
 
-Static site for `quant-productivity-toolkit`. No build step: Vercel serves this folder as-is.
+Static site for `4-risk-portfolio-saas`. No build step: Vercel serves this folder as-is.
 
 ## Deploy on its own
 
