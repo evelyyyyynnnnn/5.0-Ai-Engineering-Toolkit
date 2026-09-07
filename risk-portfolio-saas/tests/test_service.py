@@ -171,3 +171,32 @@ def test_short_history_is_flagged():
 def test_report_is_json_serialisable(market):
     import json
     json.dumps(handle(_req([0.25] * 4), market))
+
+
+# --- VaR backtest --------------------------------------------------------
+
+def test_var_backtest_needs_more_than_a_window_of_data():
+    out = risk.var_backtest(np.zeros(120), alpha=0.95, window=250)
+    assert out["tested"] is False
+
+
+def test_var_backtest_is_calibrated_on_iid_normal():
+    """On well-behaved iid returns the rolling historical VaR should not be
+    rejected: coverage near 5% and neither test firing at the 1% level."""
+    r = np.random.default_rng(11).normal(0, 0.01, 3000)
+    out = risk.var_backtest(r, alpha=0.95, window=250)
+    assert out["tested"]
+    assert abs(out["exception_rate"] - 0.05) < 0.02
+    assert out["kupiec_p"] > 0.05            # unconditional coverage not rejected
+    assert out["independence_p"] > 0.05      # exceptions arrive independently
+
+
+def test_var_backtest_detects_understated_risk():
+    """When volatility rises faster than the trailing window can track it, the
+    VaR is persistently too tight, exceptions pile up, and Kupiec must reject."""
+    rng = np.random.default_rng(8)
+    T = 3000
+    r = rng.normal(0, 1.0, T) * np.linspace(0.005, 0.05, T)   # ramping volatility
+    out = risk.var_backtest(r, alpha=0.99, window=250)
+    assert out["observed_exceptions"] > out["expected_exceptions"]
+    assert out["kupiec_p"] < 0.05

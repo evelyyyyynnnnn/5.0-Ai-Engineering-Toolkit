@@ -21,6 +21,8 @@ from .datakit import Source
 STOOQ = "https://stooq.com/q/d/l/?s={sym}&d1={start}&d2={end}&i=d"
 FRENCH = ("https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/"
           "F-F_Research_Data_Factors_daily_CSV.zip")
+FRENCH_INDUSTRY = ("https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/"
+                   "10_Industry_Portfolios_daily_CSV.zip")
 COINGECKO = ("https://api.coingecko.com/api/v3/coins/{coin}/market_chart"
              "?vs_currency=usd&days={days}&interval=daily")
 FRED = "https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}"
@@ -44,6 +46,17 @@ def french_source() -> Source:
         dest="french/ff_daily.zip", publisher="Kenneth R. French Data Library",
         terms="free for research use, attribution requested",
         note="Mkt-RF, SMB, HML and the daily risk-free rate",
+    )
+
+
+def french_industry_source() -> Source:
+    return Source(
+        name="Fama-French 10 industry portfolios, daily", url=FRENCH_INDUSTRY,
+        dest="french/10_industry_daily.zip",
+        publisher="Kenneth R. French Data Library",
+        terms="free for research use, attribution requested",
+        note="value-weighted daily returns for 10 US industry portfolios "
+             "(NoDur, Durbl, Manuf, Enrgy, HiTec, Telcm, Shops, Hlth, Utils, Other)",
     )
 
 
@@ -129,6 +142,56 @@ def parse_french(raw: bytes) -> tuple:
             data[c].append(float(v) / 100.0)   # the file is in percent
     if not dates:
         raise ValueError("no daily rows parsed from the French CSV")
+    return dates, data
+
+
+def parse_french_industry(raw: bytes) -> tuple:
+    """Return (dates, {industry: [daily returns]}) from the 10-industry zip.
+
+    The file stacks several blocks: value-weighted daily returns first, then
+    equal-weighted daily returns, then lower-frequency blocks, each introduced
+    by a title line and its own header row. Only the FIRST block -- the
+    value-weighted daily returns -- is read here; reading past the blank line
+    that ends it would splice equal-weighted returns onto the same series.
+
+    Fama-French encode a missing observation as -99.99 or -999. A day carrying
+    the sentinel for any industry is dropped rather than let a -100% return
+    dominate every VaR estimate in the report.
+    """
+    with zipfile.ZipFile(io.BytesIO(raw)) as z:
+        name = [n for n in z.namelist() if n.lower().endswith(".csv")][0]
+        text = z.read(name).decode("utf-8", errors="replace")
+
+    lines = text.splitlines()
+    start = None
+    for i, ln in enumerate(lines):
+        parts = [p.strip() for p in ln.split(",")]
+        # The header row has an empty first cell (the date column) followed by
+        # the industry codes; NoDur is always the first industry.
+        if parts and parts[0] == "" and len(parts) > 1 and \
+                parts[1].lower().startswith("nodur"):
+            start = i
+            break
+    if start is None:
+        raise ValueError("could not find the industry header row in the French CSV")
+
+    cols = [c for c in (p.strip() for p in lines[start].split(",")[1:]) if c]
+    dates, data = [], {c: [] for c in cols}
+    for ln in lines[start + 1:]:
+        s = ln.strip()
+        if not s:
+            break                      # end of the value-weighted daily block
+        parts = [p.strip() for p in s.split(",")]
+        if not parts[0].isdigit() or len(parts[0]) != 8:
+            break                      # lower-frequency blocks use 4-digit years
+        vals = [float(v) for v in parts[1:1 + len(cols)]]
+        if any(v <= -99.0 for v in vals):
+            continue                   # -99.99 / -999 is the missing sentinel
+        dates.append(datetime.strptime(parts[0], "%Y%m%d").date())
+        for c, v in zip(cols, vals):
+            data[c].append(v / 100.0)  # the file is in percent
+    if not dates:
+        raise ValueError("no daily rows parsed from the French industry CSV")
     return dates, data
 
 

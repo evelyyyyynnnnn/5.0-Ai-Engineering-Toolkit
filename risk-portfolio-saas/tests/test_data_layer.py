@@ -14,7 +14,8 @@ import pytest
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 
 from data import datakit
-from data.marketdata import align, parse_fred, parse_stooq
+from data.marketdata import (align, parse_fred, parse_french_industry,
+                             parse_stooq)
 
 D = dt.date.fromisoformat
 
@@ -46,6 +47,69 @@ def test_align_drops_dates_missing_from_any_series():
     common, out = align({"a": a, "b": b})
     assert common == [D("2024-01-02"), D("2024-01-04")]
     assert out["a"] == [1., 3.]
+
+
+def _industry_zip() -> bytes:
+    """A minimal 10-industry daily file with the block structure of the real one."""
+    import io
+    import zipfile
+    inds = ["NoDur", "Durbl", "Manuf", "Enrgy", "HiTec",
+            "Telcm", "Shops", "Hlth ", "Utils", "Other"]
+    body = [
+        "This file was created ... (preamble)",
+        "",
+        "  Average Value Weighted Returns -- Daily",
+        "," + ",".join(inds),
+    ]
+    d = dt.date(2020, 1, 2)
+    rng = np.random.default_rng(3)
+    for _ in range(30):
+        while d.weekday() >= 5:
+            d += dt.timedelta(days=1)
+        vals = ",".join(f"{v:7.2f}" for v in rng.normal(0, 1.0, len(inds)))
+        body.append(f"{d.strftime('%Y%m%d')},{vals}")
+        d += dt.timedelta(days=1)
+    # A missing-data sentinel row that must be dropped, not divided by 100.
+    body.append(d.strftime('%Y%m%d') + ("," + "-99.99") * len(inds))
+    body.append("")
+    body.append("  Average Equal Weighted Returns -- Daily")
+    body.append("," + ",".join(inds))
+    body.append("20200214," + ",".join(["9.99"] * len(inds)))   # must NOT be read
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w") as z:
+        z.writestr("10_Industry_Portfolios_Daily.csv", "\n".join(body) + "\n")
+    return buf.getvalue()
+
+
+def test_parse_french_industry_reads_only_the_value_weighted_daily_block():
+    dates, data = parse_french_industry(_industry_zip())
+    assert list(data) == ["NoDur", "Durbl", "Manuf", "Enrgy", "HiTec",
+                          "Telcm", "Shops", "Hlth", "Utils", "Other"]
+    assert len(dates) == 30                     # sentinel row dropped, EW block ignored
+    assert all(len(v) == 30 for v in data.values())
+    assert abs(data["NoDur"][0]) < 0.2          # percent has been divided by 100
+
+
+def test_load_market_prefers_cached_industry_returns(tmp_path):
+    f = datakit.Fetcher(tmp_path)
+    (f.raw / "french").mkdir(parents=True)
+    raw = _industry_zip()
+    dest = "french/10_industry_daily.zip"
+    (f.raw / dest).write_bytes(raw)
+    man = f.load_manifest()
+    man["files"][dest] = {
+        "source": "FF 10 industry", "url": "https://example/10ind.zip",
+        "publisher": "French", "terms": "research",
+        "sha256": datakit.sha256_file(f.raw / dest), "bytes": len(raw),
+        "retrieved_utc": datakit.utc_now()}
+    f._write_manifest(man)
+
+    from data.load import load_market
+    market, meta = load_market(root=tmp_path, min_days=20)
+    assert meta["n_tickers"] == 10
+    assert market.tickers[0] == "NoDur"
+    assert meta["benchmark"].startswith("equal-weighted average")   # no factor file
+    assert len(meta["betas"]) == 10
 
 
 def test_load_market_refuses_when_nothing_is_cached(tmp_path):

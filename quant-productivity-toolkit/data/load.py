@@ -64,6 +64,59 @@ def load_prices(root=ROOT, min_days: int = 750):
     return dates, aligned, prov
 
 
+def load_market_price_index(root=ROOT, min_days: int = 750):
+    """Return (dates, {"MKT-INDEX": closes}, provenance) for a real price path
+    cumulated from the Ken French daily market total return.
+
+    The Fama-French daily file already carries the excess market return (Mkt-RF)
+    and the daily risk-free rate (RF), both really downloaded and hashed in
+    data/MANIFEST.json. Their sum is the daily *total* return on the market
+    portfolio, and cumulating (1 + total return) day by day from a base of 100
+    gives a genuine, reproducible price index -- the real return history of the
+    market, not a synthetic draw.
+
+    This is the price source the moving-average sweep uses when Stooq's
+    per-ticker closes are unavailable: Stooq now answers with a JavaScript
+    bot-check page instead of a CSV, so the cached stooq/*.csv are challenge
+    pages, not prices. The distinction that has to survive into the output is
+    that this is a market price *index*, not the closes of a single traded
+    stock, and the provenance below says exactly that.
+
+    The cumulation is strictly causal: the price at day t is built only from
+    returns up to and including t, matching the no-lookahead discipline the rest
+    of the toolkit insists on.
+    """
+    f = Fetcher(root)
+    man = f.load_manifest()
+    dest = "french/ff_daily.zip"
+    if dest not in man["files"] or not (f.raw / dest).exists():
+        raise FetchError(
+            "the Fama-French daily factors are not cached, so no real price "
+            "index can be built either. Run `python -m data.fetch` in a "
+            "networked environment first.")
+    dates, data = parse_french((f.raw / dest).read_bytes())
+    if "Mkt-RF" not in data or "RF" not in data:
+        raise FetchError(
+            "the French factor file has no Mkt-RF/RF columns; cannot cumulate a "
+            "market price index from it")
+    mkt_rf = np.asarray(data["Mkt-RF"], float)
+    rf = np.asarray(data["RF"], float)
+    total = mkt_rf + rf                          # daily total return on the market
+    closes = 100.0 * np.cumprod(1.0 + total)     # base 100, strictly causal
+    if len(closes) < min_days:
+        raise FetchError(f"only {len(closes)} usable days; need {min_days}")
+    rec = man["files"][dest]
+    prov = [{
+        "ticker": "MKT-INDEX", "status": "ok", "n_closes": int(len(closes)),
+        "first": str(dates[0]), "last": str(dates[-1]),
+        "sha256": rec["sha256"][:16], "url": rec["url"],
+        "note": "price index cumulated from the Ken French daily market total "
+                "return (Mkt-RF + RF), base 100; a real market price path, not "
+                "the closes of any single traded stock",
+    }]
+    return dates, {"MKT-INDEX": closes}, prov
+
+
 def strategy_grid(prices: np.ndarray, fast_range=range(2, 22, 2),
                   slow_range=range(20, 220, 10)):
     """Every fast/slow moving-average crossover rule on one price series.

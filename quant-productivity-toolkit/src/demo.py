@@ -253,23 +253,43 @@ def run_real() -> dict:
     import sys as _sys
     _sys.path.insert(0, str(ROOT))
     from data.load import ROOT as DATA_ROOT
-    from data.load import load_factors, load_prices, strategy_grid
+    from data.load import (load_factors, load_market_price_index, load_prices,
+                           strategy_grid)
+    from data.datakit import FetchError
 
     dates, factors, fprov = load_factors(root=DATA_ROOT)
     mkt = np.asarray(factors.get("Mkt-RF", []), float)
 
-    pdates, prices, pprov = load_prices(root=DATA_ROOT)
-    ticker = "spy.us" if "spy.us" in prices else sorted(prices)[0]
-    px = np.asarray(prices[ticker], float)
+    # The sweep needs a price series. Prefer Stooq's per-ticker closes; if Stooq
+    # is unavailable -- it now serves a JavaScript bot-check page instead of a
+    # CSV, so the cached stooq/*.csv parse as nothing usable -- fall back to a
+    # price index cumulated from the real French daily market total return.
+    # BOTH paths are genuinely-downloaded data; neither is synthetic.
+    try:
+        pdates, prices, pprov = load_prices(root=DATA_ROOT)
+        ticker = "spy.us" if "spy.us" in prices else sorted(prices)[0]
+        px = np.asarray(prices[ticker], float)
+        sweep_label = f"{ticker} moving-average grid"
+        price_source = "Stooq daily closes"
+    except FetchError:
+        pdates, prices, pprov = load_market_price_index(root=DATA_ROOT)
+        px = np.asarray(prices["MKT-INDEX"], float)
+        sweep_label = ("market price index (cumulated Ken French daily market "
+                       "return) moving-average grid")
+        price_source = ("a daily price index cumulated from the Ken French "
+                        "daily market total return (Mkt-RF + RF), base 100 -- a "
+                        "real, reproducible market price path, not raw "
+                        "single-stock closes (Stooq per-ticker closes were "
+                        "unavailable: it now returns a bot-check page)")
 
     look = lookahead_demo_real(dates, mkt, "Fama-French daily market factor")
-    sweep = selection_demo_real(strategy_grid(px), f"{ticker} moving-average grid")
+    sweep = selection_demo_real(strategy_grid(px), sweep_label)
 
     results = {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "is_synthetic": False,
-        "data_source": "Fama-French daily research factors and Stooq daily "
-                       "closes; see data/MANIFEST.json for URLs, hashes and "
+        "data_source": "Fama-French daily research factors, and " + price_source
+                       + "; see data/MANIFEST.json for URLs, hashes and "
                        "retrieval times",
         "package": {"name": "qkit-research", "version": qkit.__version__,
                     "exports": len(qkit.__all__), "published": False},
