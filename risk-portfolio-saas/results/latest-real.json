@@ -1,0 +1,395 @@
+{
+  "generated_at": "2026-09-07T00:16:52+00:00",
+  "is_synthetic": false,
+  "data_source": "Fama-French 10-industry value-weighted daily returns (Kenneth R. French Data Library); see data/MANIFEST.json for the URL, sha256 and retrieval time",
+  "n_tickers": 10,
+  "observations": 2600,
+  "window": {
+    "first": "2016-03-30",
+    "last": "2026-07-31"
+  },
+  "betas_estimated_against": "Fama-French US market factor (Mkt-RF + RF)",
+  "betas": {
+    "NoDur": 0.5779,
+    "Durbl": 1.4654,
+    "Manuf": 0.9604,
+    "Enrgy": 0.9338,
+    "HiTec": 1.2057,
+    "Telcm": 0.6891,
+    "Shops": 0.8986,
+    "Hlth": 0.7276,
+    "Utils": 0.5959,
+    "Other": 1.0054
+  },
+  "provenance": [
+    {
+      "ticker": "NoDur",
+      "status": "ok",
+      "n_obs": 2600,
+      "first": "2016-03-30",
+      "last": "2026-07-31",
+      "sha256": "b1a23edba335ddd3",
+      "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/10_Industry_Portfolios_daily_CSV.zip"
+    },
+    {
+      "ticker": "Durbl",
+      "status": "ok",
+      "n_obs": 2600,
+      "first": "2016-03-30",
+      "last": "2026-07-31",
+      "sha256": "b1a23edba335ddd3",
+      "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/10_Industry_Portfolios_daily_CSV.zip"
+    },
+    {
+      "ticker": "Manuf",
+      "status": "ok",
+      "n_obs": 2600,
+      "first": "2016-03-30",
+      "last": "2026-07-31",
+      "sha256": "b1a23edba335ddd3",
+      "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/10_Industry_Portfolios_daily_CSV.zip"
+    },
+    {
+      "ticker": "Enrgy",
+      "status": "ok",
+      "n_obs": 2600,
+      "first": "2016-03-30",
+      "last": "2026-07-31",
+      "sha256": "b1a23edba335ddd3",
+      "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/10_Industry_Portfolios_daily_CSV.zip"
+    },
+    {
+      "ticker": "HiTec",
+      "status": "ok",
+      "n_obs": 2600,
+      "first": "2016-03-30",
+      "last": "2026-07-31",
+      "sha256": "b1a23edba335ddd3",
+      "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/10_Industry_Portfolios_daily_CSV.zip"
+    },
+    {
+      "ticker": "Telcm",
+      "status": "ok",
+      "n_obs": 2600,
+      "first": "2016-03-30",
+      "last": "2026-07-31",
+      "sha256": "b1a23edba335ddd3",
+      "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/10_Industry_Portfolios_daily_CSV.zip"
+    },
+    {
+      "ticker": "Shops",
+      "status": "ok",
+      "n_obs": 2600,
+      "first": "2016-03-30",
+      "last": "2026-07-31",
+      "sha256": "b1a23edba335ddd3",
+      "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/10_Industry_Portfolios_daily_CSV.zip"
+    },
+    {
+      "ticker": "Hlth",
+      "status": "ok",
+      "n_obs": 2600,
+      "first": "2016-03-30",
+      "last": "2026-07-31",
+      "sha256": "b1a23edba335ddd3",
+      "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/10_Industry_Portfolios_daily_CSV.zip"
+    },
+    {
+      "ticker": "Utils",
+      "status": "ok",
+      "n_obs": 2600,
+      "first": "2016-03-30",
+      "last": "2026-07-31",
+      "sha256": "b1a23edba335ddd3",
+      "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/10_Industry_Portfolios_daily_CSV.zip"
+    },
+    {
+      "ticker": "Other",
+      "status": "ok",
+      "n_obs": 2600,
+      "first": "2016-03-30",
+      "last": "2026-07-31",
+      "sha256": "b1a23edba335ddd3",
+      "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/10_Industry_Portfolios_daily_CSV.zip"
+    }
+  ],
+  "portfolios_are_authored": true,
+  "reports": {
+    "EQUAL-WEIGHT": {
+      "portfolio_id": "EQUAL-WEIGHT",
+      "as_of": "2026-07-31",
+      "n_positions": 10,
+      "observations": 2600,
+      "alpha": 0.95,
+      "risk": {
+        "annualised_volatility": 0.172676,
+        "var_historical": 0.014992,
+        "var_gaussian": 0.017332,
+        "var_cornish_fisher": 0.015461,
+        "expected_shortfall": 0.026321,
+        "max_drawdown": 0.367832
+      },
+      "concentration": {
+        "hhi": 0.1,
+        "effective_positions": 10.0,
+        "top3_share": 0.3
+      },
+      "contributions": [
+        {
+          "ticker": "Durbl",
+          "weight": 0.1,
+          "risk_contribution": 0.0017869,
+          "risk_share": 0.16427
+        },
+        {
+          "ticker": "Enrgy",
+          "weight": 0.1,
+          "risk_contribution": 0.00127895,
+          "risk_share": 0.11758
+        },
+        {
+          "ticker": "HiTec",
+          "weight": 0.1,
+          "risk_contribution": 0.00124275,
+          "risk_share": 0.11425
+        },
+        {
+          "ticker": "Other",
+          "weight": 0.1,
+          "risk_contribution": 0.00117818,
+          "risk_share": 0.10831
+        },
+        {
+          "ticker": "Manuf",
+          "weight": 0.1,
+          "risk_contribution": 0.00112668,
+          "risk_share": 0.10358
+        },
+        {
+          "ticker": "Shops",
+          "weight": 0.1,
+          "risk_contribution": 0.00099622,
+          "risk_share": 0.09158
+        },
+        {
+          "ticker": "Telcm",
+          "weight": 0.1,
+          "risk_contribution": 0.00087465,
+          "risk_share": 0.08041
+        },
+        {
+          "ticker": "Hlth",
+          "weight": 0.1,
+          "risk_contribution": 0.00084766,
+          "risk_share": 0.07793
+        },
+        {
+          "ticker": "Utils",
+          "weight": 0.1,
+          "risk_contribution": 0.00079684,
+          "risk_share": 0.07325
+        },
+        {
+          "ticker": "NoDur",
+          "weight": 0.1,
+          "risk_contribution": 0.00074876,
+          "risk_share": 0.06884
+        }
+      ],
+      "stress": {
+        "factor_shock_-10pct": -0.090598,
+        "factor_shock_-20pct": -0.181195,
+        "worst_20d_realised": {
+          "window": 20,
+          "loss": 0.341162,
+          "start": 982
+        }
+      },
+      "latency_ms": 7.394,
+      "checks": [
+        {
+          "level": "warn",
+          "code": "risk_capital_mismatch",
+          "detail": "Durbl carries 1.64x its capital share in risk (16% of risk on 10% of capital)"
+        }
+      ],
+      "backtest": {
+        "var_95": {
+          "tested": true,
+          "confidence": 0.95,
+          "window": 250,
+          "test_observations": 2350,
+          "expected_exceptions": 117.5,
+          "observed_exceptions": 131,
+          "exception_rate": 0.05574,
+          "expected_rate": 0.05,
+          "kupiec_lr": 1.5767,
+          "kupiec_p": 0.2092,
+          "independence_lr": 15.2809,
+          "independence_p": 0.0001,
+          "christoffersen_cc_lr": 16.8575,
+          "christoffersen_cc_p": 0.0002
+        },
+        "var_99": {
+          "tested": true,
+          "confidence": 0.99,
+          "window": 250,
+          "test_observations": 2350,
+          "expected_exceptions": 23.5,
+          "observed_exceptions": 41,
+          "exception_rate": 0.01745,
+          "expected_rate": 0.01,
+          "kupiec_lr": 10.7708,
+          "kupiec_p": 0.001,
+          "independence_lr": 11.8252,
+          "independence_p": 0.0006,
+          "christoffersen_cc_lr": 22.596,
+          "christoffersen_cc_p": 0.0
+        }
+      }
+    },
+    "HIGH-BETA-TILT": {
+      "portfolio_id": "HIGH-BETA-TILT",
+      "as_of": "2026-07-31",
+      "n_positions": 10,
+      "observations": 2600,
+      "alpha": 0.95,
+      "risk": {
+        "annualised_volatility": 0.227964,
+        "var_historical": 0.021228,
+        "var_gaussian": 0.022948,
+        "var_cornish_fisher": 0.021403,
+        "expected_shortfall": 0.033825,
+        "max_drawdown": 0.400602
+      },
+      "concentration": {
+        "hhi": 0.2,
+        "effective_positions": 5.0,
+        "top3_share": 0.5333
+      },
+      "contributions": [
+        {
+          "ticker": "Durbl",
+          "weight": 0.4,
+          "risk_contribution": 0.00922866,
+          "risk_share": 0.64265
+        },
+        {
+          "ticker": "HiTec",
+          "weight": 0.06667,
+          "risk_contribution": 0.0007901,
+          "risk_share": 0.05502
+        },
+        {
+          "ticker": "Other",
+          "weight": 0.06667,
+          "risk_contribution": 0.00068246,
+          "risk_share": 0.04752
+        },
+        {
+          "ticker": "Enrgy",
+          "weight": 0.06667,
+          "risk_contribution": 0.00067185,
+          "risk_share": 0.04679
+        },
+        {
+          "ticker": "Manuf",
+          "weight": 0.06667,
+          "risk_contribution": 0.00065721,
+          "risk_share": 0.04577
+        },
+        {
+          "ticker": "Shops",
+          "weight": 0.06667,
+          "risk_contribution": 0.00060089,
+          "risk_share": 0.04184
+        },
+        {
+          "ticker": "Telcm",
+          "weight": 0.06667,
+          "risk_contribution": 0.00047413,
+          "risk_share": 0.03302
+        },
+        {
+          "ticker": "Hlth",
+          "weight": 0.06667,
+          "risk_contribution": 0.00046689,
+          "risk_share": 0.03251
+        },
+        {
+          "ticker": "Utils",
+          "weight": 0.06667,
+          "risk_contribution": 0.0003987,
+          "risk_share": 0.02776
+        },
+        {
+          "ticker": "NoDur",
+          "weight": 0.06667,
+          "risk_contribution": 0.00038949,
+          "risk_share": 0.02712
+        }
+      ],
+      "stress": {
+        "factor_shock_-10pct": -0.109245,
+        "factor_shock_-20pct": -0.21849,
+        "worst_20d_realised": {
+          "window": 20,
+          "loss": 0.380485,
+          "start": 980
+        }
+      },
+      "latency_ms": 3.672,
+      "checks": [
+        {
+          "level": "warn",
+          "code": "concentrated",
+          "detail": "5.0 effective positions across 10 holdings (50% of equal weighting)"
+        },
+        {
+          "level": "warn",
+          "code": "risk_concentration",
+          "detail": "Durbl is 64% of risk on 40% of capital"
+        },
+        {
+          "level": "warn",
+          "code": "risk_capital_mismatch",
+          "detail": "Durbl carries 1.61x its capital share in risk (64% of risk on 40% of capital)"
+        }
+      ],
+      "backtest": {
+        "var_95": {
+          "tested": true,
+          "confidence": 0.95,
+          "window": 250,
+          "test_observations": 2350,
+          "expected_exceptions": 117.5,
+          "observed_exceptions": 139,
+          "exception_rate": 0.05915,
+          "expected_rate": 0.05,
+          "kupiec_lr": 3.9216,
+          "kupiec_p": 0.0477,
+          "independence_lr": 6.7151,
+          "independence_p": 0.0096,
+          "christoffersen_cc_lr": 10.6367,
+          "christoffersen_cc_p": 0.0049
+        },
+        "var_99": {
+          "tested": true,
+          "confidence": 0.99,
+          "window": 250,
+          "test_observations": 2350,
+          "expected_exceptions": 23.5,
+          "observed_exceptions": 38,
+          "exception_rate": 0.01617,
+          "expected_rate": 0.01,
+          "kupiec_lr": 7.6151,
+          "kupiec_p": 0.0058,
+          "independence_lr": 8.8499,
+          "independence_p": 0.0029,
+          "christoffersen_cc_lr": 16.465,
+          "christoffersen_cc_p": 0.0003
+        }
+      }
+    }
+  }
+}
