@@ -1,0 +1,422 @@
+{
+  "generated_at": "2026-09-06T23:58:59+00:00",
+  "is_synthetic": false,
+  "data_source": "SEC EDGAR XBRL company-concept API -- values as filed, each carrying the accession number of the filing it was reported in; see data/MANIFEST.json for hashes",
+  "package": {
+    "name": "spanlineage",
+    "version": "0.1.0",
+    "exports": 12,
+    "published": false
+  },
+  "duplicate_policy": "the same figure is reported many times -- in the original 10-K, again as a comparative the next year, again in each quarter's year-to-date column. The earliest FILED entry for a period is used, because a lineage that followed restatements would explain a number using characters from a document published after it.",
+  "companies": [
+    {
+      "ticker": "AAPL",
+      "metrics": {
+        "revenue": {
+          "value": 416161000000.0,
+          "n_spans": 1,
+          "documents": [
+            "AAPL:RevenueFromContractWithCustomerExcludingAssessedTax"
+          ],
+          "evidence": [
+            "416161000000"
+          ],
+          "op": "extract",
+          "depth": 0
+        },
+        "gross_profit": {
+          "value": 195201000000.0,
+          "n_spans": 2,
+          "documents": [
+            "AAPL:CostOfGoodsAndServicesSold",
+            "AAPL:RevenueFromContractWithCustomerExcludingAssessedTax"
+          ],
+          "evidence": [
+            "416161000000",
+            "220960000000"
+          ],
+          "op": "sub",
+          "depth": 1
+        },
+        "gross_margin": {
+          "value": 0.469052,
+          "n_spans": 2,
+          "documents": [
+            "AAPL:CostOfGoodsAndServicesSold",
+            "AAPL:RevenueFromContractWithCustomerExcludingAssessedTax"
+          ],
+          "evidence": [
+            "416161000000",
+            "220960000000"
+          ],
+          "op": "div",
+          "depth": 2
+        },
+        "rnd_intensity": {
+          "value": 0.083021,
+          "n_spans": 2,
+          "documents": [
+            "AAPL:ResearchAndDevelopmentExpense",
+            "AAPL:RevenueFromContractWithCustomerExcludingAssessedTax"
+          ],
+          "evidence": [
+            "34550000000",
+            "416161000000"
+          ],
+          "op": "div",
+          "depth": 1
+        }
+      },
+      "provenance": [
+        {
+          "field": "revenue",
+          "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+          "status": "ok",
+          "value": 416161000000,
+          "unit": "USD",
+          "period": "2024-09-29..2025-09-27",
+          "fy": 2025,
+          "form": "10-K",
+          "accession": "0000320193-25-000079",
+          "filed": "2025-10-31",
+          "span": [
+            17451,
+            17463
+          ],
+          "span_text": "416161000000",
+          "document_sha256": "4495f7a16b4ade43",
+          "url": "https://data.sec.gov/api/xbrl/companyconcept/CIK0000320193/us-gaap/RevenueFromContractWithCustomerExcludingAssessedTax.json",
+          "retrieved_utc": "2026-09-06T23:58:54+00:00"
+        },
+        {
+          "field": "cost",
+          "tag": "CostOfGoodsAndServicesSold",
+          "status": "ok",
+          "value": 220960000000,
+          "unit": "USD",
+          "period": "2024-09-29..2025-09-27",
+          "fy": 2025,
+          "form": "10-K",
+          "accession": "0000320193-25-000079",
+          "filed": "2025-10-31",
+          "span": [
+            34885,
+            34897
+          ],
+          "span_text": "220960000000",
+          "document_sha256": "8a288be0e114f9ff",
+          "url": "https://data.sec.gov/api/xbrl/companyconcept/CIK0000320193/us-gaap/CostOfGoodsAndServicesSold.json",
+          "retrieved_utc": "2026-09-06T23:58:55+00:00"
+        },
+        {
+          "field": "rnd",
+          "tag": "ResearchAndDevelopmentExpense",
+          "status": "ok",
+          "value": 34550000000,
+          "unit": "USD",
+          "period": "2024-09-29..2025-09-27",
+          "fy": 2025,
+          "form": "10-K",
+          "accession": "0000320193-25-000079",
+          "filed": "2025-10-31",
+          "span": [
+            35220,
+            35231
+          ],
+          "span_text": "34550000000",
+          "document_sha256": "88618d12c71fce5b",
+          "url": "https://data.sec.gov/api/xbrl/companyconcept/CIK0000320193/us-gaap/ResearchAndDevelopmentExpense.json",
+          "retrieved_utc": "2026-09-06T23:58:55+00:00"
+        }
+      ],
+      "graph": {
+        "n_nodes": 4,
+        "n_edges": 4,
+        "depth": 2,
+        "n_leaves": 2,
+        "ops": [
+          "div",
+          "extract",
+          "sub"
+        ]
+      },
+      "explanation": [
+        {
+          "depth": 0,
+          "op": "div",
+          "value": 0.4690516410716045,
+          "note": "",
+          "evidence": []
+        },
+        {
+          "depth": 1,
+          "op": "sub",
+          "value": 195201000000.0,
+          "note": "",
+          "evidence": []
+        },
+        {
+          "depth": 2,
+          "op": "extract",
+          "value": 416161000000.0,
+          "note": "RevenueFromContractWithCustomerExcludingAssessedTax 2025 10-K",
+          "evidence": [
+            "416161000000"
+          ]
+        },
+        {
+          "depth": 2,
+          "op": "extract",
+          "value": 220960000000.0,
+          "note": "CostOfGoodsAndServicesSold 2025 10-K",
+          "evidence": [
+            "220960000000"
+          ]
+        },
+        {
+          "depth": 1,
+          "op": "extract",
+          "value": 416161000000.0,
+          "note": "RevenueFromContractWithCustomerExcludingAssessedTax 2025 10-K",
+          "evidence": [
+            "416161000000"
+          ]
+        }
+      ],
+      "verification": {
+        "ok": true,
+        "n_spans": 2,
+        "n_checked": 2,
+        "problems": []
+      },
+      "tamper": {
+        "detected": true,
+        "problems": [
+          {
+            "span": {
+              "doc_id": "AAPL:RevenueFromContractWithCustomerExcludingAssessedTax",
+              "start": 17451,
+              "end": 17463,
+              "doc_sha": "4495f7a16b4ade43"
+            },
+            "issue": "document has changed",
+            "recorded_sha": "4495f7a16b4ade43",
+            "current_sha": "247ff039802bad2c"
+          }
+        ]
+      },
+      "cross_document": [
+        "AAPL:CostOfGoodsAndServicesSold",
+        "AAPL:RevenueFromContractWithCustomerExcludingAssessedTax"
+      ]
+    },
+    {
+      "ticker": "MSFT",
+      "metrics": {
+        "revenue": {
+          "value": 331839000000.0,
+          "n_spans": 1,
+          "documents": [
+            "MSFT:RevenueFromContractWithCustomerExcludingAssessedTax"
+          ],
+          "evidence": [
+            "331839000000"
+          ],
+          "op": "extract",
+          "depth": 0
+        },
+        "gross_profit": {
+          "value": 225465000000.0,
+          "n_spans": 2,
+          "documents": [
+            "MSFT:CostOfGoodsAndServicesSold",
+            "MSFT:RevenueFromContractWithCustomerExcludingAssessedTax"
+          ],
+          "evidence": [
+            "331839000000",
+            "106374000000"
+          ],
+          "op": "sub",
+          "depth": 1
+        },
+        "gross_margin": {
+          "value": 0.679441,
+          "n_spans": 2,
+          "documents": [
+            "MSFT:CostOfGoodsAndServicesSold",
+            "MSFT:RevenueFromContractWithCustomerExcludingAssessedTax"
+          ],
+          "evidence": [
+            "331839000000",
+            "106374000000"
+          ],
+          "op": "div",
+          "depth": 2
+        },
+        "rnd_intensity": {
+          "value": 0.107166,
+          "n_spans": 2,
+          "documents": [
+            "MSFT:ResearchAndDevelopmentExpense",
+            "MSFT:RevenueFromContractWithCustomerExcludingAssessedTax"
+          ],
+          "evidence": [
+            "35562000000",
+            "331839000000"
+          ],
+          "op": "div",
+          "depth": 1
+        }
+      },
+      "provenance": [
+        {
+          "field": "revenue",
+          "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+          "status": "ok",
+          "value": 331839000000,
+          "unit": "USD",
+          "period": "2025-07-01..2026-06-30",
+          "fy": 2026,
+          "form": "10-K",
+          "accession": "0001193125-26-323660",
+          "filed": "2026-07-29",
+          "span": [
+            20802,
+            20814
+          ],
+          "span_text": "331839000000",
+          "document_sha256": "5d82a226a193327e",
+          "url": "https://data.sec.gov/api/xbrl/companyconcept/CIK0000789019/us-gaap/RevenueFromContractWithCustomerExcludingAssessedTax.json",
+          "retrieved_utc": "2026-09-06T23:58:56+00:00"
+        },
+        {
+          "field": "cost",
+          "tag": "CostOfGoodsAndServicesSold",
+          "status": "ok",
+          "value": 106374000000,
+          "unit": "USD",
+          "period": "2025-07-01..2026-06-30",
+          "fy": 2026,
+          "form": "10-K",
+          "accession": "0001193125-26-323660",
+          "filed": "2026-07-29",
+          "span": [
+            16965,
+            16977
+          ],
+          "span_text": "106374000000",
+          "document_sha256": "5f4ee0c38e5c1ed4",
+          "url": "https://data.sec.gov/api/xbrl/companyconcept/CIK0000789019/us-gaap/CostOfGoodsAndServicesSold.json",
+          "retrieved_utc": "2026-09-06T23:58:56+00:00"
+        },
+        {
+          "field": "rnd",
+          "tag": "ResearchAndDevelopmentExpense",
+          "status": "ok",
+          "value": 35562000000,
+          "unit": "USD",
+          "period": "2025-07-01..2026-06-30",
+          "fy": 2026,
+          "form": "10-K",
+          "accession": "0001193125-26-323660",
+          "filed": "2026-07-29",
+          "span": [
+            35462,
+            35473
+          ],
+          "span_text": "35562000000",
+          "document_sha256": "b3b4ef0d69b4cfb3",
+          "url": "https://data.sec.gov/api/xbrl/companyconcept/CIK0000789019/us-gaap/ResearchAndDevelopmentExpense.json",
+          "retrieved_utc": "2026-09-06T23:58:57+00:00"
+        }
+      ],
+      "graph": {
+        "n_nodes": 4,
+        "n_edges": 4,
+        "depth": 2,
+        "n_leaves": 2,
+        "ops": [
+          "div",
+          "extract",
+          "sub"
+        ]
+      },
+      "explanation": [
+        {
+          "depth": 0,
+          "op": "div",
+          "value": 0.6794409337058032,
+          "note": "",
+          "evidence": []
+        },
+        {
+          "depth": 1,
+          "op": "sub",
+          "value": 225465000000.0,
+          "note": "",
+          "evidence": []
+        },
+        {
+          "depth": 2,
+          "op": "extract",
+          "value": 331839000000.0,
+          "note": "RevenueFromContractWithCustomerExcludingAssessedTax 2026 10-K",
+          "evidence": [
+            "331839000000"
+          ]
+        },
+        {
+          "depth": 2,
+          "op": "extract",
+          "value": 106374000000.0,
+          "note": "CostOfGoodsAndServicesSold 2026 10-K",
+          "evidence": [
+            "106374000000"
+          ]
+        },
+        {
+          "depth": 1,
+          "op": "extract",
+          "value": 331839000000.0,
+          "note": "RevenueFromContractWithCustomerExcludingAssessedTax 2026 10-K",
+          "evidence": [
+            "331839000000"
+          ]
+        }
+      ],
+      "verification": {
+        "ok": true,
+        "n_spans": 2,
+        "n_checked": 2,
+        "problems": []
+      },
+      "tamper": {
+        "detected": true,
+        "problems": [
+          {
+            "span": {
+              "doc_id": "MSFT:RevenueFromContractWithCustomerExcludingAssessedTax",
+              "start": 20802,
+              "end": 20814,
+              "doc_sha": "5d82a226a193327e"
+            },
+            "issue": "document has changed",
+            "recorded_sha": "5d82a226a193327e",
+            "current_sha": "749797cc521f1845"
+          }
+        ]
+      },
+      "cross_document": [
+        "MSFT:CostOfGoodsAndServicesSold",
+        "MSFT:RevenueFromContractWithCustomerExcludingAssessedTax"
+      ]
+    }
+  ],
+  "failures": [
+    {
+      "ticker": "KO",
+      "error": "FetchError: KO: no usable revenue concept in the cache"
+    }
+  ]
+}
