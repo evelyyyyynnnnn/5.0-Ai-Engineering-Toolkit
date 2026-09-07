@@ -1,6 +1,6 @@
 # spanlineage — website
 
-Static site for `data-provenance-library`. No build step: Vercel serves this folder as-is.
+Static site for `1-data-provenance-library`. No build step: Vercel serves this folder as-is.
 
 ## Deploy on its own
 

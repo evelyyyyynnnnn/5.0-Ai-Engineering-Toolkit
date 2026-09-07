@@ -1,6 +1,6 @@
 # LLM Eval & Calibration Harness — website
 
-Static site for `llm-eval-calibration-harness`. No build step: Vercel serves this folder as-is.
+Static site for `2-llm-eval-calibration-harness`. No build step: Vercel serves this folder as-is.
 
 ## Deploy on its own
 
