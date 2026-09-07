@@ -1,6 +1,6 @@
 # 5.0 — AI Engineering Toolkit
 
-Shared, installable engineering infrastructure behind the endeavor. Four rebuilt projects carry it; six earlier entries sit alongside them at the top level, labelled — consumer products, asset libraries and duplicates that are not part of the petition's evidence.
+Shared, installable engineering infrastructure behind the endeavor. Four rebuilt projects carry it.
 
 Part of a five-repository portfolio supporting the endeavor described in the
 EB2-NIW petition: **optimization-driven, system-level decision frameworks** —
@@ -68,18 +68,12 @@ The Notion 风控组合SaaS idea built as a working risk-portfolio prototype.
 ├── quant-productivity-toolkit/
 ├── risk-portfolio-saas/
 ├── data-provenance-library/
-├── llm-eval-calibration-harness/
-│
-│   ── earlier work, promoted out of previous/ ──
-├── distributed-ledger-system/
-├── realtime-chat-system/
-├── realtime-chat-system-2/
-├── 3D-campus-model/
-├── repo3-fine-tuning-template/
-└── repo4-llm-efficiency-reference-search/
+└── llm-eval-calibration-harness/
 ```
 
 Every rebuilt project carries the same skeleton: `README.md`, `src/`, `data/`, `results/`, `tests/`, `website/`.
+
+> Earlier and off-theme prior work (dashboards, consumer apps, templates, and other non-endeavor folders) has been moved to a separate `archive-prior-work` repository to keep this repository focused on the endeavor. It remains recoverable from this repository's git history.
 
 ## Ground rules
 
@@ -90,24 +84,6 @@ Every rebuilt project carries the same skeleton: `README.md`, `src/`, `data/`, `
 3. **Adoption must be documentable** — named institutions, dated
    correspondence, registry statistics. Never an inflated count.
 4. **Third-party and forked code stays labelled** and is never counted.
-
-## Earlier work
-
-There is no `previous/` folder any more. Everything that was in it has been promoted to the top level, so every piece of work in this repository is a first-class folder that can be opened, read and continued.
-
-Nothing was deleted except items the rebuild genuinely supersedes; those remain in git history.
-
-| Folder | What it is | How it may be used |
-|---|---|---|
-| [`distributed-ledger-system/`](distributed-ledger-system/) | Accounting ledger built on a Notion database (记账系统). | Prior original work. Consumer product — not part of the endeavor. |
-| [`realtime-chat-system/`](realtime-chat-system/) | Pluggable LLM chatbot core with multi-channel deployment. | Prior original work. Consumer product — not part of the endeavor. |
-| [`realtime-chat-system-2/`](realtime-chat-system-2/) | BrewMeet: iOS app, React prototype, merch assets and a reference-screenshot library. | Consumer product and design assets. **Not citable for the petition.** |
-| [`3D-campus-model/`](3D-campus-model/) | Nine 3D campus models with figures. | Assets only, no code. **Not citable for the petition.** |
-| [`repo3-fine-tuning-template/`](repo3-fine-tuning-template/) | Qwen DPO preference-tuning scaffold. | Duplicate of `llm-fine-tuning-template/` in repo 4.0. Count once, not twice. |
-| [`repo4-llm-efficiency-reference-search/`](repo4-llm-efficiency-reference-search/) | Reference and citation automation. | Duplicate of `efficiency-toolkit/` in repo 4.0. Count once, not twice. |
-
-**Read the third column before citing anything here.** Forks of third-party work, duplicates, retired projects and asset-only folders are labelled as such and are not part of the petition's evidence.
-
 
 ---
 Scaffold generated from `NIW_Project_Portfolio_and_Gap_Plan.xlsx` (sheets: Repo Build-Out Plan, Core Ideas at a Glance, NIW Claim vs Repo Evidence, Notion 创业 Alignment). Structure only — no results are claimed here yet.

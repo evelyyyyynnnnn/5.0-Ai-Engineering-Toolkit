@@ -1,0 +1,1304 @@
+{
+  "generated_at": "2026-09-06T23:59:03+00:00",
+  "is_synthetic": false,
+  "data_source": "SEC EDGAR XBRL company-concept API -- every answer is a filed value; see data/MANIFEST.json for hashes",
+  "any_language_model_run": false,
+  "no_model_caveat": "the answerers are deterministic stubs, not language models. This measures whether the harness separates behaviours on real questions; it measures no model's calibration.",
+  "provenance": {
+    "source": "SEC EDGAR XBRL company-concept API",
+    "n_questions": 24,
+    "by_category": {
+      "answerable": 20,
+      "unanswerable": 2,
+      "trap": 2
+    },
+    "companies": [
+      {
+        "ticker": "AAPL",
+        "fiscal_years": [
+          2024,
+          2025
+        ],
+        "metrics_reported": [
+          "total revenue",
+          "cost of revenue",
+          "operating income",
+          "research and development expense",
+          "total operating expenses"
+        ],
+        "metrics_absent": [],
+        "n_questions": 12,
+        "concepts": [
+          {
+            "tag": "CostOfGoodsAndServicesSold",
+            "label": "cost of revenue",
+            "n_years": 17,
+            "sha256": "8a288be0e114f9ff",
+            "url": "https://data.sec.gov/api/xbrl/companyconcept/CIK0000320193/us-gaap/CostOfGoodsAndServicesSold.json",
+            "retrieved_utc": "2026-09-06T23:59:00+00:00"
+          },
+          {
+            "tag": "OperatingExpenses",
+            "label": "total operating expenses",
+            "n_years": 17,
+            "sha256": "35ad4d92df0be1a2",
+            "url": "https://data.sec.gov/api/xbrl/companyconcept/CIK0000320193/us-gaap/OperatingExpenses.json",
+            "retrieved_utc": "2026-09-06T23:59:01+00:00"
+          },
+          {
+            "tag": "OperatingIncomeLoss",
+            "label": "operating income",
+            "n_years": 17,
+            "sha256": "de614247dd39d514",
+            "url": "https://data.sec.gov/api/xbrl/companyconcept/CIK0000320193/us-gaap/OperatingIncomeLoss.json",
+            "retrieved_utc": "2026-09-06T23:59:01+00:00"
+          },
+          {
+            "tag": "ResearchAndDevelopmentExpense",
+            "label": "research and development expense",
+            "n_years": 17,
+            "sha256": "88618d12c71fce5b",
+            "url": "https://data.sec.gov/api/xbrl/companyconcept/CIK0000320193/us-gaap/ResearchAndDevelopmentExpense.json",
+            "retrieved_utc": "2026-09-06T23:59:01+00:00"
+          },
+          {
+            "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+            "label": "total revenue",
+            "n_years": 7,
+            "sha256": "4495f7a16b4ade43",
+            "url": "https://data.sec.gov/api/xbrl/companyconcept/CIK0000320193/us-gaap/RevenueFromContractWithCustomerExcludingAssessedTax.json",
+            "retrieved_utc": "2026-09-06T23:59:00+00:00"
+          },
+          {
+            "tag": "Revenues",
+            "label": "total revenue",
+            "n_years": 1,
+            "sha256": "ae228f6e452e9dd0",
+            "url": "https://data.sec.gov/api/xbrl/companyconcept/CIK0000320193/us-gaap/Revenues.json",
+            "retrieved_utc": "2026-09-06T23:59:00+00:00"
+          }
+        ]
+      },
+      {
+        "ticker": "MSFT",
+        "fiscal_years": [
+          2025,
+          2026
+        ],
+        "metrics_reported": [
+          "total revenue",
+          "cost of revenue",
+          "operating income",
+          "research and development expense",
+          "total operating expenses"
+        ],
+        "metrics_absent": [],
+        "n_questions": 12,
+        "concepts": [
+          {
+            "tag": "CostOfGoodsAndServicesSold",
+            "label": "cost of revenue",
+            "n_years": 9,
+            "sha256": "5f4ee0c38e5c1ed4",
+            "url": "https://data.sec.gov/api/xbrl/companyconcept/CIK0000789019/us-gaap/CostOfGoodsAndServicesSold.json",
+            "retrieved_utc": "2026-09-06T23:59:01+00:00"
+          },
+          {
+            "tag": "CostOfRevenue",
+            "label": "cost of revenue",
+            "n_years": 8,
+            "sha256": "1c055019dc355c05",
+            "url": "https://data.sec.gov/api/xbrl/companyconcept/CIK0000789019/us-gaap/CostOfRevenue.json",
+            "retrieved_utc": "2026-09-06T23:59:02+00:00"
+          },
+          {
+            "tag": "OperatingExpenses",
+            "label": "total operating expenses",
+            "n_years": 5,
+            "sha256": "10b13ddb58faf51e",
+            "url": "https://data.sec.gov/api/xbrl/companyconcept/CIK0000789019/us-gaap/OperatingExpenses.json",
+            "retrieved_utc": "2026-09-06T23:59:02+00:00"
+          },
+          {
+            "tag": "OperatingIncomeLoss",
+            "label": "operating income",
+            "n_years": 17,
+            "sha256": "9934b6a73013326e",
+            "url": "https://data.sec.gov/api/xbrl/companyconcept/CIK0000789019/us-gaap/OperatingIncomeLoss.json",
+            "retrieved_utc": "2026-09-06T23:59:02+00:00"
+          },
+          {
+            "tag": "ResearchAndDevelopmentExpense",
+            "label": "research and development expense",
+            "n_years": 17,
+            "sha256": "b3b4ef0d69b4cfb3",
+            "url": "https://data.sec.gov/api/xbrl/companyconcept/CIK0000789019/us-gaap/ResearchAndDevelopmentExpense.json",
+            "retrieved_utc": "2026-09-06T23:59:02+00:00"
+          },
+          {
+            "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+            "label": "total revenue",
+            "n_years": 9,
+            "sha256": "5d82a226a193327e",
+            "url": "https://data.sec.gov/api/xbrl/companyconcept/CIK0000789019/us-gaap/RevenueFromContractWithCustomerExcludingAssessedTax.json",
+            "retrieved_utc": "2026-09-06T23:59:01+00:00"
+          },
+          {
+            "tag": "Revenues",
+            "label": "total revenue",
+            "n_years": 1,
+            "sha256": "522057d949b70b53",
+            "url": "https://data.sec.gov/api/xbrl/companyconcept/CIK0000789019/us-gaap/Revenues.json",
+            "retrieved_utc": "2026-09-06T23:59:01+00:00"
+          }
+        ]
+      }
+    ],
+    "skipped": [
+      {
+        "ticker": "KO",
+        "reason": "KO: no usable annual metrics in the cache"
+      }
+    ],
+    "answers_are_filed_values": true
+  },
+  "suite": {
+    "n_questions": 24,
+    "by_category": {
+      "answerable": 20,
+      "unanswerable": 2,
+      "trap": 2
+    }
+  },
+  "models": {
+    "careful": {
+      "n": 24,
+      "accuracy": 0.0833,
+      "fabrication_rate": 0.125,
+      "citation_accuracy": 0.0833,
+      "by_category": {
+        "answerable": {
+          "n": 20,
+          "ok": 0,
+          "traps_taken": 0,
+          "fabrications": 3,
+          "accuracy": 0.0
+        },
+        "unanswerable": {
+          "n": 2,
+          "ok": 2,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 1.0
+        },
+        "trap": {
+          "n": 2,
+          "ok": 0,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 0.0
+        }
+      }
+    },
+    "eager": {
+      "n": 24,
+      "accuracy": 0.0,
+      "fabrication_rate": 1.0,
+      "citation_accuracy": 0.375,
+      "by_category": {
+        "answerable": {
+          "n": 20,
+          "ok": 0,
+          "traps_taken": 0,
+          "fabrications": 20,
+          "accuracy": 0.0
+        },
+        "unanswerable": {
+          "n": 2,
+          "ok": 0,
+          "traps_taken": 0,
+          "fabrications": 2,
+          "accuracy": 0.0
+        },
+        "trap": {
+          "n": 2,
+          "ok": 0,
+          "traps_taken": 0,
+          "fabrications": 2,
+          "accuracy": 0.0
+        }
+      }
+    },
+    "year-blind": {
+      "n": 24,
+      "accuracy": 0.0,
+      "fabrication_rate": 0.6667,
+      "citation_accuracy": 0.0833,
+      "by_category": {
+        "answerable": {
+          "n": 20,
+          "ok": 0,
+          "traps_taken": 0,
+          "fabrications": 12,
+          "accuracy": 0.0
+        },
+        "unanswerable": {
+          "n": 2,
+          "ok": 0,
+          "traps_taken": 0,
+          "fabrications": 2,
+          "accuracy": 0.0
+        },
+        "trap": {
+          "n": 2,
+          "ok": 0,
+          "traps_taken": 0,
+          "fabrications": 2,
+          "accuracy": 0.0
+        }
+      }
+    },
+    "over-refuser": {
+      "n": 24,
+      "accuracy": 0.0833,
+      "fabrication_rate": 0.0,
+      "citation_accuracy": 0.0833,
+      "by_category": {
+        "answerable": {
+          "n": 20,
+          "ok": 0,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 0.0
+        },
+        "unanswerable": {
+          "n": 2,
+          "ok": 2,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 1.0
+        },
+        "trap": {
+          "n": 2,
+          "ok": 0,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 0.0
+        }
+      }
+    },
+    "uncited": {
+      "n": 24,
+      "accuracy": 0.0833,
+      "fabrication_rate": 0.125,
+      "citation_accuracy": 0.0833,
+      "by_category": {
+        "answerable": {
+          "n": 20,
+          "ok": 0,
+          "traps_taken": 0,
+          "fabrications": 3,
+          "accuracy": 0.0
+        },
+        "unanswerable": {
+          "n": 2,
+          "ok": 2,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 1.0
+        },
+        "trap": {
+          "n": 2,
+          "ok": 0,
+          "traps_taken": 0,
+          "fabrications": 0,
+          "accuracy": 0.0
+        }
+      }
+    }
+  },
+  "separation": {
+    "best": "careful",
+    "worst": "eager",
+    "spread": 0.0833,
+    "accuracies": {
+      "careful": 0.0833,
+      "eager": 0.0,
+      "year-blind": 0.0,
+      "over-refuser": 0.0833,
+      "uncited": 0.0833
+    }
+  },
+  "transcripts": {
+    "careful": [
+      {
+        "qid": "R000",
+        "question": "What was AAPL's total revenue in fiscal 2024?",
+        "answer": "1,284,500 [A]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R001",
+        "question": "What was AAPL's cost of revenue in fiscal 2024?",
+        "answer": "742,100 [A]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R002",
+        "question": "What was AAPL's operating income in fiscal 2024?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R003",
+        "question": "What was AAPL's research and development expense in fiscal 2024?",
+        "answer": "141,200 [A]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R004",
+        "question": "What was AAPL's total operating expenses in fiscal 2024?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R005",
+        "question": "What was AAPL's total revenue in fiscal 2025?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R006",
+        "question": "What was AAPL's cost of revenue in fiscal 2025?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R007",
+        "question": "What was AAPL's operating income in fiscal 2025?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R008",
+        "question": "What was AAPL's research and development expense in fiscal 2025?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R009",
+        "question": "What was AAPL's total operating expenses in fiscal 2025?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R010",
+        "question": "What was AAPL's total revenue in fiscal 2026?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "unanswerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "R011",
+        "question": "What was AAPL's total revenue in fiscal 2025?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "trap",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R012",
+        "question": "What was MSFT's total revenue in fiscal 2025?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R013",
+        "question": "What was MSFT's cost of revenue in fiscal 2025?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R014",
+        "question": "What was MSFT's operating income in fiscal 2025?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R015",
+        "question": "What was MSFT's research and development expense in fiscal 2025?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R016",
+        "question": "What was MSFT's total operating expenses in fiscal 2025?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R017",
+        "question": "What was MSFT's total revenue in fiscal 2026?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R018",
+        "question": "What was MSFT's cost of revenue in fiscal 2026?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R019",
+        "question": "What was MSFT's operating income in fiscal 2026?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R020",
+        "question": "What was MSFT's research and development expense in fiscal 2026?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R021",
+        "question": "What was MSFT's total operating expenses in fiscal 2026?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R022",
+        "question": "What was MSFT's total revenue in fiscal 2027?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "unanswerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "R023",
+        "question": "What was MSFT's total revenue in fiscal 2026?",
+        "answer": "That figure is not stated in the provided documents.",
+        "category": "trap",
+        "ok": false,
+        "failure": "refused an answerable question"
+      }
+    ],
+    "eager": [
+      {
+        "qid": "R000",
+        "question": "What was AAPL's total revenue in fiscal 2024?",
+        "answer": "1,284,500 [A]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R001",
+        "question": "What was AAPL's cost of revenue in fiscal 2024?",
+        "answer": "742,100 [A]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R002",
+        "question": "What was AAPL's operating income in fiscal 2024?",
+        "answer": "2024 [AAPL-2024]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R003",
+        "question": "What was AAPL's research and development expense in fiscal 2024?",
+        "answer": "141,200 [A]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R004",
+        "question": "What was AAPL's total operating expenses in fiscal 2024?",
+        "answer": "2024 [AAPL-2024]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R005",
+        "question": "What was AAPL's total revenue in fiscal 2025?",
+        "answer": "2024 [AAPL-2024]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R006",
+        "question": "What was AAPL's cost of revenue in fiscal 2025?",
+        "answer": "2024 [AAPL-2024]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R007",
+        "question": "What was AAPL's operating income in fiscal 2025?",
+        "answer": "2024 [AAPL-2024]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R008",
+        "question": "What was AAPL's research and development expense in fiscal 2025?",
+        "answer": "2024 [AAPL-2024]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R009",
+        "question": "What was AAPL's total operating expenses in fiscal 2025?",
+        "answer": "2024 [AAPL-2024]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R010",
+        "question": "What was AAPL's total revenue in fiscal 2026?",
+        "answer": "2024 [AAPL-2024]",
+        "category": "unanswerable",
+        "ok": false,
+        "failure": "answered an unanswerable question"
+      },
+      {
+        "qid": "R011",
+        "question": "What was AAPL's total revenue in fiscal 2025?",
+        "answer": "2024 [AAPL-2024]",
+        "category": "trap",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R012",
+        "question": "What was MSFT's total revenue in fiscal 2025?",
+        "answer": "2025 [MSFT-2025]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R013",
+        "question": "What was MSFT's cost of revenue in fiscal 2025?",
+        "answer": "2025 [MSFT-2025]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R014",
+        "question": "What was MSFT's operating income in fiscal 2025?",
+        "answer": "2025 [MSFT-2025]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R015",
+        "question": "What was MSFT's research and development expense in fiscal 2025?",
+        "answer": "2025 [MSFT-2025]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R016",
+        "question": "What was MSFT's total operating expenses in fiscal 2025?",
+        "answer": "2025 [MSFT-2025]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R017",
+        "question": "What was MSFT's total revenue in fiscal 2026?",
+        "answer": "2025 [MSFT-2025]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R018",
+        "question": "What was MSFT's cost of revenue in fiscal 2026?",
+        "answer": "2025 [MSFT-2025]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R019",
+        "question": "What was MSFT's operating income in fiscal 2026?",
+        "answer": "2025 [MSFT-2025]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R020",
+        "question": "What was MSFT's research and development expense in fiscal 2026?",
+        "answer": "2025 [MSFT-2025]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R021",
+        "question": "What was MSFT's total operating expenses in fiscal 2026?",
+        "answer": "2025 [MSFT-2025]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R022",
+        "question": "What was MSFT's total revenue in fiscal 2027?",
+        "answer": "2025 [MSFT-2025]",
+        "category": "unanswerable",
+        "ok": false,
+        "failure": "answered an unanswerable question"
+      },
+      {
+        "qid": "R023",
+        "question": "What was MSFT's total revenue in fiscal 2026?",
+        "answer": "2025 [MSFT-2025]",
+        "category": "trap",
+        "ok": false,
+        "failure": "wrong or missing value"
+      }
+    ],
+    "year-blind": [
+      {
+        "qid": "R000",
+        "question": "What was AAPL's total revenue in fiscal 2024?",
+        "answer": "1,284,500 [A]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R001",
+        "question": "What was AAPL's cost of revenue in fiscal 2024?",
+        "answer": "742,100 [A]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R002",
+        "question": "What was AAPL's operating income in fiscal 2024?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R003",
+        "question": "What was AAPL's research and development expense in fiscal 2024?",
+        "answer": "141,200 [A]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R004",
+        "question": "What was AAPL's total operating expenses in fiscal 2024?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R005",
+        "question": "What was AAPL's total revenue in fiscal 2025?",
+        "answer": "1,284,500 [A]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R006",
+        "question": "What was AAPL's cost of revenue in fiscal 2025?",
+        "answer": "742,100 [A]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R007",
+        "question": "What was AAPL's operating income in fiscal 2025?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R008",
+        "question": "What was AAPL's research and development expense in fiscal 2025?",
+        "answer": "141,200 [A]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R009",
+        "question": "What was AAPL's total operating expenses in fiscal 2025?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R010",
+        "question": "What was AAPL's total revenue in fiscal 2026?",
+        "answer": "1,284,500 [A]",
+        "category": "unanswerable",
+        "ok": false,
+        "failure": "answered an unanswerable question"
+      },
+      {
+        "qid": "R011",
+        "question": "What was AAPL's total revenue in fiscal 2025?",
+        "answer": "1,284,500 [A]",
+        "category": "trap",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R012",
+        "question": "What was MSFT's total revenue in fiscal 2025?",
+        "answer": "1,284,500 [A]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R013",
+        "question": "What was MSFT's cost of revenue in fiscal 2025?",
+        "answer": "742,100 [A]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R014",
+        "question": "What was MSFT's operating income in fiscal 2025?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R015",
+        "question": "What was MSFT's research and development expense in fiscal 2025?",
+        "answer": "141,200 [A]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R016",
+        "question": "What was MSFT's total operating expenses in fiscal 2025?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R017",
+        "question": "What was MSFT's total revenue in fiscal 2026?",
+        "answer": "1,284,500 [A]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R018",
+        "question": "What was MSFT's cost of revenue in fiscal 2026?",
+        "answer": "742,100 [A]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R019",
+        "question": "What was MSFT's operating income in fiscal 2026?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R020",
+        "question": "What was MSFT's research and development expense in fiscal 2026?",
+        "answer": "141,200 [A]",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R021",
+        "question": "What was MSFT's total operating expenses in fiscal 2026?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R022",
+        "question": "What was MSFT's total revenue in fiscal 2027?",
+        "answer": "1,284,500 [A]",
+        "category": "unanswerable",
+        "ok": false,
+        "failure": "answered an unanswerable question"
+      },
+      {
+        "qid": "R023",
+        "question": "What was MSFT's total revenue in fiscal 2026?",
+        "answer": "1,284,500 [A]",
+        "category": "trap",
+        "ok": false,
+        "failure": "wrong or missing value"
+      }
+    ],
+    "over-refuser": [
+      {
+        "qid": "R000",
+        "question": "What was AAPL's total revenue in fiscal 2024?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R001",
+        "question": "What was AAPL's cost of revenue in fiscal 2024?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R002",
+        "question": "What was AAPL's operating income in fiscal 2024?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R003",
+        "question": "What was AAPL's research and development expense in fiscal 2024?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R004",
+        "question": "What was AAPL's total operating expenses in fiscal 2024?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R005",
+        "question": "What was AAPL's total revenue in fiscal 2025?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R006",
+        "question": "What was AAPL's cost of revenue in fiscal 2025?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R007",
+        "question": "What was AAPL's operating income in fiscal 2025?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R008",
+        "question": "What was AAPL's research and development expense in fiscal 2025?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R009",
+        "question": "What was AAPL's total operating expenses in fiscal 2025?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R010",
+        "question": "What was AAPL's total revenue in fiscal 2026?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "unanswerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "R011",
+        "question": "What was AAPL's total revenue in fiscal 2025?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "trap",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R012",
+        "question": "What was MSFT's total revenue in fiscal 2025?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R013",
+        "question": "What was MSFT's cost of revenue in fiscal 2025?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R014",
+        "question": "What was MSFT's operating income in fiscal 2025?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R015",
+        "question": "What was MSFT's research and development expense in fiscal 2025?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R016",
+        "question": "What was MSFT's total operating expenses in fiscal 2025?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R017",
+        "question": "What was MSFT's total revenue in fiscal 2026?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R018",
+        "question": "What was MSFT's cost of revenue in fiscal 2026?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R019",
+        "question": "What was MSFT's operating income in fiscal 2026?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R020",
+        "question": "What was MSFT's research and development expense in fiscal 2026?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R021",
+        "question": "What was MSFT's total operating expenses in fiscal 2026?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R022",
+        "question": "What was MSFT's total revenue in fiscal 2027?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "unanswerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "R023",
+        "question": "What was MSFT's total revenue in fiscal 2026?",
+        "answer": "I cannot determine that from the provided documents.",
+        "category": "trap",
+        "ok": false,
+        "failure": "refused an answerable question"
+      }
+    ],
+    "uncited": [
+      {
+        "qid": "R000",
+        "question": "What was AAPL's total revenue in fiscal 2024?",
+        "answer": "1,284,500",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R001",
+        "question": "What was AAPL's cost of revenue in fiscal 2024?",
+        "answer": "742,100",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R002",
+        "question": "What was AAPL's operating income in fiscal 2024?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R003",
+        "question": "What was AAPL's research and development expense in fiscal 2024?",
+        "answer": "141,200",
+        "category": "answerable",
+        "ok": false,
+        "failure": "wrong or missing value"
+      },
+      {
+        "qid": "R004",
+        "question": "What was AAPL's total operating expenses in fiscal 2024?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R005",
+        "question": "What was AAPL's total revenue in fiscal 2025?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R006",
+        "question": "What was AAPL's cost of revenue in fiscal 2025?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R007",
+        "question": "What was AAPL's operating income in fiscal 2025?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R008",
+        "question": "What was AAPL's research and development expense in fiscal 2025?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R009",
+        "question": "What was AAPL's total operating expenses in fiscal 2025?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R010",
+        "question": "What was AAPL's total revenue in fiscal 2026?",
+        "answer": "Not stated in the documents.",
+        "category": "unanswerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "R011",
+        "question": "What was AAPL's total revenue in fiscal 2025?",
+        "answer": "Not stated in the documents.",
+        "category": "trap",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R012",
+        "question": "What was MSFT's total revenue in fiscal 2025?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R013",
+        "question": "What was MSFT's cost of revenue in fiscal 2025?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R014",
+        "question": "What was MSFT's operating income in fiscal 2025?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R015",
+        "question": "What was MSFT's research and development expense in fiscal 2025?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R016",
+        "question": "What was MSFT's total operating expenses in fiscal 2025?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R017",
+        "question": "What was MSFT's total revenue in fiscal 2026?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R018",
+        "question": "What was MSFT's cost of revenue in fiscal 2026?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R019",
+        "question": "What was MSFT's operating income in fiscal 2026?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R020",
+        "question": "What was MSFT's research and development expense in fiscal 2026?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R021",
+        "question": "What was MSFT's total operating expenses in fiscal 2026?",
+        "answer": "Not stated in the documents.",
+        "category": "answerable",
+        "ok": false,
+        "failure": "refused an answerable question"
+      },
+      {
+        "qid": "R022",
+        "question": "What was MSFT's total revenue in fiscal 2027?",
+        "answer": "Not stated in the documents.",
+        "category": "unanswerable",
+        "ok": true,
+        "failure": ""
+      },
+      {
+        "qid": "R023",
+        "question": "What was MSFT's total revenue in fiscal 2026?",
+        "answer": "Not stated in the documents.",
+        "category": "trap",
+        "ok": false,
+        "failure": "refused an answerable question"
+      }
+    ]
+  }
+}
