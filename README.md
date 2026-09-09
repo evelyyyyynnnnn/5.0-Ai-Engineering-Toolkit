@@ -1,5 +1,7 @@
 # 5.0 — AI Engineering Toolkit
 
+[![tests](https://github.com/evelyyyyynnnnn/5.0-Ai-Engineering-Toolkit/actions/workflows/tests.yml/badge.svg)](https://github.com/evelyyyyynnnnn/5.0-Ai-Engineering-Toolkit/actions/workflows/tests.yml)
+
 Shared, installable engineering infrastructure behind the endeavor. Four rebuilt projects carry it.
 
 Part of a five-repository portfolio supporting the endeavor described in the
