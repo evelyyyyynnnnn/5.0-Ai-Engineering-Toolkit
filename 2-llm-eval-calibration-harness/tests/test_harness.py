@@ -145,3 +145,77 @@ def test_harness_separates_best_from_worst():
     accs = [_run(a)["accuracy"] for a in
             (CarefulAnswerer(), EagerAnswerer(), OverRefuser())]
     assert max(accs) - min(accs) > 0.3
+
+
+# --- the real-model path, exercised without a model ---------------------------
+#
+# The harness had never been pointed at a language model. What makes that
+# runnable is an answerer that speaks the OpenAI chat protocol; what makes it
+# trustworthy is that the reply reaches the grader unaltered. Both are checked
+# here with a scripted stand-in, so the wiring is known-good before anyone
+# spends a CPU-hour on it.
+
+def test_the_prompt_carries_every_source_and_the_question():
+    from src.llm_answerer import render_prompt
+    from src.suite import SUITE
+
+    q = SUITE[0]
+    prompt = render_prompt(q)
+
+    for doc_id, text in q.sources.items():
+        assert f"--- DOCUMENT {doc_id} ---" in prompt
+        assert text.strip()[:40] in prompt
+    assert q.text in prompt
+
+
+def test_the_prompt_never_contains_the_expected_answer_as_a_hint():
+    """The value may legitimately appear inside a source document. It must not
+    appear anywhere else in the prompt -- that would be handing over the key."""
+    from src.llm_answerer import render_prompt
+    from src.suite import SUITE
+
+    for q in SUITE:
+        if not q.answer:
+            continue
+        prompt = render_prompt(q)
+        after_sources = prompt.split("--- QUESTION ---")[1]
+        assert q.answer not in after_sources
+
+
+def test_a_scripted_reply_reaches_the_grader_verbatim():
+    from src.demo import evaluate
+    from src.llm_answerer import ScriptedAnswerer
+    from src.suite import SUITE
+
+    q = SUITE[0]
+    scripted = ScriptedAnswerer({q.qid: f"{q.answer} [{q.correct_source}]"})
+    per_model, transcripts = evaluate([q], answerers=[scripted])
+
+    assert transcripts["scripted"][0]["answer"] == f"{q.answer} [{q.correct_source}]"
+    assert per_model["scripted"]["score"]["accuracy"] == 1.0
+
+
+def test_a_failed_call_is_scored_as_the_empty_answer_it_was():
+    """Substituting a refusal for a network error would credit the model with
+    behaviour it never produced -- on an unanswerable question, generously."""
+    from src.demo import evaluate
+    from src.llm_answerer import LLMAnswerer
+    from src.suite import SUITE
+
+    llm = LLMAnswerer(base_url="http://127.0.0.1:9")     # nothing listens here
+    unanswerable = [q for q in SUITE if q.category == "unanswerable"][:1]
+    per_model, transcripts = evaluate(unanswerable, answerers=[llm])
+
+    assert transcripts[llm.name][0]["answer"] == ""
+    assert per_model[llm.name]["score"]["accuracy"] == 0.0
+    assert len(llm.calls) == 1 and llm.calls[0]["error"]
+
+
+def test_the_answerer_defaults_to_a_local_ollama_endpoint():
+    from src.llm_answerer import LLMAnswerer
+
+    llm = LLMAnswerer()
+
+    assert llm.base_url == "http://localhost:11434/v1"
+    assert llm.is_language_model is True
+    assert llm.name.startswith("llm:")
