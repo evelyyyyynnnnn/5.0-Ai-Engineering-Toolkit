@@ -6,18 +6,44 @@
 
 ## Status
 
-This is working code with a runnable demo and 0 tests. It is **not** a
-finished result.
+Working code with a runnable demo and 40 tests.
 
-NO language model has been run through this harness. Every row below is a deterministic stand-in written to embody one failure mode, so the harness itself can be shown to separate careful behaviour from reckless behaviour before any real model is scored.
+The committed results carry `any_language_model_run: false`, and that is the
+honest description of them: every answerer scored so far is a deterministic
+stand-in written to embody one failure mode — eager, year-blind, over-refusing,
+uncited. They exist so the grader can be shown to separate careful behaviour
+from reckless behaviour, which has to be established before any model's score
+means anything. That part is done.
 
-Last run: `2026-08-31T19:14:56+00:00`
+**A real model can now be scored.** `src/llm_answerer.py` speaks the OpenAI chat
+protocol, so it runs against Ollama on localhost with no key and no network
+beyond the machine:
+
+```bash
+ollama pull qwen2.5-coder:7b
+python run_llm_demo.py              # authored suite
+python run_llm_demo.py --real       # suite built from filed SEC values
+```
+
+The stubs are scored in the same run, over the same questions, by the same
+grader — a model's accuracy means nothing without the behaviours the grader was
+built to separate sitting beside it. The run writes `results/latest-llm.json`
+with `any_language_model_run: true`.
+
+Two properties the wiring holds to, both covered by tests that need no model
+server:
+
+- **The reply reaches the grader verbatim.** Nothing repairs, reformats or
+  re-asks. A wrapper that tidied the answer first would be measuring the wrapper.
+- **A failed call is scored as the empty answer it was**, not replaced by a
+  refusal the model never gave — which on an unanswerable question would credit
+  it with exactly the behaviour under test.
 
 ## Quick start
 
 ```bash
 pip install -r requirements.txt
-python -m pytest tests/ -q     # 0 tests
+python -m pytest tests/ -q     # 40 tests
 python -m src.demo             # runs everything, rewrites results/ and website/
 ```
 
