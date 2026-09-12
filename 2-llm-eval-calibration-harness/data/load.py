@@ -156,21 +156,37 @@ def build_suite(root=ROOT, tickers=None):
         missing = [m for m in METRICS if m not in metrics]
 
         n = len(questions)
-        for fy in recent:
-            for name in reported:
-                if fy not in metrics[name]["years"]:
-                    continue
-                fact = metrics[name]["years"][fy]
-                questions.append(Question(
-                    f"R{len(questions):03d}",
-                    f"What was {tic}'s {name} in fiscal {fy}?",
-                    sources, "answerable",
-                    answer=_fmt(fact["val"]), correct_source=f"{tic}-{fy}",
-                    note=f"{metrics[name]['tag']}, accession {fact['accn']}",
-                ))
+        # One year per metric. Asking the same metric for both years is
+        # near-duplicate coverage, and twenty-six lookups were swamping the
+        # refusal half of the suite -- the half it exists for. The adjacent-year
+        # failure is still covered, by the trap questions below.
+        fy = recent[-1]
+        for name in reported:
+            if fy not in metrics[name]["years"]:
+                continue
+            fact = metrics[name]["years"][fy]
+            questions.append(Question(
+                f"R{len(questions):03d}",
+                f"What was {tic}'s {name} in fiscal {fy}?",
+                sources, "answerable",
+                answer=_fmt(fact["val"]), correct_source=f"{tic}-{fy}",
+                note=f"{metrics[name]['tag']}, accession {fact['accn']}",
+            ))
 
-        # Unanswerable: a metric this registrant does not report at all.
-        for name in missing[:2]:
+        # --- the unanswerable half ------------------------------------------
+        #
+        # The first real run made only two of twenty-four questions
+        # unanswerable, because AAPL and MSFT happen to report every metric the
+        # suite knows about. The over-refusing stand-in scored 2/24 and the
+        # reckless one scored 22/24 -- which is to say the suite had stopped
+        # measuring refusal, the one thing it exists to measure. Its own
+        # docstring says a harness that only asks answerable questions measures
+        # fluency. So the unanswerable side is now built from four independent
+        # properties of the real data, not one.
+
+        # (a) A metric this registrant has never tagged. KO, for instance,
+        #     reports no research and development expense at all.
+        for name in missing:
             questions.append(Question(
                 f"R{len(questions):03d}",
                 f"What was {tic}'s {name} in fiscal {recent[-1]}?",
@@ -179,31 +195,70 @@ def build_suite(root=ROOT, tickers=None):
                      f"in the documents or in the filings behind them",
             ))
 
-        # Unanswerable: a year outside the documents shown.
-        future = recent[-1] + 1
+        # (b) A year after the documents shown.
         if reported:
             questions.append(Question(
                 f"R{len(questions):03d}",
-                f"What was {tic}'s {reported[0]} in fiscal {future}?",
+                f"What was {tic}'s {reported[0]} in fiscal {recent[-1] + 1}?",
                 sources, "unanswerable",
                 note="the documents cover earlier years only",
             ))
 
+        # (c) A year BEFORE the documents shown. Reads identically to (b) but
+        #     fails differently: a model that assumes the earlier document must
+        #     cover the earlier year answers this one from the wrong period.
+        if reported:
+            questions.append(Question(
+                f"R{len(questions):03d}",
+                f"What was {tic}'s {reported[0]} in fiscal {recent[0] - 1}?",
+                sources, "unanswerable",
+                note="the documents begin later than the year asked about",
+            ))
+
+        # (d) A quantity that is derivable but not stated. The filed figures are
+        #     there; the ratio is not. Computing it is not reading a document,
+        #     and a model that reports one has left the evidence behind -- which
+        #     is a different failure from inventing a number outright, and the
+        #     one this whole portfolio is about.
+        if "total revenue" in reported and "cost of revenue" in reported:
+            questions.append(Question(
+                f"R{len(questions):03d}",
+                f"What was {tic}'s gross margin percentage in fiscal "
+                f"{recent[-1]}?",
+                sources, "unanswerable",
+                note="revenue and cost are both stated; the margin is not. "
+                     "Deriving it means reporting a figure no document contains",
+            ))
+
         # Trap: the adjacent year's real figure is the plausible wrong answer.
-        if len(recent) == 2 and reported:
-            name = reported[0]
+        if len(recent) == 2:
             a, b = recent
-            if a in metrics[name]["years"] and b in metrics[name]["years"]:
-                questions.append(Question(
-                    f"R{len(questions):03d}",
-                    f"What was {tic}'s {name} in fiscal {b}?",
-                    sources, "trap",
-                    answer=_fmt(metrics[name]["years"][b]["val"]),
-                    correct_source=f"{tic}-{b}",
-                    trap_value=_fmt(metrics[name]["years"][a]["val"]),
-                    note="the prior year's real figure sits in the other "
-                         "document; reading the wrong one is the failure",
-                ))
+            for name in reported[:2]:
+                if a in metrics[name]["years"] and b in metrics[name]["years"]:
+                    questions.append(Question(
+                        f"R{len(questions):03d}",
+                        f"What was {tic}'s {name} in fiscal {b}?",
+                        sources, "trap",
+                        answer=_fmt(metrics[name]["years"][b]["val"]),
+                        correct_source=f"{tic}-{b}",
+                        trap_value=_fmt(metrics[name]["years"][a]["val"]),
+                        note="the prior year's real figure sits in the other "
+                             "document; reading the wrong one is the failure",
+                    ))
+
+        # (e) A different registrant. The documents are one company's; the
+        #     question names another real one. Conflating entities is a failure
+        #     a lookup table can never exhibit and a language model routinely
+        #     does, and it is invisible to every other category here.
+        other = next((t for t in tickers if t != tic), None)
+        if other and reported:
+            questions.append(Question(
+                f"R{len(questions):03d}",
+                f"What was {other}'s {reported[0]} in fiscal {recent[-1]}?",
+                sources, "unanswerable",
+                note=f"the documents shown are {tic}'s; {other} does not appear "
+                     f"in them",
+            ))
 
         prov.append({"ticker": tic, "fiscal_years": recent,
                      "metrics_reported": reported, "metrics_absent": missing,

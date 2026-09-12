@@ -304,14 +304,117 @@ def test_a_year_mention_is_never_returned_as_the_figure():
 
 
 def test_removing_the_hardcoded_table_left_the_authored_scores_unchanged():
-    """The regression check that makes the rewrite trustworthy: the lookup now
-    reads the documents, and reproduces exactly what the table produced on the
-    corpus the table was written for."""
+    """The regression check that makes the rewrite trustworthy.
+
+    Four of the five stand-ins score exactly what the hardcoded table produced
+    on the corpus that table was written for, which is the evidence that the
+    lookup changed from a table to a reader without changing what it reads.
+
+    year-blind is the exception, and moved from 0.5714 to 0.6429 on one
+    question: Q14 asks for "current supplier concentration today", which the
+    documents do not state. The table matched the loose keyword "supplier" and
+    answered 42; the reader requires the head word "concentration" to appear in
+    a sentence, finds none, and refuses. Refusing is correct. This stand-in is
+    meant to be wrong about which YEAR it reads, not to invent a metric the
+    documents never mention.
+    """
     from src.demo import evaluate
     from src.suite import SUITE
 
     per_model, _ = evaluate(SUITE)
     acc = {k: round(v["score"]["accuracy"], 4) for k, v in per_model.items()}
 
-    assert acc == {"careful": 1.0, "eager": 0.5714, "year-blind": 0.5714,
+    assert acc == {"careful": 1.0, "eager": 0.5714, "year-blind": 0.6429,
                    "over-refuser": 0.4286, "uncited": 1.0}
+
+
+# --- the balance the suite exists to have ------------------------------------
+
+def _fake_filed_suite():
+    """A cached-XBRL tree shaped like the real one: two registrants reporting
+    every metric, one reporting only some. Lets the filed suite's SHAPE be
+    checked without a network."""
+    import json
+    import tempfile
+    import pathlib as _p
+
+    root = _p.Path(tempfile.mkdtemp())
+    raw = root / "raw"
+    def fact(fy, val):
+        return {"form": "10-K", "start": f"{fy-1}-10-01", "end": f"{fy}-09-30",
+                "fy": fy, "val": val, "filed": f"{fy}-10-31", "accn": f"000-{fy}"}
+    companies = {
+        "aapl": {"RevenueFromContractWithCustomerExcludingAssessedTax": (416161e6, 391035e6),
+                 "CostOfGoodsAndServicesSold": (220960e6, 210352e6),
+                 "OperatingIncomeLoss": (127364e6, 123216e6),
+                 "ResearchAndDevelopmentExpense": (34550e6, 31370e6),
+                 "OperatingExpenses": (57467e6, 54847e6)},
+        "msft": {"RevenueFromContractWithCustomerExcludingAssessedTax": (331839e6, 245122e6),
+                 "CostOfGoodsAndServicesSold": (106374e6, 74114e6),
+                 "OperatingIncomeLoss": (128527e6, 109433e6),
+                 "ResearchAndDevelopmentExpense": (35562e6, 29510e6),
+                 "OperatingExpenses": (66838e6, 61575e6)},
+        "ko":   {"Revenues": (47061e6, 45754e6),
+                 "CostOfGoodsAndServicesSold": (18320e6, 18520e6),
+                 "OperatingIncomeLoss": (9992e6, 11311e6)},
+    }
+    files = {}
+    for tic, tags in companies.items():
+        for tag, (a, b) in tags.items():
+            dest = f"xbrl/{tic}/{tag}.json"
+            fp = raw / dest
+            fp.parent.mkdir(parents=True, exist_ok=True)
+            fp.write_text(json.dumps({"units": {"USD": [fact(2025, a), fact(2024, b)]}}))
+            files[dest] = {"sha256": "0" * 64, "url": f"https://data.sec.gov/{dest}",
+                           "retrieved_utc": "2026-09-12T00:00:00+00:00"}
+    (root / "MANIFEST.json").write_text(
+        json.dumps({"generated_utc": "2026-09-12T00:00:00+00:00", "files": files}))
+    return root
+
+
+def test_the_filed_suite_keeps_enough_questions_that_have_no_answer():
+    """The property the first real run silently lost.
+
+    Two of twenty-four questions were unanswerable, because the registrants
+    happened to report every metric the suite knew about. The over-refusing
+    stand-in scored 2/24 and the reckless one 22/24 -- the suite had stopped
+    measuring refusal, which its own docstring calls the only thing worth
+    measuring. This fails if that balance drifts again.
+    """
+    from collections import Counter
+
+    from data.load import build_suite
+
+    questions, _ = build_suite(root=_fake_filed_suite())
+    by = Counter(q.category for q in questions)
+    unanswerable = by["unanswerable"] + by["stale"]
+
+    assert unanswerable / len(questions) >= 0.33, dict(by)
+    assert by["trap"] >= 2
+
+
+def test_the_reckless_stand_in_is_punished_by_the_filed_suite():
+    """eager never refuses. On a suite that measures refusal it must lose."""
+    from data.load import build_suite
+    from src.demo import evaluate
+
+    questions, _ = build_suite(root=_fake_filed_suite())
+    per_model, _ = evaluate(questions)
+
+    eager = per_model["eager"]["score"]["accuracy"]
+    careful = per_model["careful"]["score"]["accuracy"]
+
+    assert eager < 0.70, eager
+    assert careful - eager > 0.25, (careful, eager)
+
+
+def test_naming_another_registrant_is_unanswerable_from_these_documents():
+    """Conflating entities is a failure a lookup table can never exhibit and a
+    language model routinely does. No other category here would catch it."""
+    from data.load import build_suite
+
+    questions, _ = build_suite(root=_fake_filed_suite())
+    cross = [q for q in questions
+             if "documents shown are" in q.note and q.category == "unanswerable"]
+
+    assert cross, "no cross-registrant question was built"

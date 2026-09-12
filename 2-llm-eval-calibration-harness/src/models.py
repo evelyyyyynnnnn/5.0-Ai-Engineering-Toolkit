@@ -161,9 +161,15 @@ def _lookup(q, year):
     for doc_id, text in q.sources.items():
         for sentence in _sentences(text):
             low = sentence.lower()
-            overlap = sum(1 for t in terms if t in low)
-            if not overlap:
+            # The head word of the metric must appear. Metric names overlap
+            # each other -- "total operating expenses" and "operating income"
+            # share a word -- and matching on the shared word alone was enough
+            # to answer a question about one out of the other's sentence. The
+            # head word is what distinguishes them; overlap then ranks among
+            # the sentences that have it.
+            if terms[-1] not in low:
                 continue
+            overlap = sum(1 for t in terms if t in low)
             got = _figures_by_year(sentence).get(year)
             if got and (best is None or overlap > best[0]):
                 best = (overlap, got.rstrip(","), doc_id)
