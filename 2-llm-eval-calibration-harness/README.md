@@ -6,29 +6,42 @@
 
 ## Status
 
-Working code with a runnable demo and 40 tests.
+Working code, 49 tests, and two real language models scored on real filed data.
 
-The committed results carry `any_language_model_run: false`, and that is the
-honest description of them: every answerer scored so far is a deterministic
-stand-in written to embody one failure mode — eager, year-blind, over-refusing,
-uncited. They exist so the grader can be shown to separate careful behaviour
-from reckless behaviour, which has to be established before any model's score
-means anything. That part is done.
+The committed results used to carry `any_language_model_run: false`, and that
+was the honest description of them: every answerer was a deterministic stand-in
+written to embody one failure mode — eager, year-blind, over-refusing, uncited.
+They exist so the grader can be shown to separate careful behaviour from
+reckless behaviour, which has to be established before any model's score means
+anything.
 
-**A real model can now be scored.** `src/llm_answerer.py` speaks the OpenAI chat
-protocol, so it runs against Ollama on localhost with no key and no network
-beyond the machine:
+That is no longer the state. On 2026-09-12 two open models were scored on 22
+questions built from filed SEC XBRL values, alongside the stand-ins, on the same
+questions, by the same grader:
+
+| Answerer | Accuracy | Fabrication | Citation |
+|---|---:|---:|---:|
+| **qwen2.5-coder:7b** | **1.0000** | 0.0000 | 1.0000 |
+| **gemma4:latest** | **1.0000** | 0.0000 | 1.0000 |
+| careful (best stand-in) | 0.9091 | 0.0000 | 1.0000 |
+| eager | 0.6364 | 0.0000 | 1.0000 |
+| over-refuser | 0.3636 | 0.0000 | 0.3636 |
+
+The models' entire margin over the lookup baseline is two cross-registrant
+questions: shown one company's documents and asked about another, the lookup
+reads the figure in front of it and both models decline. See
+`results/README.md` for the full table, the run log, and what these runs do not
+establish — starting with the fact that two models scoring identically means the
+suite has not distinguished them.
+
+**A real model can be scored on your own machine, with no key and no network
+beyond it:**
 
 ```bash
 ollama pull qwen2.5-coder:7b
 python run_llm_demo.py              # authored suite
 python run_llm_demo.py --real       # suite built from filed SEC values
 ```
-
-The stubs are scored in the same run, over the same questions, by the same
-grader — a model's accuracy means nothing without the behaviours the grader was
-built to separate sitting beside it. The run writes `results/latest-llm.json`
-with `any_language_model_run: true`.
 
 Two properties the wiring holds to, both covered by tests that need no model
 server:
@@ -43,7 +56,7 @@ server:
 
 ```bash
 pip install -r requirements.txt
-python -m pytest tests/ -q     # 40 tests
+python -m pytest tests/ -q     # 49 tests
 python -m src.demo             # runs everything, rewrites results/ and website/
 ```
 
