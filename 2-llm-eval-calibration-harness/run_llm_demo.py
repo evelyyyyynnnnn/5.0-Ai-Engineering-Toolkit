@@ -24,6 +24,7 @@ from __future__ import annotations
 import json
 import os
 import pathlib
+import re
 import sys
 import time
 from datetime import datetime, timezone
@@ -109,9 +110,17 @@ def main(argv: list) -> int:
     if prov:
         out["provenance"] = prov
 
+    # One file per (model, suite). Writing every run to latest-llm.json meant
+    # the second model silently destroyed the first one's result, which is a
+    # poor property for a file whose whole purpose is to be the run log.
+    slug = re.sub(r"[^a-z0-9]+", "-", llm.name.lower()).strip("-")
+    suite_tag = "real" if real else "authored"
     (ROOT / "results").mkdir(exist_ok=True)
-    dest = ROOT / "results" / "latest-llm.json"
+    dest = ROOT / "results" / f"{slug}-{suite_tag}.json"
     dest.write_text(json.dumps(out, indent=2) + "\n", encoding="utf8")
+    # latest-llm.json stays as the most recent run, for the roll-up to read.
+    (ROOT / "results" / "latest-llm.json").write_text(
+        json.dumps(out, indent=2) + "\n", encoding="utf8")
 
     print(f"{'answerer':<24}{'accuracy':>10}{'fabrication':>13}{'citation':>10}")
     for name, sc in out["models"].items():
@@ -119,8 +128,8 @@ def main(argv: list) -> int:
         print(f"{name:<24}{sc['accuracy']:>10.4f}"
               f"{sc.get('fabrication_rate', 0):>13.4f}"
               f"{sc.get('citation_accuracy', 0):>10.4f}{mark}")
-    print(f"\nwrote results/latest-llm.json  ({elapsed}s, "
-          f"{len(failed)} failed calls)")
+    print(f"\nwrote results/{dest.name} and results/latest-llm.json  "
+          f"({elapsed}s, {len(failed)} failed calls)")
     return 0 if not failed else 1
 
 
