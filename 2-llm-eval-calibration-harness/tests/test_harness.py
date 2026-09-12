@@ -219,3 +219,99 @@ def test_the_answerer_defaults_to_a_local_ollama_endpoint():
     assert llm.base_url == "http://localhost:11434/v1"
     assert llm.is_language_model is True
     assert llm.name.startswith("llm:")
+
+
+# --- what the first real-data run exposed ------------------------------------
+#
+# Pointing the harness at questions built from filed values produced a result
+# that could not be true: the model scored 1.0000 accuracy and 0.9167
+# fabrication at the same time, while the careful stand-in -- which by
+# construction should be near-perfect on a suite generated FROM the documents
+# it is shown -- scored 2 of 24. Two separate defects, both invisible on the
+# authored corpus because of how its documents happen to be named and written.
+
+def _filed_style_question(qid="R000", year=2025, category="answerable",
+                          answer="416,161"):
+    """A question shaped like data/load.py builds them: the document id carries
+    a ticker and a year, and the text wraps mid-phrase the way a filing does."""
+    from src.suite import Question
+
+    doc = ("AAPL - selected financial data, fiscal 2025 (in millions of US\n"
+           "dollars).\nRevenue for fiscal 2025 was 416,161.\nRevenue for\n"
+           "fiscal 2024 was 391,035.")
+    return Question(qid, "What was AAPL's revenue in fiscal %d?" % year,
+                    {"AAPL-2025": doc}, category,
+                    answer=answer, correct_source="AAPL-2025")
+
+
+def test_a_citation_id_containing_a_year_is_not_read_as_a_fabricated_number():
+    """The number regex read '-2025' out of '[AAPL-2025]' as a negative figure
+    appearing in no source, so every correctly cited answer scored as a
+    fabrication. The model was right; the grader was wrong."""
+    from src.graders import grade
+
+    q = _filed_style_question()
+    g = grade(q, "416,161 [AAPL-2025]")
+
+    assert g["ok"] is True
+    assert g["fabricated_numbers"] == [], g["fabricated_numbers"]
+    assert g["citation_correct"] is True
+
+
+def test_a_genuinely_invented_number_is_still_caught():
+    """The fix must not blind the detector it was fixing."""
+    from src.graders import grade
+
+    q = _filed_style_question()
+    g = grade(q, "416,161 and also 999,999 [AAPL-2025]")
+
+    assert "999999" in g["fabricated_numbers"]
+
+
+def test_the_careful_stand_in_answers_a_suite_built_from_its_own_documents():
+    """It scored 2 of 24 on the filed suite because it looked figures up in a
+    hardcoded table of the authored corpus. A baseline that cannot answer the
+    questions is not a baseline."""
+    from src.graders import grade
+    from src.models import CarefulAnswerer
+
+    q = _filed_style_question()
+    answer = CarefulAnswerer()(q)
+
+    assert "416,161" in answer
+    assert grade(q, answer)["ok"] is True
+
+
+def test_line_wrapping_does_not_attach_a_figure_to_the_wrong_year():
+    """The documents wrap mid-phrase, so 'in fiscal\\n2023.' splits a period from
+    its year. Read line by line, the prior year's figure answered this year's
+    question -- silently."""
+    from src.models import CarefulAnswerer
+
+    this_year = CarefulAnswerer()(_filed_style_question(year=2025))
+    prior_year = CarefulAnswerer()(_filed_style_question(year=2024))
+
+    assert "416,161" in this_year
+    assert "391,035" in prior_year
+
+
+def test_a_year_mention_is_never_returned_as_the_figure():
+    from src.models import _figures_by_year
+
+    got = _figures_by_year("Revenue for fiscal 2025 was 416,161.")
+
+    assert got == {2025: "416,161"}
+
+
+def test_removing_the_hardcoded_table_left_the_authored_scores_unchanged():
+    """The regression check that makes the rewrite trustworthy: the lookup now
+    reads the documents, and reproduces exactly what the table produced on the
+    corpus the table was written for."""
+    from src.demo import evaluate
+    from src.suite import SUITE
+
+    per_model, _ = evaluate(SUITE)
+    acc = {k: round(v["score"]["accuracy"], 4) for k, v in per_model.items()}
+
+    assert acc == {"careful": 1.0, "eager": 0.5714, "year-blind": 0.5714,
+                   "over-refuser": 0.4286, "uncited": 1.0}

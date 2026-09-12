@@ -17,8 +17,25 @@ _REFUSAL = (
 )
 
 
+_CITE = re.compile(r"\[[A-Za-z0-9_\-]+\]")
+
+
+def strip_citations(text: str) -> str:
+    """Remove the [source-id] markers before any number is read out of an answer.
+
+    A citation is metadata, not a claim. This mattered the moment the suite was
+    built from filed data: the authored documents are called A and B, but a real
+    one is called AAPL-2025, and the number regex read "-2025" out of the
+    bracket as a negative figure appearing in no source -- so every correctly
+    cited answer was scored as a fabrication. The model was right and the
+    grader was wrong, on 22 of 24 questions.
+    """
+    return _CITE.sub(" ", text)
+
+
 def numbers(text: str) -> set:
-    return {m.group(0).rstrip("%").replace(",", "") for m in _NUM.finditer(text)}
+    return {m.group(0).rstrip("%").replace(",", "")
+            for m in _NUM.finditer(strip_citations(text))}
 
 
 def is_refusal(answer: str) -> bool:
