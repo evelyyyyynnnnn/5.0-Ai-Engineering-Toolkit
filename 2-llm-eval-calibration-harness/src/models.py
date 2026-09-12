@@ -49,7 +49,9 @@ class YearBlindAnswerer:
     name = "year-blind"
 
     def __call__(self, q) -> str:
-        val, src = _lookup(q, year=2024)          # always the latest
+        years = {int(y) for t in q.sources.values()
+                 for y in _YEAR_MENTION.findall(t)}
+        val, src = _lookup(q, year=max(years) if years else None)
         if val is None:
             return "Not stated in the documents."
         return f"{val} [{src}]"
@@ -75,18 +77,28 @@ class UncitedAnswerer:
         return f"{val}" if val else "Not stated in the documents."
 
 
-# --- shared lookup over the authored sources -----------------------------
+# --- shared lookup, read out of the documents themselves --------------------
+#
+# This was a hardcoded table of the authored corpus's values. That made every
+# stand-in useless the moment the suite was built from filed data: the careful
+# answerer, which by construction should be near-perfect on a suite generated
+# FROM the documents it is shown, scored 2 of 24, because it was looking up
+# figures from a different corpus and refusing everything else. A baseline that
+# cannot answer the questions is not a baseline, and a comparison against one
+# flatters whatever it is compared with.
+#
+# The lookup now reads the documents it is given, so the stand-ins behave the
+# same way on any suite -- authored or filed.
 
-_TABLE = {
-    ("revenue", 2024): ("1,284,500", "A"),
-    ("revenue", 2023): ("1,102,300", "A"),
-    ("cost of revenue", 2024): ("742,100", "A"),
-    ("research", 2024): ("141,200", "A"),
-    ("research", 2023): ("128,900", "A"),
-    ("employees", 2024): ("12,450", "A"),
-    ("supplier", 2024): ("42", "B"),
-    ("supplier", 2023): ("31", "B"),
-}
+_YEAR_MENTION = re.compile(r"fiscal\s+(\d{4})", re.I)
+_FIGURE = re.compile(r"\d[\d,]*(?:\.\d+)?")
+
+# Words that appear in almost any question and so distinguish nothing.
+_STOP = {"what", "was", "were", "the", "a", "an", "in", "of", "for", "is", "are",
+         "did", "does", "have", "has", "had", "how", "much", "many", "that",
+         "this", "there", "they", "company", "companys", "fiscal", "year",
+         "during", "from", "came", "end", "total", "and", "per", "its", "their",
+         "at", "as", "by", "with", "s", "today", "current", "currently"}
 
 
 def _year(text: str):
@@ -94,26 +106,68 @@ def _year(text: str):
     return int(m.group(1)) if m else None
 
 
-def _metric(text: str):
-    t = text.lower()
-    if "cost of revenue" in t:
-        return "cost of revenue"
-    if "revenue" in t:
-        return "revenue"
-    if "r&d" in t or "research" in t:
-        return "research"
-    if "employee" in t:
-        return "employees"
-    if "supplier" in t or "component purchases" in t:
-        return "supplier"
-    return None
+def _terms(question: str) -> list:
+    """The content words that name the metric being asked about."""
+    body = question.split("'s ", 1)[-1]
+    body = re.sub(r"\bin fiscal\s+\d{4}\b", " ", body, flags=re.I)
+    words = re.findall(r"[a-z&]+", body.lower())
+    return [w for w in words if w not in _STOP and len(w) > 1]
+
+
+def _sentences(text: str) -> list:
+    """Sentences, with the document's line wrapping removed first.
+
+    The filings wrap mid-phrase, so "in fiscal\n2023." splits a period away from
+    its year. Reading line by line attached figures to the wrong year, and did
+    it silently -- the worst way for a baseline to be wrong.
+    """
+    flat = re.sub(r"\s+", " ", text)
+    return [t.strip() for t in re.split(r"(?<=\.)\s+", flat) if t.strip()]
+
+
+def _figures_by_year(sentence: str) -> dict:
+    """Attach each figure in a sentence to the fiscal year mentioned nearest it.
+
+    Both corpora state a figure beside its period, in either order:
+      "Revenue for fiscal 2025 was 416,161."
+      "R&D expense was 141,200 in fiscal 2024 and 128,900 in fiscal 2023."
+    Nearest-mention wins, which covers both without a template per phrasing.
+    """
+    mentions = [(m.start(), m.end(), int(m.group(1)))
+                for m in _YEAR_MENTION.finditer(sentence)]
+    if not mentions:
+        return {}
+    out = {}
+    for f in _FIGURE.finditer(sentence):
+        # A year inside a "fiscal YYYY" mention is a period, not a figure.
+        if any(a <= f.start() < b for a, b, _ in mentions):
+            continue
+        year = min(mentions, key=lambda m: abs(f.start() - m[0]))[2]
+        out.setdefault(year, f.group(0))
+    return out
 
 
 def _lookup(q, year):
-    metric = _metric(q.text)
-    if metric is None or year is None:
+    """The figure the documents actually state for this metric and year.
+
+    The sentence that shares the most words with the question wins. Requiring
+    every word would refuse most natural questions; requiring any one of them
+    would answer "cost of revenue" out of a revenue sentence.
+    """
+    terms = _terms(q.text)
+    if year is None or not terms:
         return None, None
-    return _TABLE.get((metric, year), (None, None))
+    best = None
+    for doc_id, text in q.sources.items():
+        for sentence in _sentences(text):
+            low = sentence.lower()
+            overlap = sum(1 for t in terms if t in low)
+            if not overlap:
+                continue
+            got = _figures_by_year(sentence).get(year)
+            if got and (best is None or overlap > best[0]):
+                best = (overlap, got.rstrip(","), doc_id)
+    return (best[1], best[2]) if best else (None, None)
 
 
 def _first_number(q):
