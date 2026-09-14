@@ -1,0 +1,56 @@
+{
+    "plugins": {
+        "Godcmd": {
+            "enabled": true,
+            "priority": 999
+        },
+        "Keyword": {
+            "enabled": true,
+            "priority": 900
+        },
+        "timetask": {
+            "enabled": true,
+            "priority": 500
+        },
+        "Banwords": {
+            "enabled": false,
+            "priority": 100
+        },
+        "tool": {
+            "enabled": true,
+            "priority": 0
+        },
+        "linkai": {
+            "enabled": true,
+            "priority": 0
+        },
+        "Role": {
+            "enabled": true,
+            "priority": 0
+        },
+        "Dungeon": {
+            "enabled": true,
+            "priority": 0
+        },
+        "BDunit": {
+            "enabled": false,
+            "priority": 0
+        },
+        "summary": {
+            "enabled": false,
+            "priority": -1
+        },
+        "Hello": {
+            "enabled": true,
+            "priority": -1
+        },
+        "Apilot": {
+            "enabled": true,
+            "priority": -1
+        },
+        "Finish": {
+            "enabled": true,
+            "priority": -999
+        }
+    }
+}
