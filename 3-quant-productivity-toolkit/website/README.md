@@ -1,6 +1,6 @@
 # qkit-research — website
 
-Static site for `3-quant-productivity-toolkit`. No build step: Vercel serves this folder as-is.
+Static site for `quant-productivity-toolkit`. No build step: Vercel serves this folder as-is.
 
 ## Deploy on its own
 

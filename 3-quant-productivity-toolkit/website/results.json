@@ -1,167 +1,227 @@
 {
-  "generated_at": "2026-08-31T22:08:12+00:00",
-  "is_synthetic": true,
-  "data_source": "synthetic return series with known contamination",
-  "package": {
-    "name": "qkit-research",
-    "version": "0.1.0",
-    "exports": 12,
-    "published": false
-  },
-  "lookahead": {
-    "cases": [
-      {
-        "feature": "copies next period's return",
-        "max_forward_corr": 1.0,
-        "lag_of_max": 1,
-        "max_backward_corr": 0.01571,
-        "contaminated": true,
-        "detail": "|corr(f[t], y[t+1])| = 1.000 exceeds 0.5; the feature knows about 1 period(s) ahead"
-      },
-      {
-        "feature": "copies this period's return",
-        "max_forward_corr": 1.0,
-        "lag_of_max": 0,
-        "max_backward_corr": 0.00369,
-        "contaminated": true,
-        "detail": "|corr(f[t], y[t+0])| = 1.000 exceeds 0.5; the feature knows about the same period"
-      },
-      {
-        "feature": "centred rolling mean (window straddles t)",
-        "max_forward_corr": 0.45359,
-        "lag_of_max": 2,
-        "max_backward_corr": 0.45331,
-        "contaminated": false,
-        "detail": "max forward correlation 0.454 is within the plausible range (backward 0.453 is not evidence of lookahead)"
-      },
-      {
-        "feature": "momentum: last period's return",
-        "max_forward_corr": 0.01549,
-        "lag_of_max": 3,
-        "max_backward_corr": 1.0,
-        "contaminated": false,
-        "detail": "max forward correlation 0.015 is within the plausible range (backward 1.000 is not evidence of lookahead)"
-      },
-      {
-        "feature": "trailing mean, properly lagged",
-        "max_forward_corr": 0.01133,
-        "lag_of_max": 1,
-        "max_backward_corr": 0.45363,
-        "contaminated": false,
-        "detail": "max forward correlation 0.011 is within the plausible range (backward 0.454 is not evidence of lookahead)"
-      },
-      {
-        "feature": "pure noise",
-        "max_forward_corr": 0.05415,
-        "lag_of_max": 2,
-        "max_backward_corr": 0.02642,
-        "contaminated": false,
-        "detail": "max forward correlation 0.054 is within the plausible range (backward 0.026 is not evidence of lookahead)"
-      },
-      {
-        "feature": "weak genuine edge (~5%)",
-        "max_forward_corr": 0.04819,
-        "lag_of_max": 2,
-        "max_backward_corr": 0.03184,
-        "contaminated": false,
-        "detail": "max forward correlation 0.048 is within the plausible range (backward 0.032 is not evidence of lookahead)"
-      }
-    ],
-    "n_flagged": 2,
-    "momentum_cleared": true
-  },
-  "survivorship": {
-    "n_universe": 300,
-    "n_survivors": 216,
-    "n_delisted": 84,
-    "survivor_share": 0.72,
-    "biased": true,
-    "mean_return_all": 0.000243,
-    "mean_return_survivors": 0.000638,
-    "bias_bps": 3.95
-  },
-  "validation": {
-    "purged_embargo_0": {
-      "n_splits": 5,
-      "label_span": 20,
-      "embargo": 0,
-      "dropped_per_fold": [
-        0,
-        20,
-        20,
-        20,
-        20
-      ],
-      "folds_with_overlap": 0
-    },
-    "purged_embargo_20": {
-      "n_splits": 5,
-      "label_span": 20,
-      "embargo": 20,
-      "dropped_per_fold": [
-        20,
-        40,
-        40,
-        40,
-        20
-      ],
-      "folds_with_overlap": 0
-    },
-    "naive_kfold": {
-      "n_splits": 5,
-      "label_span": 1,
-      "embargo": 0,
-      "dropped_per_fold": [
-        0,
-        1,
-        1,
-        1,
-        1
-      ],
-      "folds_with_overlap": 0
-    },
-    "naive_overlapping_train_points": 72,
-    "label_span": 20
-  },
-  "selection": {
-    "n_trials_run": 200,
-    "best_observed_sharpe": 1.8244,
-    "true_sharpe": 0.0,
-    "psr_vs_zero": 0.99913,
-    "min_track_record_length": 207.6,
-    "by_assumed_trials": [
-      {
-        "n_trials": 1,
-        "observed_sharpe": 1.8244,
-        "expected_max_sharpe_from_noise": 0.0,
-        "deflated_sharpe_prob": 0.99913,
-        "survives": true
-      },
-      {
-        "n_trials": 10,
-        "observed_sharpe": 1.8244,
-        "expected_max_sharpe_from_noise": 0.9127,
-        "deflated_sharpe_prob": 0.94119,
-        "survives": false
-      },
-      {
-        "n_trials": 50,
-        "observed_sharpe": 1.8244,
-        "expected_max_sharpe_from_noise": 1.3195,
-        "deflated_sharpe_prob": 0.80694,
-        "survives": false
-      },
-      {
-        "n_trials": 200,
-        "observed_sharpe": 1.8244,
-        "expected_max_sharpe_from_noise": 1.603,
-        "deflated_sharpe_prob": 0.648,
-        "survives": false
-      }
-    ]
-  },
-  "cli": {
-    "exit": 0,
-    "help_ok": true
+ "generated_at": "2026-09-07T00:09:53+00:00",
+ "is_synthetic": false,
+ "data_source": "Fama-French daily research factors, and a daily price index cumulated from the Ken French daily market total return (Mkt-RF + RF), base 100 -- a real, reproducible market price path, not raw single-stock closes (Stooq per-ticker closes were unavailable: it now returns a bot-check page); see data/MANIFEST.json for URLs, hashes and retrieval times",
+ "package": {
+  "name": "qkit-research",
+  "version": "0.1.0",
+  "exports": 12,
+  "published": false
+ },
+ "factors": {
+  "source": "Kenneth R. French Data Library, daily research factors",
+  "n_days": 26296,
+  "first": "1926-07-01",
+  "last": "2026-07-31",
+  "factors": [
+   "HML",
+   "Mkt-RF",
+   "RF",
+   "SMB"
+  ],
+  "sha256": "1916d331c2c51d2a",
+  "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_Factors_daily_CSV.zip",
+  "retrieved_utc": "2026-09-06T23:59:03+00:00"
+ },
+ "prices": [
+  {
+   "ticker": "MKT-INDEX",
+   "status": "ok",
+   "n_closes": 26296,
+   "first": "1926-07-01",
+   "last": "2026-07-31",
+   "sha256": "1916d331c2c51d2a",
+   "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_Factors_daily_CSV.zip",
+   "note": "price index cumulated from the Ken French daily market total return (Mkt-RF + RF), base 100; a real market price path, not the closes of any single traded stock"
   }
+ ],
+ "lookahead": {
+  "series": "Fama-French daily market factor",
+  "n_observations": 26296,
+  "cases": [
+   {
+    "feature": "copies next period's return",
+    "max_forward_corr": 1.0,
+    "lag_of_max": 1,
+    "max_backward_corr": 0.02486,
+    "contaminated": true,
+    "detail": "|corr(f[t], y[t+1])| = 1.000 exceeds 0.5; the feature knows about 1 period(s) ahead"
+   },
+   {
+    "feature": "copies this period's return",
+    "max_forward_corr": 1.0,
+    "lag_of_max": 0,
+    "max_backward_corr": 0.04583,
+    "contaminated": true,
+    "detail": "|corr(f[t], y[t+0])| = 1.000 exceeds 0.5; the feature knows about the same period"
+   },
+   {
+    "feature": "centred rolling mean, 3-sample window",
+    "max_forward_corr": 0.61669,
+    "lag_of_max": 0,
+    "max_backward_corr": 0.57675,
+    "contaminated": true,
+    "detail": "|corr(f[t], y[t+0])| = 0.617 exceeds 0.5; the feature knows about the same period"
+   },
+   {
+    "feature": "centred rolling mean, 9-sample window",
+    "max_forward_corr": 0.3485,
+    "lag_of_max": 0,
+    "max_backward_corr": 0.34601,
+    "contaminated": false,
+    "detail": "max forward correlation 0.348 is within the plausible range (backward 0.346 is not evidence of lookahead)"
+   },
+   {
+    "feature": "momentum: last period's return",
+    "max_forward_corr": 0.04583,
+    "lag_of_max": 0,
+    "max_backward_corr": 1.0,
+    "contaminated": false,
+    "detail": "max forward correlation 0.046 is within the plausible range (backward 1.000 is not evidence of lookahead)"
+   },
+   {
+    "feature": "trailing mean, properly lagged",
+    "max_forward_corr": 0.01802,
+    "lag_of_max": 0,
+    "max_backward_corr": 0.46557,
+    "contaminated": false,
+    "detail": "max forward correlation 0.018 is within the plausible range (backward 0.466 is not evidence of lookahead)"
+   },
+   {
+    "feature": "pure noise",
+    "max_forward_corr": 0.01083,
+    "lag_of_max": 1,
+    "max_backward_corr": 0.00606,
+    "contaminated": false,
+    "detail": "max forward correlation 0.011 is within the plausible range (backward 0.006 is not evidence of lookahead)"
+   },
+   {
+    "feature": "realised volatility, properly lagged",
+    "max_forward_corr": 0.01225,
+    "lag_of_max": 0,
+    "max_backward_corr": 0.01713,
+    "contaminated": false,
+    "detail": "max forward correlation 0.012 is within the plausible range (backward 0.017 is not evidence of lookahead)"
+   }
+  ],
+  "dilution": {
+   "rows": [
+    {
+     "window": 3,
+     "correlation_with_next_return": 0.5768,
+     "theoretical_1_over_sqrt_w": 0.5774,
+     "detected": true
+    },
+    {
+     "window": 5,
+     "correlation_with_next_return": 0.4656,
+     "theoretical_1_over_sqrt_w": 0.4472,
+     "detected": false
+    },
+    {
+     "window": 9,
+     "correlation_with_next_return": 0.346,
+     "theoretical_1_over_sqrt_w": 0.3333,
+     "detected": false
+    },
+    {
+     "window": 21,
+     "correlation_with_next_return": 0.2283,
+     "theoretical_1_over_sqrt_w": 0.2182,
+     "detected": false
+    },
+    {
+     "window": 63,
+     "correlation_with_next_return": 0.1421,
+     "theoretical_1_over_sqrt_w": 0.126,
+     "detected": false
+    }
+   ],
+   "detected_windows": [
+    3
+   ],
+   "missed_windows": [
+    5,
+    9,
+    21,
+    63
+   ],
+   "detection_floor": 3,
+   "finding": "every window here leaks -- each one contains the future. Detection stops at the width where 1/sqrt(w) falls below the plausibility bound, so a wide enough centred window is invisible to any fixed correlation threshold. Lowering the bound is not the fix: it would flag genuine predictors instead. Reading how the feature was built is."
+  },
+  "n_flagged": 3,
+  "true_leaks_caught": 2,
+  "properly_lagged_features_falsely_flagged": 0,
+  "note": "the last figure is the one to watch: a properly lagged feature flagged on real data is a false positive caused by genuine return autocorrelation, not by leakage"
+ },
+ "selection": {
+  "series": "market price index (cumulated Ken French daily market return) moving-average grid",
+  "n_strategies_tried": 199,
+  "best": {
+   "fast": 2,
+   "slow": 30,
+   "sharpe": 0.9462,
+   "n_observations": 26295
+  },
+  "sharpe_spread": {
+   "max": 0.9462,
+   "median": 0.7859,
+   "min": 0.6277
+  },
+  "probabilistic_sharpe": 1.0,
+  "deflated_sharpe_one_trial": 1.0,
+  "deflated_sharpe_all_trials": 1.0,
+  "expected_max_sharpe_from_noise": 0.2706,
+  "survives_deflation": true,
+  "note": "deflated Sharpe is the probability the true Sharpe exceeds zero AFTER accounting for how many rules were searched. The one-trial figure is what a paper reports when it does not say how many it tried."
+ },
+ "validation": {
+  "purged_embargo_0": {
+   "n_splits": 5,
+   "label_span": 20,
+   "embargo": 0,
+   "dropped_per_fold": [
+    0,
+    20,
+    20,
+    20,
+    20
+   ],
+   "folds_with_overlap": 0
+  },
+  "purged_embargo_20": {
+   "n_splits": 5,
+   "label_span": 20,
+   "embargo": 20,
+   "dropped_per_fold": [
+    20,
+    40,
+    40,
+    40,
+    20
+   ],
+   "folds_with_overlap": 0
+  },
+  "naive_kfold": {
+   "n_splits": 5,
+   "label_span": 1,
+   "embargo": 0,
+   "dropped_per_fold": [
+    0,
+    1,
+    1,
+    1,
+    1
+   ],
+   "folds_with_overlap": 0
+  },
+  "naive_overlapping_train_points": 72,
+  "label_span": 20
+ },
+ "survivorship_reported": false,
+ "survivorship_withheld_because": "a survivorship audit needs the returns of the names that died, and no free source publishes point-in-time index membership with delisted constituents. A ticker that returns no data has not necessarily been delisted, so treating a fetch failure as a delisting would manufacture the very bias the check measures.",
+ "cli": {
+  "exit": 0,
+  "help_ok": true
+ }
 }

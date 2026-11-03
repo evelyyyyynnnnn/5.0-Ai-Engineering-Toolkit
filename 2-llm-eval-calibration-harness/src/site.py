@@ -22,6 +22,11 @@ META = {
 
 
 def build_site(results: dict) -> pathlib.Path:
+    # The real run and the authored run have different shapes; dispatch on the
+    # flag the results file carries rather than on which keys happen to exist.
+    if not results.get("is_synthetic", True):
+        return build_site_real(results)
+
     s, sep = results["suite"], results["separation"]
     models = results["models"]
 
@@ -165,3 +170,135 @@ python -m src.demo</pre>
 </section>
 """
     return sk.build(ROOT, META, body, results)
+
+
+# --------------------------------------------------------------------------
+# Real-model page: a real open language model scored by the same lexical
+# grader as the deterministic stand-ins, on the same questions.
+# --------------------------------------------------------------------------
+
+REAL_META = dict(META)
+REAL_META.update({
+    "tags": [("real SEC EDGAR XBRL", "real"), ("real local model", "real"),
+             ("a third of the suite unanswerable", ""), ("lexical grader", "")],
+    "banner": "Questions built from values as filed in SEC EDGAR XBRL, with hashes "
+              "recorded in data/MANIFEST.json. More than a third of the suite has no "
+              "answer in the documents shown, because a harness that asks only "
+              "answerable questions measures fluency. Replies reach the grader "
+              "verbatim; a failed call is scored as the empty answer it was.",
+    "datanote": "Built from results/latest-llm.json. The grader is lexical by design, "
+                "which is what makes it deterministic and auditable, and also what "
+                "bounds what it can detect.",
+})
+
+
+def build_site_real(results: dict) -> pathlib.Path:
+    suite = results["suite"]
+    by = suite.get("by_category", {})
+    models = results.get("models", {})
+    mdl = results.get("model", {})
+    vs = results.get("model_vs_stubs", {})
+    unans = by.get("unanswerable", 0)
+
+    metrics = sk.metric_grid([
+        ("Model accuracy", f"{vs.get('model_accuracy', 0):.3f}",
+         sk.esc(mdl.get("name", ""))),
+        ("Best non-model", f"{vs.get('best_stub_accuracy', 0):.4f}",
+         f"the {vs.get('best_stub', '')} stand-in"),
+        ("Unanswerable", f"{unans / suite['n_questions'] * 100:.1f}%",
+         f"{unans} of {suite['n_questions']} questions"),
+        ("Failed calls", mdl.get("failed_calls", 0),
+         f"of {mdl.get('calls', 0)}, median {mdl.get('median_latency_s', 0):.2f} s"),
+    ])
+
+    order = sorted(models, key=lambda m: -models[m]["accuracy"])
+    acc_tbl = sk.table(
+        ["Answerer", "Accuracy", "Fabrication", "Citation", "Answerable",
+         "Unanswerable", "Trap"],
+        [[m, f"{models[m]['accuracy']:.4f}", f"{models[m]['fabrication_rate']:.3f}",
+          f"{models[m]['citation_accuracy']:.4f}"]
+         + [f"{models[m]['by_category'][c]['ok']}/{models[m]['by_category'][c]['n']}"
+            for c in ("answerable", "unanswerable", "trap")]
+         for m in order],
+        numeric_cols=(1, 2, 3))
+    acc_chart = sk.bar_chart(
+        [(m, models[m]["accuracy"]) for m in order], fmt="{:.3f}")
+    fab_chart = sk.bar_chart(
+        [(m, models[m]["fabrication_rate"]) for m in order], fmt="{:.3f}")
+
+    suite_tbl = sk.table(
+        ["Question category", "Count", "Share"],
+        [[c, n, f"{n / suite['n_questions'] * 100:.1f}%"] for c, n in by.items()],
+        numeric_cols=(1, 2))
+
+    call_tbl = sk.table(
+        ["", "Value"],
+        [["Model", mdl.get("name", "")],
+         ["Temperature", mdl.get("temperature", "")],
+         ["Calls", mdl.get("calls", 0)],
+         ["Failed calls", mdl.get("failed_calls", 0)],
+         ["Median latency", f"{mdl.get('median_latency_s', 0):.2f} s"],
+         ["Wall clock", f"{mdl.get('wall_clock_s', 0):.1f} s"]],
+        numeric_cols=(1,))
+
+    body = f"""
+<section>
+  <h2>This run</h2>
+  <div class="stack-lg">
+    {metrics}
+    <p class="mono" style="color:var(--muted);font-size:12.5px">
+      generated {sk.esc(results['generated_at'])} &middot;
+      a language model was run: {str(results.get('any_language_model_run', False)).lower()}
+      &middot; {suite['n_questions']} questions
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>Suite design</h2>
+  <div class="stack-lg">
+    {suite_tbl}
+    <p>Declining correctly is worth as much as answering correctly, and the grader scores
+    both. That is why more than a third of the questions have no answer in the documents
+    shown.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Every answerer, scored by the same grader on the same questions</h2>
+  <div class="stack-lg">
+    {acc_chart}
+    {acc_tbl}
+    <p>The deterministic stand-ins are scored first, and they are the reason the model's
+    number means anything: a stand-in that answers everything scores zero on the
+    unanswerable questions, and one that declines everything scores zero on the
+    answerable ones. A grader that rewarded both equally would be useless.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Fabrication &mdash; numbers appearing in no source document</h2>
+  <div class="stack-lg">
+    {fab_chart}
+  </div>
+</section>
+
+<section>
+  <h2>Call log</h2>
+  <div class="stack-lg">
+    {call_tbl}
+    <p>{sk.esc(results.get('note', ''))}</p>
+  </div>
+</section>
+
+<section>
+  <h2>Reproduce</h2>
+  <div class="stack">
+    <pre>python -m data.fetch
+python run_llm_demo.py --real
+# -&gt; results/latest-llm.json
+pytest -q</pre>
+  </div>
+</section>
+"""
+    return sk.build(ROOT, REAL_META, body, results)
