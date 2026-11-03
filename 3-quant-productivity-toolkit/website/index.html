@@ -116,145 +116,78 @@ svg.chart{display:block;width:100%;height:auto}
   <div class="eyebrow">5.0-Ai-Engineering-Toolkit &middot; Financial Stability</div>
   <h1>qkit-research</h1>
   <p class="lede">The four checks that decide whether a backtest means anything: lookahead, survivorship, label leakage, and how many strategies you tried before this one.</p>
-  <div class="tags"><span class="tag ">pip-installable</span><span class="tag ">CLI</span><span class="tag ">4 checks</span><span class="tag warn">not yet published</span></div>
+  <div class="tags"><span class="tag real">real Ken French</span><span class="tag ">26,296 days</span><span class="tag ">planted leaks</span><span class="tag warn">not published</span></div>
 </header>
 <div class="banner">
   <span class="bi">Data</span>
-  <p>Release artifacts (sdist + wheel) are built and pass twine check, but the package is NOT published to PyPI — no downloads, no users. Every demonstration below runs on synthetic series where the contamination was put there deliberately, which is the only way to show a detector finds it.</p>
+  <p>Run against Fama-French daily research factors and a price index cumulated from the Ken French daily market total return, retrieved with URLs, hashes and retrieval times recorded in data/MANIFEST.json. Leaks are planted on purpose so the detector can be scored.</p>
 </div>
-
-<section>
-  <h2>Not a backtester</h2>
-  <div class="stack">
-    <p>Backtesters are plentiful and mostly fine. What goes wrong is upstream of them,
-    in four places that turn a strategy that does not work into a beautiful equity
-    curve. Each check returns a finding rather than a number, so it can be dropped into
-    a research loop and fail loudly.</p>
-  </div>
-</section>
 
 <section>
   <h2>This run</h2>
   <div class="stack-lg">
-    <div class="metrics"><div class="metric"><span class="mk">Leaks caught</span><span class="mv">2/2</span><span class="mn">of the deliberate ones</span></div><div class="metric"><span class="mk">Survivorship bias</span><span class="mv">4.0 bps</span><span class="mn">per period, from dropping the dead</span></div><div class="metric"><span class="mk">Leaking train points</span><span class="mv">72</span><span class="mn">in naive k-fold, 0 after purging</span></div><div class="metric"><span class="mk">Noise Sharpe</span><span class="mv">1.82</span><span class="mn">best of 200 random strategies</span></div></div>
+    <div class="metrics"><div class="metric"><span class="mk">Days of real history</span><span class="mv">26,296</span><span class="mn">1926-07-01 to 2026-07-31</span></div><div class="metric"><span class="mk">Planted leak caught</span><span class="mv">1.00</span><span class="mn">forward correlation of the worst case</span></div><div class="metric"><span class="mk">False flags</span><span class="mv">0</span><span class="mn">on properly lagged features</span></div><div class="metric"><span class="mk">Sharpe from noise alone</span><span class="mv">0.2706</span><span class="mn">given 199 trials</span></div></div>
     <p class="mono" style="color:var(--muted);font-size:12.5px">
-      generated 2026-08-31T22:08:12+00:00 &middot;
+      generated 2026-09-07T00:09:53+00:00 &middot;
       qkit-research 0.1.0 &middot;
-      synthetic return series with known contamination
+      26,296 observations &middot;
+      published: false
     </p>
   </div>
 </section>
 
 <section>
-  <h2>1 · Lookahead</h2>
+  <h2>Lookahead detection, scored on features whose status is known</h2>
   <div class="stack-lg">
-    <div class="tw"><table><thead><tr><th>Feature</th><th>Forward corr</th><th>At lag</th><th>Backward corr</th><th>Flagged</th></tr></thead><tbody><tr><td>copies next period&#x27;s return</td><td class="n">1.000</td><td class="n">1</td><td class="n">0.016</td><td>YES</td></tr><tr><td>copies this period&#x27;s return</td><td class="n">1.000</td><td class="n">0</td><td class="n">0.004</td><td>YES</td></tr><tr><td>centred rolling mean (window straddles t)</td><td class="n">0.454</td><td class="n">2</td><td class="n">0.453</td><td>—</td></tr><tr><td>momentum: last period&#x27;s return</td><td class="n">0.015</td><td class="n">3</td><td class="n">1.000</td><td>—</td></tr><tr><td>trailing mean, properly lagged</td><td class="n">0.011</td><td class="n">1</td><td class="n">0.454</td><td>—</td></tr><tr><td>pure noise</td><td class="n">0.054</td><td class="n">2</td><td class="n">0.026</td><td>—</td></tr><tr><td>weak genuine edge (~5%)</td><td class="n">0.048</td><td class="n">2</td><td class="n">0.032</td><td>—</td></tr></tbody></table></div>
+    <figure><svg class="chart" viewBox="0 0 680 289" role="img" aria-label="Bar chart of results"><text x="180" y="26.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">copies next period&#x27;s return</text><rect x="190" y="9" width="422.0" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="621.0" y="26.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">1.0000</text><text x="180" y="61.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">copies this period&#x27;s return</text><rect x="190" y="44" width="422.0" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="621.0" y="61.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">1.0000</text><text x="180" y="96.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">centred rolling mean, 3-sample window</text><rect x="190" y="79" width="260.2" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="459.2" y="96.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.6167</text><text x="180" y="131.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">centred rolling mean, 9-sample window</text><rect x="190" y="114" width="147.1" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="346.1" y="131.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.3485</text><text x="180" y="166.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">momentum: last period&#x27;s return</text><rect x="190" y="149" width="19.3" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="218.3" y="166.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.0458</text><text x="180" y="201.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">trailing mean, properly lagged</text><rect x="190" y="184" width="7.6" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="206.6" y="201.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.0180</text><text x="180" y="236.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">pure noise</text><rect x="190" y="219" width="4.6" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="203.6" y="236.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.0108</text><text x="180" y="271.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">realised volatility, properly lagged</text><rect x="190" y="254" width="5.2" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="204.2" y="271.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.0123</text></svg></figure>
+    <div class="tw"><table><thead><tr><th>Feature</th><th>Max forward correlation</th><th>Flagged</th><th>Correct</th></tr></thead><tbody><tr><td>copies next period&#x27;s return</td><td class="n">1.0000</td><td>yes</td><td>true leak</td></tr><tr><td>copies this period&#x27;s return</td><td class="n">1.0000</td><td>yes</td><td>true leak</td></tr><tr><td>centred rolling mean, 3-sample window</td><td class="n">0.6167</td><td>yes</td><td>true leak</td></tr><tr><td>centred rolling mean, 9-sample window</td><td class="n">0.3485</td><td>no</td><td>clean</td></tr><tr><td>momentum: last period&#x27;s return</td><td class="n">0.0458</td><td>no</td><td>clean</td></tr><tr><td>trailing mean, properly lagged</td><td class="n">0.0180</td><td>no</td><td>clean</td></tr><tr><td>pure noise</td><td class="n">0.0108</td><td>no</td><td>clean</td></tr><tr><td>realised volatility, properly lagged</td><td class="n">0.0123</td><td>no</td><td>clean</td></tr></tbody></table></div>
+    <p>the last figure is the one to watch: a properly lagged feature flagged on real data is a false positive caused by genuine return autocorrelation, not by leakage</p>
+  </div>
+</section>
+
+<section>
+  <h2>How detection scales with the width of the window</h2>
+  <div class="stack-lg">
+    <figure><svg class="chart" viewBox="0 0 680 184" role="img" aria-label="Bar chart of results"><text x="180" y="26.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">window 3</text><rect x="190" y="9" width="422.0" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="621.0" y="26.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.5768</text><text x="180" y="61.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">window 5</text><rect x="190" y="44" width="340.6" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="539.6" y="61.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.4656</text><text x="180" y="96.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">window 9</text><rect x="190" y="79" width="253.1" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="452.1" y="96.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.3460</text><text x="180" y="131.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">window 21</text><rect x="190" y="114" width="167.0" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="366.0" y="131.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.2283</text><text x="180" y="166.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">window 63</text><rect x="190" y="149" width="104.0" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="303.0" y="166.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.1421</text></svg></figure>
+    <div class="tw"><table><thead><tr><th>Window</th><th>Correlation with next return</th><th>Theoretical 1/sqrt(w)</th><th>Detected</th></tr></thead><tbody><tr><td class="n">3</td><td class="n">0.5768</td><td class="n">0.5774</td><td>yes</td></tr><tr><td class="n">5</td><td class="n">0.4656</td><td class="n">0.4472</td><td>no</td></tr><tr><td class="n">9</td><td class="n">0.3460</td><td class="n">0.3333</td><td>no</td></tr><tr><td class="n">21</td><td class="n">0.2283</td><td class="n">0.2182</td><td>no</td></tr><tr><td class="n">63</td><td class="n">0.1421</td><td class="n">0.1260</td><td>no</td></tr></tbody></table></div>
+    <p>every window here leaks -- each one contains the future. Detection stops at the width where 1/sqrt(w) falls below the plausibility bound, so a wide enough centred window is invisible to any fixed correlation threshold. Lowering the bound is not the fix: it would flag genuine predictors instead. Reading how the feature was built is.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Selection bias, then the deflation</h2>
+  <div class="stack-lg">
+    <figure><svg class="chart" viewBox="0 0 680 149" role="img" aria-label="Bar chart of results"><text x="180" y="26.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">best of the grid</text><rect x="190" y="9" width="422.0" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="621.0" y="26.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.9462</text><text x="180" y="61.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">median of the grid</text><rect x="190" y="44" width="350.5" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="549.5" y="61.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.7859</text><text x="180" y="96.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">worst of the grid</text><rect x="190" y="79" width="280.0" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="479.0" y="96.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.6277</text><text x="180" y="131.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">expected from noise</text><rect x="190" y="114" width="120.7" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="319.7" y="131.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.2706</text></svg></figure>
+    <div class="tw"><table><thead><tr><th></th><th>Value</th></tr></thead><tbody><tr><td>Strategies tried</td><td class="n">199</td></tr><tr><td>Best rule found</td><td class="n">fast 2 / slow 30</td></tr><tr><td>Best Sharpe</td><td class="n">0.9462</td></tr><tr><td>Median Sharpe across the grid</td><td class="n">0.7859</td></tr><tr><td>Worst Sharpe across the grid</td><td class="n">0.6277</td></tr><tr><td>Sharpe expected from noise alone</td><td class="n">0.2706</td></tr><tr><td>Deflated Sharpe, all trials</td><td class="n">1.0000</td></tr><tr><td>Survives deflation</td><td class="n">yes</td></tr></tbody></table></div>
+    <p>deflated Sharpe is the probability the true Sharpe exceeds zero AFTER accounting for how many rules were searched. The one-trial figure is what a paper reports when it does not say how many it tried.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Purged cross-validation with an embargo</h2>
+  <div class="stack-lg">
+    <div class="tw"><table><thead><tr><th>Configuration</th><th>Splits</th><th>Dropped per fold</th><th>Folds with overlap</th></tr></thead><tbody><tr><td>embargo 0</td><td class="n">5</td><td>0, 20, 20, 20, 20</td><td class="n">0</td></tr><tr><td>embargo 20</td><td class="n">5</td><td>20, 40, 40, 40, 20</td><td class="n">0</td></tr><tr><td>naive_kfold</td><td class="n">5</td><td>0, 1, 1, 1, 1</td><td class="n">0</td></tr></tbody></table></div>
+    <p>Overlapping observations are dropped so no fold can see a label that straddles
+    its own boundary.</p>
+  </div>
+</section>
+
+<section>
+  <h2>What this run does not compute</h2>
+  <div class="stack-lg">
     <div class="note">
-      <h3>The direction of this test is its entire content</h3>
-      <p>The convention is that <code>feature[t]</code> is known at the end of period t
-      and predicts <code>target[t+1]</code>. Lookahead therefore means correlation with
-      the <em>contemporaneous or future</em> target. Correlation with an earlier target
-      is not lookahead: a momentum feature <em>is</em> the previous return, and
-      correlating 1.000 with it is the definition of momentum.</p>
-      <p>The first version of this module tested the wrong direction. It flagged
-      momentum as contaminated and passed a feature that was a copy of next period's
-      return — the exact inversion of what it was for.</p>
-    </div>
-    <div class="note warn" style="background:var(--warn-bg);border-color:transparent">
-      <h3>One case it misses, left in the table</h3>
-      <p>The centred rolling mean straddles time t, so it genuinely is contaminated. It
-      scores 0.454
-      — just under the 0.50 threshold — and is <strong>not flagged</strong>.</p>
-      <p>Lowering the bound would catch it and would start flagging strong-but-real
-      signals on short samples. The threshold is a plausibility bound on forward
-      predictability, not a significance test, and this row is here so the bound's cost
-      is visible rather than tuned away.</p>
+      <h3>A survivorship audit needs the names that died</h3>
+      <p>a survivorship audit needs the returns of the names that died, and no free source publishes point-in-time index membership with delisted constituents. A ticker that returns no data has not necessarily been delisted, so treating a fetch failure as a delisting would manufacture the very bias the check measures.</p>
     </div>
   </div>
 </section>
 
 <section>
-  <h2>2 · Survivorship</h2>
-  <div class="stack-lg">
-    <div class="tw"><table><thead><tr><th></th><th>Full universe</th><th>Survivors only</th></tr></thead><tbody><tr><td>Names</td><td class="n">300</td><td class="n">216</td></tr><tr><td>Mean return per period</td><td class="n">0.000243</td><td class="n">0.000638</td></tr></tbody></table></div>
-    <p>Dropping the 84 names that died — 28%
-    of the universe — raises the mean period return from
-    0.000243 to 0.000638, a bias of
-    <strong>4.0 basis points per period</strong>. Compounded over a
-    long sample that is not a small distortion; it can invert the sign of a result.</p>
-    <p>The function takes the full universe including the dead, which is exactly the
-    data most survivorship-biased studies do not have. When it is unavailable the honest
-    output is a warning, and this library does not attempt to correct a bias it cannot
-    measure.</p>
-  </div>
-</section>
-
-<section>
-  <h2>3 · Label leakage in cross-validation</h2>
-  <div class="stack-lg">
-    <div class="tw"><table><thead><tr><th>Scheme</th><th>Observations dropped per fold</th><th>Folds with residual overlap</th></tr></thead><tbody><tr><td>Naive k-fold</td><td>[0, 1, 1, 1, 1]</td><td class="n">0</td></tr><tr><td>Purged, no embargo</td><td>[0, 20, 20, 20, 20]</td><td class="n">0</td></tr><tr><td>Purged + 20-period embargo</td><td>[20, 40, 40, 40, 20]</td><td class="n">0</td></tr></tbody></table></div>
-    <p>With labels spanning 20 periods, naive k-fold leaves
-    <strong>72</strong> training observations whose
-    label windows reach into the test block. Each one shares its answer with a test
-    point. Purging removes them; the embargo additionally drops the periods immediately
-    after each test block, where serial correlation survives purging.</p>
-    <p>With span 1 and no embargo the splitter reduces to ordinary contiguous k-fold,
-    which is the check that it is not doing something exotic.</p>
-  </div>
-</section>
-
-<section>
-  <h2>4 · How many strategies did you try?</h2>
-  <div class="stack-lg">
-    <figure><svg class="chart" viewBox="0 0 680 149" role="img" aria-label="Bar chart of results"><text x="180" y="26.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">1 trials</text><rect x="190" y="9" width="422.0" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="621.0" y="26.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.999</text><text x="180" y="61.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">10 trials</text><rect x="190" y="44" width="397.5" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="596.5" y="61.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.941</text><text x="180" y="96.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">50 trials</text><rect x="190" y="79" width="340.8" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="539.8" y="96.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.807</text><text x="180" y="131.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">200 trials</text><rect x="190" y="114" width="273.7" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="472.7" y="131.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.648</text></svg></figure>
-    <div class="tw"><table><thead><tr><th>Trials assumed</th><th>E[max Sharpe from noise]</th><th>Deflated probability</th><th>Survives</th></tr></thead><tbody><tr><td class="n">1</td><td class="n">0.000</td><td class="n">0.9991</td><td>yes</td></tr><tr><td class="n">10</td><td class="n">0.913</td><td class="n">0.9412</td><td>no</td></tr><tr><td class="n">50</td><td class="n">1.319</td><td class="n">0.8069</td><td>no</td></tr><tr><td class="n">200</td><td class="n">1.603</td><td class="n">0.6480</td><td>no</td></tr></tbody></table></div>
-    <div class="note">
-      <h3>Read the first row against the last</h3>
-      <p>200 strategies were generated from <strong>pure noise</strong>.
-      Their true Sharpe is exactly zero. The best of them shows an observed Sharpe of
-      <strong>1.824</strong>, and the probabilistic Sharpe
-      ratio against zero is <strong>0.9991</strong> — that is a result
-      that looks decisively significant and is entirely selection.</p>
-      <p>Deflating for the number of trials is what exposes it. Assuming a single
-      pre-registered strategy, it survives. Told the truth —
-      200 trials — the probability falls to
-      0.648 and it does not.</p>
-      <p>The minimum track record length for this series is
-      208 periods, against the
-      750 it actually has. Reporting a Sharpe without the trial count is not a
-      rounding issue; it is the difference between a finding and an artefact.</p>
-    </div>
-  </div>
-</section>
-
-<section>
-  <h2>Install and use</h2>
+  <h2>Reproduce</h2>
   <div class="stack">
-    <pre>pip install -e .
-
-qkit lookahead features.csv --target fwd_return --features mom_5 vol_20 rsi
-qkit sharpe backtest.csv --column returns --trials 200</pre>
-    <p>Both subcommands exit non-zero on a finding, so they work as a pre-commit hook or
-    a CI gate on a research repository.</p>
-  </div>
-</section>
-
-<section>
-  <h2>What this does not establish</h2>
-  <div class="stack">
-    <ul class="tight">
-      <li><strong>Not published.</strong> No PyPI release, no downloads, no users.</li>
-      <li>Every demonstration uses synthetic series with contamination inserted
-      deliberately. That shows the detectors find what was planted, not that they
-      find what a real research process produces.</li>
-      <li>The lookahead detector is correlational and univariate. A feature that
-      leaks only in combination with another will pass, and the centred-window case
-      above shows it also misses a genuine leak that sits under the threshold.</li>
-      <li>Deflated Sharpe assumes independent trials. Two hundred variants of one
-      idea are not independent, and the correction is then too weak.</li>
-      <li>Purged k-fold assumes a fixed label span. Variable-horizon labels need
-      per-observation windows, which are not implemented.</li>
-    </ul>
+    <pre>python -m src.demo --real
+# -&gt; results/latest-real.json
+pytest -q</pre>
   </div>
 </section>
 
@@ -262,7 +195,7 @@ qkit sharpe backtest.csv --column returns --trials 200</pre>
   <p>5.0-Ai-Engineering-Toolkit &middot; quant-productivity-toolkit &middot; part of a five-repository portfolio on optimization-driven,
      system-level decision frameworks.</p>
   <p>Every figure on this page was produced by running <code>python -m src.demo</code> in this
-     project and reading <code>results.json</code>. Nothing here is hand-entered. The run used clearly-labelled synthetic data; swap in the real source and the same pipeline reports real numbers.</p>
+     project and reading <code>results.json</code>. Nothing here is hand-entered. Built from results/latest-real.json. The moving-average grid is a selection-bias demonstration, not a strategy, and nothing here is a trading recommendation.</p>
 </div>
 </div>
 </body>
