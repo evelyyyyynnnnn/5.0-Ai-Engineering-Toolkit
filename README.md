@@ -4,18 +4,18 @@
 
 Shared, installable engineering infrastructure behind the endeavor. Four rebuilt projects carry it.
 
-Part of a five-repository portfolio supporting the endeavor described in the
-[redacted] [redacted]: **optimization-driven, system-level decision frameworks** —
+Part of a five-repository portfolio on one theme: **optimization-driven,
+system-level decision frameworks** —
 integrating operations research, mathematical optimization and applied AI — for
 domains where a wrong decision carries systemic consequences. The three pillars
 are financial stability, healthcare safety and secure digital infrastructure.
 
 | | |
 |---|---|
-| [redacted] projects today | 0 original, [redacted]-relevant projects |
+| Projects with measured results | 0 |
 | Verdict | **Rebuild around its own name** |
 
-> "[redacted]" means: original work, a stated method, real data at a stated
+> "Measured" means: original work, a stated method, real data at a stated
 > scale, a measured result, and a README a reviewer can follow. Counts exclude
 > duplicates, forks of third-party work, retired projects, and asset-only
 > folders.
@@ -43,7 +43,7 @@ The Notion 综合性工具 idea shipped as a real, installable package with publ
 
 Grounding, citation accuracy and refusal behaviour evaluation for LLMs applied to finance.
 
-*Why it earns its place:* Directly serves the hallucination and verification argument in Section 2 of the [redacted].
+*Why it earns its place:* Accuracy and calibration come apart: a model can be right often and confidently wrong on the rest, and it is refusal behaviour that decides whether such an error ever reaches a user. Scoring grounding, citation accuracy and refusal together — rather than accuracy alone — is the point of the harness.
 
 *Target scale:* Public filings and public financial corpora
 
@@ -79,8 +79,9 @@ Every rebuilt project carries the same skeleton: `README.md`, `src/`, `data/`, `
 
 ## Ground rules
 
-1. **No number without a run log.** Anything cited in the [redacted] must appear
-   in that project's `results/README.md` with a run date behind it.
+1. **No number without a run log.** Any figure quoted anywhere in this
+   repository must appear in that project's `results/README.md` with a run
+   date behind it.
 2. **No simulated data under a real claim.** Sample data lives in
    `data/sample/`, labelled, and is never the source of a cited figure.
 3. **Adoption must be documentable** — named institutions, dated
@@ -88,4 +89,13 @@ Every rebuilt project carries the same skeleton: `README.md`, `src/`, `data/`, `
 4. **Third-party and forked code stays labelled** and is never counted.
 
 ---
-Scaffold generated from `[redacted].xlsx` (sheets: Repo Build-Out Plan, Core Ideas at a Glance, [redacted] Claim vs Repo Evidence, Notion 创业 Alignment). Structure only — no results are claimed here yet.
+Structure only — no results are claimed here unless a project's `results/README.md` records a dated run.
+
+## Licence
+
+[Apache License 2.0](LICENSE). The code, benchmarks and documentation in this
+repository may be reused, modified and redistributed under its terms, including
+by projects that need a patent grant to incorporate them.
+
+Third-party data and vendored code kept under `*/data/` and
+`historical-archive/` carry their own terms and are labelled where they appear.

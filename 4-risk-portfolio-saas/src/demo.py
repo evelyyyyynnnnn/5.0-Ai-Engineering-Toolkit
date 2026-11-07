@@ -229,6 +229,12 @@ def main_real() -> int:
     print("\nportfolios are authored; every risk number above is measured "
           "from real returns")
     print("wrote results/latest-real.json")
+    try:
+        from .site import build_site
+        build_site(r)
+        print("website/ rebuilt from this run")
+    except Exception as exc:                      # noqa: BLE001
+        print(f"(site not rebuilt: {exc})", file=sys.stderr)
     return 0
 
 

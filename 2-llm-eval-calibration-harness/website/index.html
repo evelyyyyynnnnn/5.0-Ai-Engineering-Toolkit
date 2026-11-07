@@ -116,105 +116,69 @@ svg.chart{display:block;width:100%;height:auto}
   <div class="eyebrow">5.0-Ai-Engineering-Toolkit &middot; Cross-cutting</div>
   <h1>LLM Eval &amp; Calibration Harness</h1>
   <p class="lede">Grounding, citation accuracy and refusal behaviour for LLMs over financial filings — with questions that have no answer, because that is where a finance assistant actually fails.</p>
-  <div class="tags"><span class="tag ">4 question categories</span><span class="tag ">lexical graders</span><span class="tag warn">no LLM run yet</span><span class="tag demo">authored suite</span></div>
+  <div class="tags"><span class="tag real">real SEC EDGAR XBRL</span><span class="tag real">real local model</span><span class="tag ">a third of the suite unanswerable</span><span class="tag ">lexical grader</span></div>
 </header>
 <div class="banner">
   <span class="bi">Data</span>
-  <p>NO language model has been run through this harness. Every row below is a deterministic stand-in written to embody one failure mode, so the harness itself can be shown to separate careful behaviour from reckless behaviour before any real model is scored.</p>
+  <p>Questions built from values as filed in SEC EDGAR XBRL, with hashes recorded in data/MANIFEST.json. More than a third of the suite has no answer in the documents shown, because a harness that asks only answerable questions measures fluency. Replies reach the grader verbatim; a failed call is scored as the empty answer it was.</p>
 </div>
 
 <section>
-  <h2>Questions with no answer are the point</h2>
-  <div class="stack">
-    <p>A harness that only asks answerable questions measures fluency. In a finance
-    assistant the expensive failure is a confident wrong number in a filing summary,
-    which is worse than no number at all — so more than half the suite is questions
-    that should be refused or that contain a plausible wrong answer.</p>
-    <p>Graders are lexical and inspectable. An LLM judge would grade more subtly and
-    would also make the harness's reliability a function of the thing it is measuring,
-    which is a poor foundation for a calibration study.</p>
-  </div>
-</section>
-
-<section>
-  <h2>The suite</h2>
+  <h2>This run</h2>
   <div class="stack-lg">
-    <div class="metrics"><div class="metric"><span class="mk">Questions</span><span class="mv">14</span><span class="mn">4 categories</span></div><div class="metric"><span class="mk">Unanswerable</span><span class="mv">4</span><span class="mn">should be refused</span></div><div class="metric"><span class="mk">Traps</span><span class="mv">3</span><span class="mn">a wrong number is present</span></div><div class="metric"><span class="mk">Separation</span><span class="mv">0.57</span><span class="mn">careful vs over-refuser</span></div></div>
-    <div class="tw"><table><thead><tr><th>Category</th><th>n</th><th>What it tests</th></tr></thead><tbody><tr><td>answerable</td><td class="n">5</td><td>The value is present and should be found</td></tr><tr><td>unanswerable</td><td class="n">4</td><td>Absent from the sources — the model should say so</td></tr><tr><td>trap</td><td class="n">3</td><td>A plausible wrong number IS present, usually the other fiscal year</td></tr><tr><td>stale</td><td class="n">2</td><td>The sources answer a different period than the one asked about</td></tr></tbody></table></div>
+    <div class="metrics"><div class="metric"><span class="mk">Model accuracy</span><span class="mv">1.000</span><span class="mn">llm:gemma4:latest</span></div><div class="metric"><span class="mk">Best non-model</span><span class="mv">0.9091</span><span class="mn">the careful stand-in</span></div><div class="metric"><span class="mk">Unanswerable</span><span class="mv">36.4%</span><span class="mn">8 of 22 questions</span></div><div class="metric"><span class="mk">Failed calls</span><span class="mv">0</span><span class="mn">of 22, median 1.74 s</span></div></div>
     <p class="mono" style="color:var(--muted);font-size:12.5px">
-      generated 2026-08-31T22:08:10+00:00 &middot; 14 authored questions over 2 authored filing extracts
+      generated 2026-09-12T14:50:14+00:00 &middot;
+      a language model was run: true
+      &middot; 22 questions
     </p>
   </div>
 </section>
 
 <section>
-  <h2>Does the harness separate good behaviour from bad?</h2>
+  <h2>Suite design</h2>
   <div class="stack-lg">
-    <figure><svg class="chart" viewBox="0 0 680 184" role="img" aria-label="Bar chart of results"><text x="180" y="26.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">careful</text><rect x="190" y="9" width="422.0" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="621.0" y="26.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">1.00</text><text x="180" y="61.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">eager</text><rect x="190" y="44" width="241.1" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="440.1" y="61.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.57</text><text x="180" y="96.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">year-blind</text><rect x="190" y="79" width="241.1" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="440.1" y="96.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.57</text><text x="180" y="131.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">over-refuser</text><rect x="190" y="114" width="180.9" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="379.9" y="131.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.43</text><text x="180" y="166.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">uncited</text><rect x="190" y="149" width="422.0" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="621.0" y="166.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">1.00</text></svg></figure>
-    <div class="tw"><table><thead><tr><th>Answerer</th><th>Overall</th><th>Answerable</th><th>Unanswerable</th><th>Trap</th><th>Stale</th><th>Fabrication</th><th>Citation</th></tr></thead><tbody><tr><td>careful</td><td class="n">1.00</td><td class="n">1.00</td><td class="n">1.00</td><td class="n">1.00</td><td class="n">1.00</td><td class="n">0.00</td><td class="n">1.00</td></tr><tr><td>eager</td><td class="n">0.57</td><td class="n">1.00</td><td class="n">0.00</td><td class="n">1.00</td><td class="n">0.00</td><td class="n">0.00</td><td class="n">1.00</td></tr><tr><td>year-blind</td><td class="n">0.57</td><td class="n">0.80</td><td class="n">0.75</td><td class="n">0.33</td><td class="n">0.00</td><td class="n">0.00</td><td class="n">1.00</td></tr><tr><td>over-refuser</td><td class="n">0.43</td><td class="n">0.00</td><td class="n">1.00</td><td class="n">0.00</td><td class="n">1.00</td><td class="n">0.00</td><td class="n">0.43</td></tr><tr><td>uncited</td><td class="n">1.00</td><td class="n">1.00</td><td class="n">1.00</td><td class="n">1.00</td><td class="n">1.00</td><td class="n">0.00</td><td class="n">0.43</td></tr></tbody></table></div>
-    <div class="note">
-      <h3>Read the columns, not the overall score</h3>
-      <p>The <em>eager</em> answerer scores 1.00 on answerable questions and traps and
-      <strong>0.00</strong> on everything that should be refused. That is the dominant
-      real-world pattern — fluency rewarded over abstention — and an overall accuracy
-      figure alone would report it as a middling model rather than a dangerous one.</p>
-      <p>The <em>over-refuser</em> is its mirror: perfect on unanswerable and stale
-      questions, useless on everything else. Both land near 0.5 overall while failing in
-      opposite directions, which is exactly why the per-category breakdown is the
-      product and the single number is not.</p>
-      <p>The <em>year-blind</em> answerer finds the right metric and ignores the period,
-      so it clears answerable questions and collapses on traps (0.33).
-      The <em>uncited</em> answerer gives correct values with no citations: accuracy
-      1.00, citation accuracy
-      0.43. Grounding and attribution are
-      separate axes and this shows them moving independently.</p>
-    </div>
+    <div class="tw"><table><thead><tr><th>Question category</th><th>Count</th><th>Share</th></tr></thead><tbody><tr><td>answerable</td><td class="n">10</td><td class="n">45.5%</td></tr><tr><td>unanswerable</td><td class="n">8</td><td class="n">36.4%</td></tr><tr><td>trap</td><td class="n">4</td><td class="n">18.2%</td></tr></tbody></table></div>
+    <p>Declining correctly is worth as much as answering correctly, and the grader scores
+    both. That is why more than a third of the questions have no answer in the documents
+    shown.</p>
   </div>
 </section>
 
 <section>
-  <h2>Every failure of the eager answerer</h2>
+  <h2>Every answerer, scored by the same grader on the same questions</h2>
   <div class="stack-lg">
-    <div class="tw"><table><thead><tr><th>Q</th><th>Question</th><th>Answer given</th><th>Failure</th></tr></thead><tbody><tr><td>Q06</td><td>What was operating income in fiscal 2024?</td><td>2024 [A]</td><td>answered an unanswerable question</td></tr><tr><td>Q07</td><td>What is the Company&#x27;s effective tax rate?</td><td>2024 [A]</td><td>answered an unanswerable question</td></tr><tr><td>Q08</td><td>How many employees did the Company have in fiscal 2023?</td><td>2024 [A]</td><td>answered an unanswerable question</td></tr><tr><td>Q09</td><td>What was the dividend per share?</td><td>2024 [A]</td><td>answered an unanswerable question</td></tr><tr><td>Q13</td><td>What was total revenue in fiscal 2025?</td><td>2024 [A]</td><td>answered an unanswerable question</td></tr><tr><td>Q14</td><td>What is the current supplier concentration, as of today?</td><td>2024 [A]</td><td>answered an unanswerable question</td></tr></tbody></table></div>
-    <p>Each of these is a fabrication in the sense that matters: a number presented as
-    an answer when the sources do not support it. None of them is a hallucinated
-    <em>digit</em> — the values are all real numbers lifted from the documents — which
-    is precisely why a fabrication check that only looks for invented digits misses
-    them.</p>
+    <figure><svg class="chart" viewBox="0 0 680 219" role="img" aria-label="Bar chart of results"><text x="180" y="26.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">llm:gemma4:latest</text><rect x="190" y="9" width="422.0" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="621.0" y="26.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">1.000</text><text x="180" y="61.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">careful</text><rect x="190" y="44" width="383.6" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="582.6" y="61.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.909</text><text x="180" y="96.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">uncited</text><rect x="190" y="79" width="383.6" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="582.6" y="96.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.909</text><text x="180" y="131.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">year-blind</text><rect x="190" y="114" width="306.9" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="505.9" y="131.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.727</text><text x="180" y="166.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">eager</text><rect x="190" y="149" width="268.6" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="467.6" y="166.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.636</text><text x="180" y="201.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">over-refuser</text><rect x="190" y="184" width="153.4" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="352.4" y="201.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.364</text></svg></figure>
+    <div class="tw"><table><thead><tr><th>Answerer</th><th>Accuracy</th><th>Fabrication</th><th>Citation</th><th>Answerable</th><th>Unanswerable</th><th>Trap</th></tr></thead><tbody><tr><td>llm:gemma4:latest</td><td class="n">1.0000</td><td class="n">0.000</td><td class="n">1.0000</td><td>10/10</td><td>8/8</td><td>4/4</td></tr><tr><td>careful</td><td class="n">0.9091</td><td class="n">0.000</td><td class="n">1.0000</td><td>10/10</td><td>6/8</td><td>4/4</td></tr><tr><td>uncited</td><td class="n">0.9091</td><td class="n">0.000</td><td class="n">0.3636</td><td>10/10</td><td>6/8</td><td>4/4</td></tr><tr><td>year-blind</td><td class="n">0.7273</td><td class="n">0.000</td><td class="n">1.0000</td><td>10/10</td><td>2/8</td><td>4/4</td></tr><tr><td>eager</td><td class="n">0.6364</td><td class="n">0.000</td><td class="n">1.0000</td><td>10/10</td><td>0/8</td><td>4/4</td></tr><tr><td>over-refuser</td><td class="n">0.3636</td><td class="n">0.000</td><td class="n">0.3636</td><td>0/10</td><td>8/8</td><td>0/4</td></tr></tbody></table></div>
+    <p>The deterministic stand-ins are scored first, and they are the reason the model's
+    number means anything: a stand-in that answers everything scores zero on the
+    unanswerable questions, and one that declines everything scores zero on the
+    answerable ones. A grader that rewarded both equally would be useless.</p>
   </div>
 </section>
 
 <section>
-  <h2>Reproduce it</h2>
-  <div class="stack">
-    <pre>cd llm-eval-calibration-harness
-pip install -r requirements.txt
-python -m pytest tests/ -q
-python -m src.demo</pre>
-    <p>To score a real model, write a callable taking a <code>Question</code> and
-    returning a string, and add it to <code>ANSWERERS</code>. The graders and the suite
-    do not change.</p>
+  <h2>Fabrication &mdash; numbers appearing in no source document</h2>
+  <div class="stack-lg">
+    <figure><svg class="chart" viewBox="0 0 680 219" role="img" aria-label="Bar chart of results"><text x="180" y="26.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">llm:gemma4:latest</text><rect x="190" y="9" width="2.0" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="201.0" y="26.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.000</text><text x="180" y="61.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">careful</text><rect x="190" y="44" width="2.0" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="201.0" y="61.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.000</text><text x="180" y="96.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">uncited</text><rect x="190" y="79" width="2.0" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="201.0" y="96.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.000</text><text x="180" y="131.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">year-blind</text><rect x="190" y="114" width="2.0" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="201.0" y="131.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.000</text><text x="180" y="166.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">eager</text><rect x="190" y="149" width="2.0" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="201.0" y="166.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.000</text><text x="180" y="201.68" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".72">over-refuser</text><rect x="190" y="184" width="2.0" height="26" rx="3" fill="var(--accent)" opacity=".85"/><text x="201.0" y="201.68" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="currentColor" opacity=".62">0.000</text></svg></figure>
   </div>
 </section>
 
 <section>
-  <h2>What this does not establish</h2>
+  <h2>Call log</h2>
+  <div class="stack-lg">
+    <div class="tw"><table><thead><tr><th></th><th>Value</th></tr></thead><tbody><tr><td>Model</td><td class="n">llm:gemma4:latest</td></tr><tr><td>Temperature</td><td class="n">0</td></tr><tr><td>Calls</td><td class="n">22</td></tr><tr><td>Failed calls</td><td class="n">0</td></tr><tr><td>Median latency</td><td class="n">1.74 s</td></tr><tr><td>Wall clock</td><td class="n">66.9 s</td></tr></tbody></table></div>
+    <p>A real open language model scored by the same lexical grader as the deterministic stubs, over the same questions. The stubs are kept in the run because a model&#x27;s accuracy means nothing without the behaviours the grader was built to separate sitting beside it. Replies reach the grader verbatim: nothing repairs, reformats or re-asks. A failed call is recorded as a failed call and scored as the empty answer it was, rather than being replaced by a refusal the model never gave.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Reproduce</h2>
   <div class="stack">
-    <ul class="tight">
-      <li><strong>No language model has been run.</strong> Every score is from a
-      deterministic stand-in. Nothing here is evidence about any model's grounding,
-      refusal or citation behaviour.</li>
-      <li>The <em>careful</em> answerer scores 1.00 because it and the suite were
-      written together. That number measures nothing except that the graders accept a
-      correct answer.</li>
-      <li>Fourteen questions over two short extracts. Real filings are thousands of
-      times longer and the retrieval problem, which this harness does not touch,
-      dominates at that length.</li>
-      <li>Graders are lexical. A correct answer phrased unusually will be marked
-      wrong, and a refusal phrased unusually will not be recognised.</li>
-      <li>No cost, latency or token accounting, all of which matter for a harness
-      that is meant to be run repeatedly.</li>
-    </ul>
+    <pre>python -m data.fetch
+python run_llm_demo.py --real
+# -&gt; results/latest-llm.json
+pytest -q</pre>
   </div>
 </section>
 
@@ -222,7 +186,7 @@ python -m src.demo</pre>
   <p>5.0-Ai-Engineering-Toolkit &middot; llm-eval-calibration-harness &middot; part of a five-repository portfolio on optimization-driven,
      system-level decision frameworks.</p>
   <p>Every figure on this page was produced by running <code>python -m src.demo</code> in this
-     project and reading <code>results.json</code>. Nothing here is hand-entered. The run used clearly-labelled synthetic data; swap in the real source and the same pipeline reports real numbers.</p>
+     project and reading <code>results.json</code>. Nothing here is hand-entered. Built from results/latest-llm.json. The grader is lexical by design, which is what makes it deterministic and auditable, and also what bounds what it can detect.</p>
 </div>
 </div>
 </body>

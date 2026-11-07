@@ -37,6 +37,11 @@ spanlineage verify filing.txt record.json"""
 
 
 def build_site(results: dict) -> pathlib.Path:
+    # The real run and the authored run have different shapes; dispatch on the
+    # flag the results file carries rather than on which keys happen to exist.
+    if not results.get("is_synthetic", True):
+        return build_site_real(results)
+
     m, g, v, t = (results["metrics"], results["graph"], results["verification"],
                   results["tamper"])
     margin = m["operating_margin"]
@@ -159,3 +164,104 @@ def build_site(results: dict) -> pathlib.Path:
 </section>
 """
     return sk.build(ROOT, META, body, results)
+
+
+# --------------------------------------------------------------------------
+# Real-data page: lineage carried through arithmetic on values as filed.
+# --------------------------------------------------------------------------
+
+REAL_META = dict(META)
+REAL_META.update({
+    "tags": [("real SEC EDGAR XBRL", "real"), ("values as filed", ""),
+             ("span-level lineage", ""), ("not published", "warn")],
+    "banner": "Run against the SEC EDGAR XBRL company-concept API: every value is a "
+              "figure as filed, carrying the accession number of the filing that "
+              "reported it, with hashes recorded in data/MANIFEST.json.",
+    "datanote": "Built from results/latest-real.json. The package is installable from "
+                "this repository and is not published, so it has no downloads and no "
+                "users.",
+})
+
+
+def build_site_real(results: dict) -> pathlib.Path:
+    pkg = results["package"]
+    comps = results.get("companies", [])
+    fails = results.get("failures", [])
+    rows, deepest = [], 0
+    for c in comps:
+        for name, m in c["metrics"].items():
+            deepest = max(deepest, m["depth"])
+            rows.append([c["ticker"], name, f"{m['value']:,.6g}", m["op"],
+                         m["depth"], m["n_spans"], ", ".join(m["documents"])])
+
+    metrics = sk.metric_grid([
+        ("Public API", pkg["exports"], f"exports in {pkg['name']} {pkg['version']}"),
+        ("Filers traced", len(comps), "to the span each value was filed in"),
+        ("Deepest derivation", f"{deepest} operations",
+         "and it still names its sources"),
+        ("Failures recorded", len(fails), "not silently dropped"),
+    ])
+
+    lin_tbl = sk.table(
+        ["Filer", "Metric", "Value", "Operation", "Depth", "Spans", "Source concepts"],
+        rows, numeric_cols=(2, 4, 5))
+    depth_chart = sk.bar_chart(
+        [(f"{r[0]} {r[1]} (depth {r[4]})", r[5]) for r in rows], fmt="{:.0f}")
+
+    fail_tbl = sk.table(["Filer", "Recorded failure"],
+                        [[f["ticker"], f["error"]] for f in fails]) if fails else ""
+    fail_section = ""
+    if fails:
+        fail_section = (
+            '<section><h2>Failures</h2><div class="stack-lg">' + fail_tbl
+            + "<p>A fetch that failed is in the results file as a failure rather than "
+              "absent from the companies list. A provenance library that quietly drops "
+              "what it could not retrieve is the one thing it must not be.</p>"
+              "</div></section>")
+
+    body = f"""
+<section>
+  <h2>This run</h2>
+  <div class="stack-lg">
+    {metrics}
+    <p class="mono" style="color:var(--muted);font-size:12.5px">
+      generated {sk.esc(results['generated_at'])} &middot;
+      {pkg['name']} {pkg['version']} &middot;
+      published: {str(pkg.get('published', False)).lower()}
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>Lineage carried through arithmetic</h2>
+  <div class="stack-lg">
+    {depth_chart}
+    {lin_tbl}
+    <p>The rows that matter are the derived ones. A ratio two operations away from
+    anything anyone filed still names every filed fact it came from, so if the ratio is
+    wrong the wrong input can be located rather than guessed at.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Why the earliest filing wins</h2>
+  <div class="stack-lg">
+    <div class="note">
+      <h3>The same figure is filed many times</h3>
+      <p>{sk.esc(results.get('duplicate_policy', ''))}</p>
+    </div>
+  </div>
+</section>
+
+{fail_section}
+
+<section>
+  <h2>Reproduce</h2>
+  <div class="stack">
+    <pre>python -m src.demo --real
+# -&gt; results/latest-real.json
+pytest -q</pre>
+  </div>
+</section>
+"""
+    return sk.build(ROOT, REAL_META, body, results)

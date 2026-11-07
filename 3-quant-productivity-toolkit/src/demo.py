@@ -370,6 +370,12 @@ def main_real() -> int:
     print("\nSURVIVORSHIP IS NOT REPORTED ON REAL DATA: " +
           r["survivorship_withheld_because"])
     print("wrote results/latest-real.json")
+    try:
+        from .site import build_site
+        build_site(r)
+        print("website/ rebuilt from this run")
+    except Exception as exc:                      # noqa: BLE001
+        print(f"(site not rebuilt: {exc})", file=sys.stderr)
     return 0
 
 

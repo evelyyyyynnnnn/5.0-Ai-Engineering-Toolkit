@@ -18,7 +18,7 @@ bash 5.0-Ai-Engineering-Toolkit/5-data-fetch-harness/fetch-all.sh --list
 ```
 
 ```
-portfolio root: /home/you/[redacted]
+portfolio root: /home/you/portfolio
 17 project(s) would be fetched and re-run:
   1.0-Secure-Ai-Agent-Infrastructure/1-agent-verification-harness
   1.0-Secure-Ai-Agent-Infrastructure/2-chaintrust-bench
@@ -39,7 +39,7 @@ bash 5.0-Ai-Engineering-Toolkit/5-data-fetch-harness/fetch-all.sh
 All five repositories checked out side by side:
 
 ```
-[redacted]/
+portfolio/
   1.0-Secure-Ai-Agent-Infrastructure/
   2.0-Healthcare-Ai-Systems/
   3.0-Financial-Ai-Systems/

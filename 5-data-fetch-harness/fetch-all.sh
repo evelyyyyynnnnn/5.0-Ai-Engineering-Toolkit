@@ -10,7 +10,7 @@
 # Run it from a machine with ordinary internet access, in the folder that holds
 # all five repositories side by side:
 #
-#   ~/[redacted]/
+#   ~/portfolio/
 #     1.0-Secure-Ai-Agent-Infrastructure/
 #     2.0-Healthcare-Ai-Systems/
 #     3.0-Financial-Ai-Systems/
