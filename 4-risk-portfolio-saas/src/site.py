@@ -21,6 +21,11 @@ META = {
 
 
 def build_site(results: dict) -> pathlib.Path:
+    # The real run and the authored run have different shapes; dispatch on the
+    # flag the results file carries rather than on which keys happen to exist.
+    if not results.get("is_synthetic", True):
+        return build_site_real(results)
+
     reps, val, th = results["reports"], results["validation"], results["throughput"]
     eq = reps["EQUAL-WEIGHT"]
 
@@ -171,3 +176,145 @@ python -m src.demo</pre>
 </section>
 """
     return sk.build(ROOT, META, body, results)
+
+
+# --------------------------------------------------------------------------
+# Real-data page: VaR backtested against its own promise.
+# --------------------------------------------------------------------------
+
+REAL_META = dict(META)
+REAL_META.update({
+    "tags": [("real Fama-French", "real"), ("2,600 trading days", ""),
+             ("Kupiec & Christoffersen", ""), ("portfolios authored", "")],
+    "banner": "Run on Fama-French 10-industry value-weighted daily returns, retrieved "
+              "with URL, SHA-256 and retrieval time recorded in data/MANIFEST.json. The "
+              "central claim is tested rather than asserted: a model that says it will "
+              "be breached 1% of the time is backtested and told whether it was.",
+    "datanote": "Built from results/latest-real.json. The portfolios are authored to "
+                "exercise the risk engine; neither is a recommendation.",
+})
+
+
+def build_site_real(results: dict) -> pathlib.Path:
+    reps = results.get("reports", {})
+    betas = results.get("betas", {})
+    win = results.get("window", {})
+    bt_rows, risk_rows, chk_rows, bars = [], [], [], []
+    for pid, r in reps.items():
+        for lvl, b in r.get("backtest", {}).items():
+            conf = b["confidence"]
+            bt_rows.append([pid, f"{conf * 100:.0f}%", f"{b['expected_exceptions']:.1f}",
+                            b["observed_exceptions"], f"{b['exception_rate'] * 100:.2f}%",
+                            f"{(1 - conf) * 100:.0f}%", f"{b['kupiec_p']:.4f}",
+                            f"{b['christoffersen_cc_p']:.4f}"])
+            if abs(conf - 0.99) < 1e-9:
+                bars.append((f"{pid} observed", b["exception_rate"] * 100))
+        k = r["risk"]
+        risk_rows.append([pid, f"{k['annualised_volatility'] * 100:.2f}%",
+                          f"{k['var_historical'] * 100:.4f}%",
+                          f"{k['var_gaussian'] * 100:.4f}%",
+                          f"{k['var_cornish_fisher'] * 100:.4f}%",
+                          f"{k['expected_shortfall'] * 100:.4f}%",
+                          f"{k['max_drawdown'] * 100:.2f}%"])
+        for c in r.get("checks", []):
+            chk_rows.append([pid, c["level"], c["code"], c["detail"]])
+
+    first = next(iter(reps.values())) if reps else {}
+    fk = first.get("risk", {})
+
+    metrics = sk.metric_grid([
+        ("Observations", f"{results.get('observations', 0):,}",
+         f"{win.get('first', '')} to {win.get('last', '')}"),
+        ("Portfolios", len(reps), "both backtested at two levels"),
+        ("Cornish-Fisher VaR", f"{fk.get('var_cornish_fisher', 0) * 100:.4f}%",
+         f"against {fk.get('var_gaussian', 0) * 100:.4f}% Gaussian"),
+        ("Checks raised", len(chk_rows), "risk against capital"),
+    ])
+
+    bt_tbl = sk.table(
+        ["Portfolio", "Level", "Expected breaches", "Observed", "Rate",
+         "Should be", "Kupiec p", "Christoffersen p"],
+        bt_rows, numeric_cols=(2, 3, 4, 5, 6, 7))
+    bt_chart = sk.bar_chart(bars + [("promised at the 99% level", 1.0)], fmt="{:.2f}")
+
+    risk_tbl = sk.table(
+        ["Portfolio", "Annualised vol", "Historical VaR", "Gaussian VaR",
+         "Cornish-Fisher VaR", "Expected shortfall", "Max drawdown"],
+        risk_rows, numeric_cols=(1, 2, 3, 4, 5, 6))
+    var_chart = sk.bar_chart(
+        [("historical (what happened)", fk.get("var_historical", 0)),
+         ("Cornish-Fisher", fk.get("var_cornish_fisher", 0)),
+         ("Gaussian", fk.get("var_gaussian", 0))], fmt="{:.5f}")
+
+    beta_tbl = sk.table(
+        ["Industry", "Beta"],
+        [[t, f"{b:.4f}"] for t, b in sorted(betas.items(), key=lambda kv: -kv[1])],
+        numeric_cols=(1,))
+    beta_chart = sk.bar_chart(
+        sorted(betas.items(), key=lambda kv: -kv[1]), fmt="{:.3f}")
+
+    chk_tbl = sk.table(["Portfolio", "Level", "Code", "Detail"], chk_rows)
+
+    body = f"""
+<section>
+  <h2>This run</h2>
+  <div class="stack-lg">
+    {metrics}
+    <p class="mono" style="color:var(--muted);font-size:12.5px">
+      generated {sk.esc(results['generated_at'])} &middot;
+      {results.get('n_tickers', 0)} industries &middot;
+      betas against {sk.esc(results.get('betas_estimated_against', ''))}
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>The backtest &mdash; does the model breach at the rate it promises?</h2>
+  <div class="stack-lg">
+    {bt_chart}
+    {bt_tbl}
+    <p>Kupiec tests the breach <em>rate</em>; Christoffersen tests rate and independence
+    together. A model can pass the first and fail the second, which means the breaches
+    arrive in clusters &mdash; and a risk model that is right on average and clustered in
+    practice is the one that fails on the day it is needed. Only running both shows it.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Why the tail correction exists</h2>
+  <div class="stack-lg">
+    {var_chart}
+    {risk_tbl}
+    <p>The Gaussian figure assumes normality; the historical one is what actually
+    happened. How far apart they sit is the whole argument for the Cornish-Fisher
+    correction.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Risk against capital</h2>
+  <div class="stack-lg">
+    {chk_tbl}
+    <p>These checks fire on portfolios most readers would call diversified. The service
+    raises them rather than suppressing them.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Measured betas</h2>
+  <div class="stack-lg">
+    {beta_chart}
+    {beta_tbl}
+  </div>
+</section>
+
+<section>
+  <h2>Reproduce</h2>
+  <div class="stack">
+    <pre>python -m src.demo --real
+# -&gt; results/latest-real.json
+pytest -q</pre>
+  </div>
+</section>
+"""
+    return sk.build(ROOT, REAL_META, body, results)

@@ -23,6 +23,11 @@ META = {
 
 
 def build_site(results: dict) -> pathlib.Path:
+    # The real run and the authored run have different shapes; dispatch on the
+    # flag the results file carries rather than on which keys happen to exist.
+    if not results.get("is_synthetic", True):
+        return build_site_real(results)
+
     la, sv, va, sel = (results["lookahead"], results["survivorship"],
                        results["validation"], results["selection"])
 
@@ -208,3 +213,152 @@ qkit sharpe backtest.csv --column returns --trials 200</pre>
 </section>
 """
     return sk.build(ROOT, META, body, results)
+
+
+# --------------------------------------------------------------------------
+# Real-data page: the three checks on a century of real factor history.
+# --------------------------------------------------------------------------
+
+REAL_META = dict(META)
+REAL_META.update({
+    "tags": [("real Ken French", "real"), ("26,296 days", ""),
+             ("planted leaks", ""), ("not published", "warn")],
+    "banner": "Run against Fama-French daily research factors and a price index "
+              "cumulated from the Ken French daily market total return, retrieved with "
+              "URLs, hashes and retrieval times recorded in data/MANIFEST.json. Leaks "
+              "are planted on purpose so the detector can be scored.",
+    "datanote": "Built from results/latest-real.json. The moving-average grid is a "
+                "selection-bias demonstration, not a strategy, and nothing here is a "
+                "trading recommendation.",
+})
+
+
+def build_site_real(results: dict) -> pathlib.Path:
+    pkg, fac = results["package"], results["factors"]
+    la, sel, val = results["lookahead"], results["selection"], results["validation"]
+    dil = la.get("dilution", {})
+
+    metrics = sk.metric_grid([
+        ("Days of real history", f"{fac['n_days']:,}", f"{fac['first']} to {fac['last']}"),
+        ("Planted leak caught", f"{max(c['max_forward_corr'] for c in la['cases']):.2f}",
+         "forward correlation of the worst case"),
+        ("False flags", la.get("properly_lagged_features_falsely_flagged", 0),
+         "on properly lagged features"),
+        ("Sharpe from noise alone", f"{sel['expected_max_sharpe_from_noise']:.4f}",
+         f"given {sel['n_strategies_tried']} trials"),
+    ])
+
+    la_tbl = sk.table(
+        ["Feature", "Max forward correlation", "Flagged", "Correct"],
+        [[c["feature"], f"{c['max_forward_corr']:.4f}",
+          "yes" if c["contaminated"] else "no",
+          "true leak" if c["contaminated"] else "clean"] for c in la["cases"]],
+        numeric_cols=(1,))
+    la_chart = sk.bar_chart(
+        [(c["feature"], c["max_forward_corr"]) for c in la["cases"]], fmt="{:.4f}")
+
+    dil_tbl = sk.table(
+        ["Window", "Correlation with next return", "Theoretical 1/sqrt(w)", "Detected"],
+        [[r["window"], f"{r['correlation_with_next_return']:.4f}",
+          f"{r['theoretical_1_over_sqrt_w']:.4f}", "yes" if r["detected"] else "no"]
+         for r in dil.get("rows", [])],
+        numeric_cols=(0, 1, 2))
+    dil_chart = sk.bar_chart(
+        [(f"window {r['window']}", r["correlation_with_next_return"])
+         for r in dil.get("rows", [])], fmt="{:.4f}")
+
+    sel_tbl = sk.table(
+        ["", "Value"],
+        [["Strategies tried", f"{sel['n_strategies_tried']:,}"],
+         ["Best rule found", f"fast {sel['best']['fast']} / slow {sel['best']['slow']}"],
+         ["Best Sharpe", f"{sel['best']['sharpe']:.4f}"],
+         ["Median Sharpe across the grid", f"{sel['sharpe_spread']['median']:.4f}"],
+         ["Worst Sharpe across the grid", f"{sel['sharpe_spread']['min']:.4f}"],
+         ["Sharpe expected from noise alone",
+          f"{sel['expected_max_sharpe_from_noise']:.4f}"],
+         ["Deflated Sharpe, all trials", f"{sel['deflated_sharpe_all_trials']:.4f}"],
+         ["Survives deflation", "yes" if sel["survives_deflation"] else "no"]],
+        numeric_cols=(1,))
+    sel_chart = sk.bar_chart(
+        [("best of the grid", sel["best"]["sharpe"]),
+         ("median of the grid", sel["sharpe_spread"]["median"]),
+         ("worst of the grid", sel["sharpe_spread"]["min"]),
+         ("expected from noise", sel["expected_max_sharpe_from_noise"])], fmt="{:.4f}")
+
+    val_tbl = sk.table(
+        ["Configuration", "Splits", "Dropped per fold", "Folds with overlap"],
+        [[k.replace("purged_embargo_", "embargo "), v["n_splits"],
+          ", ".join(str(x) for x in v["dropped_per_fold"]), v["folds_with_overlap"]]
+         for k, v in val.items() if isinstance(v, dict)],
+        numeric_cols=(1, 3))
+
+    body = f"""
+<section>
+  <h2>This run</h2>
+  <div class="stack-lg">
+    {metrics}
+    <p class="mono" style="color:var(--muted);font-size:12.5px">
+      generated {sk.esc(results['generated_at'])} &middot;
+      {pkg['name']} {pkg['version']} &middot;
+      {la['n_observations']:,} observations &middot;
+      published: {str(pkg.get('published', False)).lower()}
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2>Lookahead detection, scored on features whose status is known</h2>
+  <div class="stack-lg">
+    {la_chart}
+    {la_tbl}
+    <p>{sk.esc(la.get('note', ''))}</p>
+  </div>
+</section>
+
+<section>
+  <h2>How detection scales with the width of the window</h2>
+  <div class="stack-lg">
+    {dil_chart}
+    {dil_tbl}
+    <p>{sk.esc(dil.get('finding', ''))}</p>
+  </div>
+</section>
+
+<section>
+  <h2>Selection bias, then the deflation</h2>
+  <div class="stack-lg">
+    {sel_chart}
+    {sel_tbl}
+    <p>{sk.esc(sel.get('note', ''))}</p>
+  </div>
+</section>
+
+<section>
+  <h2>Purged cross-validation with an embargo</h2>
+  <div class="stack-lg">
+    {val_tbl}
+    <p>Overlapping observations are dropped so no fold can see a label that straddles
+    its own boundary.</p>
+  </div>
+</section>
+
+<section>
+  <h2>What this run does not compute</h2>
+  <div class="stack-lg">
+    <div class="note">
+      <h3>A survivorship audit needs the names that died</h3>
+      <p>{sk.esc(results.get('survivorship_withheld_because', ''))}</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Reproduce</h2>
+  <div class="stack">
+    <pre>python -m src.demo --real
+# -&gt; results/latest-real.json
+pytest -q</pre>
+  </div>
+</section>
+"""
+    return sk.build(ROOT, REAL_META, body, results)
