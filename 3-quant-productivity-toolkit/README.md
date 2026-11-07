@@ -37,7 +37,6 @@ dist/
   |-- qkit_research-0.1.0.tar.gz
 docs/
   |-- DATA.md
-  |-- EVIDENCE.md
   |-- METHOD.md
 pyproject.toml
 qkit/

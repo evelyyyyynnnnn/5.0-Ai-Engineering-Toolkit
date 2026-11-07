@@ -9,7 +9,7 @@ Grounding, citation accuracy and refusal behaviour evaluation for LLMs applied t
 
 ## Why the approach is non-obvious
 
-Directly serves the hallucination and verification argument in Section 2 of the petition.
+Accuracy and calibration come apart: a model can be right often and confidently wrong on the rest, and it is refusal behaviour that decides whether such an error ever reaches a user. Scoring grounding, citation accuracy and refusal together — rather than accuracy alone — is the point of the harness.
 
 ## Method
 
