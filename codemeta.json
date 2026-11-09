@@ -1,0 +1,29 @@
+{
+  "@context": "https://w3id.org/codemeta/3.0",
+  "@type": "SoftwareSourceCode",
+  "name": "AI Engineering Toolkit",
+  "description": "Installable engineering infrastructure shared across the portfolio: a data provenance library, an LLM evaluation and calibration harness, a quantitative productivity toolkit and a data-fetch harness. Where an evaluation suite saturates, the documentation says so and reports the saturation rather than the perfect score.",
+  "author": [
+    {
+      "@type": "Person",
+      "givenName": "Wenke",
+      "familyName": "Du"
+    }
+  ],
+  "version": "1.0.0",
+  "dateModified": "2026-11-09",
+  "datePublished": "2026-11-09",
+  "license": "https://spdx.org/licenses/Apache-2.0",
+  "codeRepository": "https://github.com/evelyyyyynnnnn/5.0-ai-engineering-toolkit",
+  "programmingLanguage": "Python",
+  "keywords": [
+    "research software",
+    "LLM evaluation",
+    "calibration",
+    "data provenance",
+    "software engineering",
+    "reproducibility"
+  ],
+  "developmentStatus": "active",
+  "applicationCategory": "Research software"
+}
