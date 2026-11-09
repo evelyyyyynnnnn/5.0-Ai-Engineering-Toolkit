@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it using these metadata.
+type: software
+title: AI Engineering Toolkit
+abstract: 'Installable engineering infrastructure shared across the portfolio: a data provenance library,
+  an LLM evaluation and calibration harness, a quantitative productivity toolkit and a data-fetch harness.
+  Where an evaluation suite saturates, the documentation says so and reports the saturation rather than
+  the perfect score.'
+authors:
+- given-names: Wenke
+  family-names: Du
+  orcid: https://orcid.org/0009-0007-5579-234X
+version: 1.0.0
+date-released: '2026-11-09'
+license: Apache-2.0
+repository-code: https://github.com/evelyyyyynnnnn/5.0-ai-engineering-toolkit
+url: https://github.com/evelyyyyynnnnn/5.0-ai-engineering-toolkit
+keywords:
+- research software
+- LLM evaluation
+- calibration
+- data provenance
+- software engineering
+- reproducibility
