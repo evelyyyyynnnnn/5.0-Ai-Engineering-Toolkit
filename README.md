@@ -1,6 +1,7 @@
 # 5.0 — AI Engineering Toolkit
 
 [![tests](https://github.com/evelyyyyynnnnn/5.0-Ai-Engineering-Toolkit/actions/workflows/tests.yml/badge.svg)](https://github.com/evelyyyyynnnnn/5.0-Ai-Engineering-Toolkit/actions/workflows/tests.yml)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24094775.svg)](https://doi.org/10.5281/zenodo.24094775)
 
 Shared, installable engineering infrastructure behind the endeavor. Four rebuilt projects carry it.
 
