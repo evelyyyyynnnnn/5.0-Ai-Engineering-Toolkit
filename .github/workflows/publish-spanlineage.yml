@@ -1,0 +1,69 @@
+name: publish spanlineage
+
+# Publishes 1-data-provenance-library/ to PyPI using Trusted Publishing
+# (OIDC). No API token is stored in this repository or in GitHub Secrets.
+#
+# To cut a release:
+#   git tag spanlineage-v0.1.0 && git push origin spanlineage-v0.1.0
+#
+# The tag version must match `version` in 1-data-provenance-library/pyproject.toml.
+
+on:
+  push:
+    tags:
+      - "spanlineage-v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 1-data-provenance-library
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Check tag matches pyproject version
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          proj=$(python -c "import tomllib,pathlib; print(tomllib.loads(pathlib.Path('pyproject.toml').read_text())['project']['version'])")
+          tag="${GITHUB_REF_NAME#spanlineage-v}"
+          echo "pyproject=$proj  tag=$tag"
+          test "$proj" = "$tag"
+
+      - name: Run the package test suite
+        run: |
+          python -m pip install -U pip pytest
+          python -m pip install -e .
+          python -m pytest tests/ -q -p no:cacheprovider
+
+      - name: Build sdist and wheel
+        run: |
+          python -m pip install -U build twine
+          python -m build
+          python -m twine check dist/*
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: 1-data-provenance-library/dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    # Required for Trusted Publishing: GitHub mints a short-lived OIDC token
+    # that PyPI verifies against the configured publisher. No secrets used.
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
