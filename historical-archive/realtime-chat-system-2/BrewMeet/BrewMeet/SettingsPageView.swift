@@ -21,7 +21,7 @@ struct SettingsPageView: View {
     @State private var showingBlockList = false
     @State private var showingCommentFilter = false
     @State private var showingEditEmail = false
-    @State private var phoneNumber = "+1 607 262 4282"
+    @State private var phoneNumber = "+1 607 555 0100"
     @State private var emailAddress = "evelyn@example.com"
     
     private let coffeePreferences = [
